@@ -1,0 +1,13 @@
+name, description, type, st, chatter, req_kbytes, resp_kbytes, data_store, cache_pct
+Client Service 001,Sample Pro Workflow Service,pro,831,500,1000,13340,DBMS,0
+Client Service 002,Sample Web Browser Workflow Service,browser,20,10,100,2134,NONE,20
+Client Service 003,Sample Mobile Workflow Service,mobile,20,10,100,1200,NONE,20
+VDI Service 001,Sample VDI Workflow Service,vdi,831,10,100,3691,DBMS,0
+Web Service 001,Sample Web Workflow Service,web,18,10,100,2134,NONE,0
+Portal Service 001,Sample Portal Workflow Service,portal,19,10,100,2134,FILE,0
+Map Service 001,Sample Map Workflow Service,map,141,10,100,2134,DBMS,0
+Map Service 002,Sample Cached Map Workflow Service,map,1,10,100,2134,FILE,100
+Hosted Service 001,Sample Hosted Workflow Service,feature,70,10,100,4000,RELATIONAL,0
+DBMS Service 001,Sample DBMS Workflow Service,dbms,24,500,1000,13340,FILE,75
+File Service 001,Sample File Workflow Service,file,24,500,1000,13340,FILE,0
+Relational Service 001,Sample Relational DS Workflow Service,relational,24,10,1000,13340,FILE,0

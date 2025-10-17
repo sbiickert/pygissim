@@ -1,0 +1,492 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tests.test_compute &mdash; pygissim  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            pygissim
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">pygissim</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pygissim</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">tests.test_compute</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for tests.test_compute</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">unittest</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pygissim.engine</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tests.test_network</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+
+<div class="viewcode-block" id="TestHWDef">
+<a class="viewcode-back" href="../../tests.html#tests.test_compute.TestHWDef">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TestHWDef</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+    
+<div class="viewcode-block" id="TestHWDef.test_create_hw_def">
+<a class="viewcode-back" href="../../tests.html#tests.test_compute.TestHWDef.test_create_hw_def">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_create_hw_def</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">phone</span><span class="p">:</span> <span class="n">HardwareDef</span> <span class="o">=</span> <span class="n">TestHWDef</span><span class="o">.</span><span class="n">sample_moble_hw_def</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="s1">&#39;Apple Silicon M1&#39;</span><span class="p">,</span> <span class="n">phone</span><span class="o">.</span><span class="n">processor</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TestHWDef.sample_moble_hw_def">
+<a class="viewcode-back" href="../../tests.html#tests.test_compute.TestHWDef.sample_moble_hw_def">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_moble_hw_def</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">HardwareDef</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">HardwareDef</span><span class="p">(</span><span class="n">processor</span><span class="o">=</span><span class="s1">&#39;Apple Silicon M1&#39;</span><span class="p">,</span> 
+                           <span class="n">cores</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">specint_rate2017</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> 
+                           <span class="n">architecture</span><span class="o">=</span><span class="n">ComputeArchitecture</span><span class="o">.</span><span class="n">ARM64</span><span class="p">,</span> 
+                           <span class="n">threading</span><span class="o">=</span><span class="n">ThreadingModel</span><span class="o">.</span><span class="n">PHYSICAL</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="TestHWDef.sample_client_hw_def">
+<a class="viewcode-back" href="../../tests.html#tests.test_compute.TestHWDef.sample_client_hw_def">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_client_hw_def</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">HardwareDef</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">HardwareDef</span><span class="p">(</span><span class="n">processor</span><span class="o">=</span><span class="s1">&#39;Intel Core i7-4770K&#39;</span><span class="p">,</span> 
+                           <span class="n">cores</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">specint_rate2017</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> 
+                           <span class="n">architecture</span><span class="o">=</span><span class="n">ComputeArchitecture</span><span class="o">.</span><span class="n">INTEL</span><span class="p">,</span> 
+                           <span class="n">threading</span><span class="o">=</span><span class="n">ThreadingModel</span><span class="o">.</span><span class="n">PHYSICAL</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="TestHWDef.sample_server_hw_def">
+<a class="viewcode-back" href="../../tests.html#tests.test_compute.TestHWDef.sample_server_hw_def">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_server_hw_def</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">HardwareDef</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">HardwareDef</span><span class="p">(</span><span class="n">processor</span><span class="o">=</span><span class="s1">&#39;Intel Xeon E5-2643v3&#39;</span><span class="p">,</span> 
+                           <span class="n">cores</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">specint_rate2017</span><span class="o">=</span><span class="mi">67</span><span class="p">,</span> 
+                           <span class="n">architecture</span><span class="o">=</span><span class="n">ComputeArchitecture</span><span class="o">.</span><span class="n">INTEL</span><span class="p">,</span> 
+                           <span class="n">threading</span><span class="o">=</span><span class="n">ThreadingModel</span><span class="o">.</span><span class="n">HYPERTHREADED</span><span class="p">)</span></div>
+</div>
+
+
+<div class="viewcode-block" id="TestServiceDef">
+<a class="viewcode-back" href="../../tests.html#tests.test_compute.TestServiceDef">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TestServiceDef</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+
+<div class="viewcode-block" id="TestServiceDef.test_create_service_def">
+<a class="viewcode-back" href="../../tests.html#tests.test_compute.TestServiceDef.test_create_service_def">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_create_service_def</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">types</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">TestServiceDef</span><span class="o">.</span><span class="n">sample_service_types</span><span class="p">()</span>
+        <span class="n">defs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ServiceDef</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="p">(</span><span class="n">TestServiceDef</span><span class="o">.</span><span class="n">sample_service</span><span class="p">(</span><span class="n">s</span><span class="p">)),</span> <span class="n">types</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">types</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">defs</span><span class="p">))</span>
+        <span class="n">all_services</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span><span class="n">ServiceDef</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">types</span><span class="p">,</span><span class="n">defs</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s2">&quot;pro&quot;</span><span class="p">,</span> <span class="n">all_services</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="s2">&quot;Pro&quot;</span><span class="p">,</span> <span class="n">all_services</span><span class="p">[</span><span class="s1">&#39;pro&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">BalancingModel</span><span class="o">.</span><span class="n">ROUND_ROBIN</span><span class="p">,</span> <span class="n">all_services</span><span class="p">[</span><span class="s1">&#39;image&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">balancing_model</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">BalancingModel</span><span class="o">.</span><span class="n">FAILOVER</span><span class="p">,</span> <span class="n">all_services</span><span class="p">[</span><span class="s1">&#39;portal&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">balancing_model</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">BalancingModel</span><span class="o">.</span><span class="n">SINGLE</span><span class="p">,</span> <span class="n">all_services</span><span class="p">[</span><span class="s1">&#39;geoevent&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">balancing_model</span><span class="p">)</span></div>
+
+        
+
+<div class="viewcode-block" id="TestServiceDef.sample_service_types">
+<a class="viewcode-back" href="../../tests.html#tests.test_compute.TestServiceDef.sample_service_types">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_service_types</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="p">[</span>
+		<span class="s2">&quot;pro&quot;</span><span class="p">,</span> <span class="s2">&quot;browser&quot;</span><span class="p">,</span> <span class="s2">&quot;map&quot;</span><span class="p">,</span> <span class="s2">&quot;feature&quot;</span><span class="p">,</span> <span class="s2">&quot;image&quot;</span><span class="p">,</span>
+		<span class="s2">&quot;geocode&quot;</span><span class="p">,</span> <span class="s2">&quot;geoevent&quot;</span><span class="p">,</span> <span class="s2">&quot;geometry&quot;</span><span class="p">,</span> <span class="s2">&quot;gp&quot;</span><span class="p">,</span>
+		<span class="s2">&quot;network&quot;</span><span class="p">,</span> <span class="s2">&quot;scene&quot;</span><span class="p">,</span> <span class="s2">&quot;sync&quot;</span><span class="p">,</span> <span class="s2">&quot;stream&quot;</span><span class="p">,</span>
+		<span class="s2">&quot;ranalytics&quot;</span><span class="p">,</span> <span class="s2">&quot;un&quot;</span><span class="p">,</span> <span class="s2">&quot;custom&quot;</span><span class="p">,</span> <span class="s2">&quot;vdi&quot;</span><span class="p">,</span>
+		<span class="s2">&quot;web&quot;</span><span class="p">,</span> <span class="s2">&quot;portal&quot;</span><span class="p">,</span> <span class="s2">&quot;dbms&quot;</span><span class="p">,</span> <span class="s2">&quot;relational&quot;</span><span class="p">,</span>
+		<span class="s2">&quot;object&quot;</span><span class="p">,</span> <span class="s2">&quot;stbds&quot;</span><span class="p">,</span> <span class="s2">&quot;file&quot;</span><span class="p">,</span> <span class="s2">&quot;mobile&quot;</span><span class="p">]</span></div>
+
+    
+<div class="viewcode-block" id="TestServiceDef.sample_service">
+<a class="viewcode-back" href="../../tests.html#tests.test_compute.TestServiceDef.sample_service">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_service</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ServiceDef</span><span class="p">:</span>
+        <span class="k">match</span> <span class="nb">type</span><span class="p">:</span>
+            <span class="k">case</span> <span class="s2">&quot;pro&quot;</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">ServiceDef</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Pro&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Sample Pro&quot;</span><span class="p">,</span> <span class="n">service_type</span><span class="o">=</span><span class="nb">type</span><span class="p">,</span> <span class="n">balancing_model</span><span class="o">=</span><span class="n">BalancingModel</span><span class="o">.</span><span class="n">SINGLE</span><span class="p">)</span>
+            <span class="k">case</span> <span class="s2">&quot;browser&quot;</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">ServiceDef</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Browser&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Sample Browser&quot;</span><span class="p">,</span> <span class="n">service_type</span><span class="o">=</span><span class="nb">type</span><span class="p">,</span> <span class="n">balancing_model</span><span class="o">=</span><span class="n">BalancingModel</span><span class="o">.</span><span class="n">SINGLE</span><span class="p">)</span>
+            <span class="k">case</span> <span class="s2">&quot;mobile&quot;</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">ServiceDef</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Mobile&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Sample App&quot;</span><span class="p">,</span> <span class="n">service_type</span><span class="o">=</span><span class="nb">type</span><span class="p">,</span> <span class="n">balancing_model</span><span class="o">=</span><span class="n">BalancingModel</span><span class="o">.</span><span class="n">SINGLE</span><span class="p">)</span>
+            <span class="k">case</span> <span class="s2">&quot;map&quot;</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">ServiceDef</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Map&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Sample Map&quot;</span><span class="p">,</span> <span class="n">service_type</span><span class="o">=</span><span class="nb">type</span><span class="p">,</span> <span class="n">balancing_model</span><span class="o">=</span><span class="n">BalancingModel</span><span class="o">.</span><span class="n">ROUND_ROBIN</span><span class="p">)</span>
+            <span class="k">case</span> <span class="s2">&quot;feature&quot;</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">ServiceDef</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Feature&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Sample Feature&quot;</span><span class="p">,</span> <span class="n">service_type</span><span class="o">=</span><span class="nb">type</span><span class="p">,</span> <span class="n">balancing_model</span><span class="o">=</span><span class="n">BalancingModel</span><span class="o">.</span><span class="n">ROUND_ROBIN</span><span class="p">)</span>
+            <span class="k">case</span> <span class="s2">&quot;image&quot;</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">ServiceDef</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Image&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Sample Image&quot;</span><span class="p">,</span> <span class="n">service_type</span><span class="o">=</span><span class="nb">type</span><span class="p">,</span> <span class="n">balancing_model</span><span class="o">=</span><span class="n">BalancingModel</span><span class="o">.</span><span class="n">ROUND_ROBIN</span><span class="p">)</span>
+            <span class="k">case</span> <span class="s2">&quot;geocode&quot;</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">ServiceDef</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Geocode&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Sample Geocode&quot;</span><span class="p">,</span> <span class="n">service_type</span><span class="o">=</span><span class="nb">type</span><span class="p">,</span> <span class="n">balancing_model</span><span class="o">=</span><span class="n">BalancingModel</span><span class="o">.</span><span class="n">ROUND_ROBIN</span><span class="p">)</span>
+            <span class="k">case</span> <span class="s2">&quot;geoevent&quot;</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">ServiceDef</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Geoevent&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Sample Geoevent&quot;</span><span class="p">,</span> <span class="n">service_type</span><span class="o">=</span><span class="nb">type</span><span class="p">,</span> <span class="n">balancing_model</span><span class="o">=</span><span class="n">BalancingModel</span><span class="o">.</span><span class="n">SINGLE</span><span class="p">)</span>
+            <span class="k">case</span> <span class="s2">&quot;geometry&quot;</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">ServiceDef</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Geometry&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Sample Geometry&quot;</span><span class="p">,</span> <span class="n">service_type</span><span class="o">=</span><span class="nb">type</span><span class="p">,</span> <span class="n">balancing_model</span><span class="o">=</span><span class="n">BalancingModel</span><span class="o">.</span><span class="n">ROUND_ROBIN</span><span class="p">)</span>
+            <span class="k">case</span> <span class="s2">&quot;gp&quot;</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">ServiceDef</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;GP&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Sample GP&quot;</span><span class="p">,</span> <span class="n">service_type</span><span class="o">=</span><span class="nb">type</span><span class="p">,</span> <span class="n">balancing_model</span><span class="o">=</span><span class="n">BalancingModel</span><span class="o">.</span><span class="n">ROUND_ROBIN</span><span class="p">)</span>
+            <span class="k">case</span> <span class="s2">&quot;network&quot;</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">ServiceDef</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Network&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Sample Network&quot;</span><span class="p">,</span> <span class="n">service_type</span><span class="o">=</span><span class="nb">type</span><span class="p">,</span> <span class="n">balancing_model</span><span class="o">=</span><span class="n">BalancingModel</span><span class="o">.</span><span class="n">ROUND_ROBIN</span><span class="p">)</span>
+            <span class="k">case</span> <span class="s2">&quot;scene&quot;</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">ServiceDef</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Scene&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Sample Scene&quot;</span><span class="p">,</span> <span class="n">service_type</span><span class="o">=</span><span class="nb">type</span><span class="p">,</span> <span class="n">balancing_model</span><span class="o">=</span><span class="n">BalancingModel</span><span class="o">.</span><span class="n">ROUND_ROBIN</span><span class="p">)</span>
+            <span class="k">case</span> <span class="s2">&quot;sync&quot;</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">ServiceDef</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Sync&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Sample Sync&quot;</span><span class="p">,</span> <span class="n">service_type</span><span class="o">=</span><span class="nb">type</span><span class="p">,</span> <span class="n">balancing_model</span><span class="o">=</span><span class="n">BalancingModel</span><span class="o">.</span><span class="n">ROUND_ROBIN</span><span class="p">)</span>
+            <span class="k">case</span> <span class="s2">&quot;stream&quot;</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">ServiceDef</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Stream&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Sample Stream&quot;</span><span class="p">,</span> <span class="n">service_type</span><span class="o">=</span><span class="nb">type</span><span class="p">,</span> <span class="n">balancing_model</span><span class="o">=</span><span class="n">BalancingModel</span><span class="o">.</span><span class="n">ROUND_ROBIN</span><span class="p">)</span>
+            <span class="k">case</span> <span class="s2">&quot;ranalytics&quot;</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">ServiceDef</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Ranalytics&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Sample Ranalytics&quot;</span><span class="p">,</span> <span class="n">service_type</span><span class="o">=</span><span class="nb">type</span><span class="p">,</span> <span class="n">balancing_model</span><span class="o">=</span><span class="n">BalancingModel</span><span class="o">.</span><span class="n">ROUND_ROBIN</span><span class="p">)</span>
+            <span class="k">case</span> <span class="s2">&quot;un&quot;</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">ServiceDef</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;UN&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Sample UN&quot;</span><span class="p">,</span> <span class="n">service_type</span><span class="o">=</span><span class="nb">type</span><span class="p">,</span> <span class="n">balancing_model</span><span class="o">=</span><span class="n">BalancingModel</span><span class="o">.</span><span class="n">ROUND_ROBIN</span><span class="p">)</span>
+            <span class="k">case</span> <span class="s2">&quot;custom&quot;</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">ServiceDef</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Custom&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Sample Custom&quot;</span><span class="p">,</span> <span class="n">service_type</span><span class="o">=</span><span class="nb">type</span><span class="p">,</span> <span class="n">balancing_model</span><span class="o">=</span><span class="n">BalancingModel</span><span class="o">.</span><span class="n">SINGLE</span><span class="p">)</span>
+            <span class="k">case</span> <span class="s2">&quot;vdi&quot;</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">ServiceDef</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Vdi&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Sample VDI&quot;</span><span class="p">,</span> <span class="n">service_type</span><span class="o">=</span><span class="nb">type</span><span class="p">,</span> <span class="n">balancing_model</span><span class="o">=</span><span class="n">BalancingModel</span><span class="o">.</span><span class="n">FAILOVER</span><span class="p">)</span>
+            <span class="k">case</span> <span class="s2">&quot;web&quot;</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">ServiceDef</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Web&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Sample Web&quot;</span><span class="p">,</span> <span class="n">service_type</span><span class="o">=</span><span class="nb">type</span><span class="p">,</span> <span class="n">balancing_model</span><span class="o">=</span><span class="n">BalancingModel</span><span class="o">.</span><span class="n">ROUND_ROBIN</span><span class="p">)</span>
+            <span class="k">case</span> <span class="s2">&quot;portal&quot;</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">ServiceDef</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Portal&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Sample Portal&quot;</span><span class="p">,</span> <span class="n">service_type</span><span class="o">=</span><span class="nb">type</span><span class="p">,</span> <span class="n">balancing_model</span><span class="o">=</span><span class="n">BalancingModel</span><span class="o">.</span><span class="n">FAILOVER</span><span class="p">)</span>
+            <span class="k">case</span> <span class="s2">&quot;dbms&quot;</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">ServiceDef</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;DBMS&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Sample DBMS&quot;</span><span class="p">,</span> <span class="n">service_type</span><span class="o">=</span><span class="nb">type</span><span class="p">,</span> <span class="n">balancing_model</span><span class="o">=</span><span class="n">BalancingModel</span><span class="o">.</span><span class="n">FAILOVER</span><span class="p">)</span>
+            <span class="k">case</span> <span class="s2">&quot;relational&quot;</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">ServiceDef</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Relational&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Sample Relational&quot;</span><span class="p">,</span> <span class="n">service_type</span><span class="o">=</span><span class="nb">type</span><span class="p">,</span> <span class="n">balancing_model</span><span class="o">=</span><span class="n">BalancingModel</span><span class="o">.</span><span class="n">FAILOVER</span><span class="p">)</span>
+            <span class="k">case</span> <span class="s2">&quot;object&quot;</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">ServiceDef</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Object&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Sample Object&quot;</span><span class="p">,</span> <span class="n">service_type</span><span class="o">=</span><span class="nb">type</span><span class="p">,</span> <span class="n">balancing_model</span><span class="o">=</span><span class="n">BalancingModel</span><span class="o">.</span><span class="n">FAILOVER</span><span class="p">)</span>
+            <span class="k">case</span> <span class="s2">&quot;stbds&quot;</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">ServiceDef</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;STBDS&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Sample Spatio-Temporal Data Store&quot;</span><span class="p">,</span> <span class="n">service_type</span><span class="o">=</span><span class="nb">type</span><span class="p">,</span> <span class="n">balancing_model</span><span class="o">=</span><span class="n">BalancingModel</span><span class="o">.</span><span class="n">ROUND_ROBIN</span><span class="p">)</span>
+            <span class="k">case</span> <span class="s2">&quot;file&quot;</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">ServiceDef</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;File&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Sample File&quot;</span><span class="p">,</span> <span class="n">service_type</span><span class="o">=</span><span class="nb">type</span><span class="p">,</span> <span class="n">balancing_model</span><span class="o">=</span><span class="n">BalancingModel</span><span class="o">.</span><span class="n">FAILOVER</span><span class="p">)</span>
+            <span class="k">case</span><span class="w"> </span><span class="k">_</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">ServiceDef</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;None&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Invalid&quot;</span><span class="p">,</span> <span class="n">service_type</span><span class="o">=</span><span class="nb">type</span><span class="p">,</span> <span class="n">balancing_model</span><span class="o">=</span><span class="n">BalancingModel</span><span class="o">.</span><span class="n">SINGLE</span><span class="p">)</span></div>
+</div>
+
+
+<div class="viewcode-block" id="TestComputeNode">
+<a class="viewcode-back" href="../../tests.html#tests.test_compute.TestComputeNode">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TestComputeNode</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+<div class="viewcode-block" id="TestComputeNode.test_create_compute">
+<a class="viewcode-back" href="../../tests.html#tests.test_compute.TestComputeNode.test_create_compute">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_create_compute</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">client</span><span class="p">:</span> <span class="n">ComputeNode</span> <span class="o">=</span> <span class="n">TestComputeNode</span><span class="o">.</span><span class="n">sample_client</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="s1">&#39;Client 001&#39;</span><span class="p">,</span> <span class="n">client</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">phone</span><span class="p">:</span> <span class="n">ComputeNode</span> <span class="o">=</span> <span class="n">TestComputeNode</span><span class="o">.</span><span class="n">sample_mobile</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="n">phone</span><span class="o">.</span><span class="n">memory_GB</span><span class="p">)</span>
+        <span class="n">v_host</span><span class="p">:</span> <span class="n">ComputeNode</span> <span class="o">=</span> <span class="n">TestComputeNode</span><span class="o">.</span><span class="n">sample_vhost</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">v_host</span><span class="o">.</span><span class="n">vcore_count</span><span class="p">())</span>
+        <span class="n">p_host</span><span class="p">:</span> <span class="n">ComputeNode</span> <span class="o">=</span> <span class="n">TestComputeNode</span><span class="o">.</span><span class="n">sample_phost</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="s1">&#39;Host 001&#39;</span><span class="p">,</span> <span class="n">p_host</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">p_host</span><span class="o">.</span><span class="n">virtual_host_count</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">p_host</span><span class="o">.</span><span class="n">total_cpu_allocation</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">p_host</span><span class="o">.</span><span class="n">total_vcpu_allocation</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="n">p_host</span><span class="o">.</span><span class="n">total_memory_allocation</span><span class="p">())</span>
+        <span class="n">v_host_opt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ComputeNode</span><span class="p">]</span> <span class="o">=</span> <span class="n">p_host</span><span class="o">.</span><span class="n">virtual_host</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNotNone</span><span class="p">(</span><span class="n">v_host_opt</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">v_host_opt</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="s1">&#39;VH Host 001: 0&#39;</span><span class="p">,</span> <span class="n">v_host_opt</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div>
+
+
+    <span class="n">_sample_client</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ComputeNode</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_sample_mobile</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ComputeNode</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_sample_vhost</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ComputeNode</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_sample_phost</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ComputeNode</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    
+<div class="viewcode-block" id="TestComputeNode.sample_client">
+<a class="viewcode-back" href="../../tests.html#tests.test_compute.TestComputeNode.sample_client">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_client</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ComputeNode</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">TestComputeNode</span><span class="o">.</span><span class="n">_sample_client</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">TestComputeNode</span><span class="o">.</span><span class="n">_sample_client</span> <span class="o">=</span> <span class="n">ComputeNode</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Client 001&#39;</span><span class="p">,</span>
+                                                         <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;Sample PC&#39;</span><span class="p">,</span>
+                                                         <span class="n">hw_def</span><span class="o">=</span><span class="n">TestHWDef</span><span class="o">.</span><span class="n">sample_client_hw_def</span><span class="p">(),</span>
+                                                         <span class="n">memory_GB</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span>
+                                                         <span class="n">zone</span><span class="o">=</span><span class="n">TestZone</span><span class="o">.</span><span class="n">sample_intranet_zone</span><span class="p">(),</span>
+                                                         <span class="nb">type</span><span class="o">=</span><span class="n">ComputeNodeType</span><span class="o">.</span><span class="n">CLIENT</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">TestComputeNode</span><span class="o">.</span><span class="n">_sample_client</span></div>
+
+    
+<div class="viewcode-block" id="TestComputeNode.sample_mobile">
+<a class="viewcode-back" href="../../tests.html#tests.test_compute.TestComputeNode.sample_mobile">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_mobile</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ComputeNode</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">TestComputeNode</span><span class="o">.</span><span class="n">_sample_mobile</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">TestComputeNode</span><span class="o">.</span><span class="n">_sample_mobile</span> <span class="o">=</span> <span class="n">ComputeNode</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Mobile 001&#39;</span><span class="p">,</span>
+                                                         <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;Sample Phone&#39;</span><span class="p">,</span>
+                                                         <span class="n">hw_def</span><span class="o">=</span><span class="n">TestHWDef</span><span class="o">.</span><span class="n">sample_moble_hw_def</span><span class="p">(),</span>
+                                                         <span class="n">memory_GB</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+                                                         <span class="n">zone</span><span class="o">=</span><span class="n">TestZone</span><span class="o">.</span><span class="n">sample_internet_zone</span><span class="p">(),</span>
+                                                         <span class="nb">type</span><span class="o">=</span><span class="n">ComputeNodeType</span><span class="o">.</span><span class="n">CLIENT</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">TestComputeNode</span><span class="o">.</span><span class="n">_sample_mobile</span></div>
+
+    
+<div class="viewcode-block" id="TestComputeNode.sample_vhost">
+<a class="viewcode-back" href="../../tests.html#tests.test_compute.TestComputeNode.sample_vhost">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_vhost</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ComputeNode</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">TestComputeNode</span><span class="o">.</span><span class="n">_sample_vhost</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">TestComputeNode</span><span class="o">.</span><span class="n">_sample_vhost</span> <span class="o">=</span> <span class="n">ComputeNode</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;VHost 001&#39;</span><span class="p">,</span>
+                                                         <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;Sample VHost&#39;</span><span class="p">,</span>
+                                                         <span class="n">hw_def</span><span class="o">=</span><span class="n">TestHWDef</span><span class="o">.</span><span class="n">sample_server_hw_def</span><span class="p">(),</span>
+                                                         <span class="n">memory_GB</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span>
+                                                         <span class="n">zone</span><span class="o">=</span><span class="n">TestZone</span><span class="o">.</span><span class="n">sample_intranet_zone</span><span class="p">(),</span>
+                                                         <span class="nb">type</span><span class="o">=</span><span class="n">ComputeNodeType</span><span class="o">.</span><span class="n">V_SERVER</span><span class="p">)</span>
+            <span class="n">TestComputeNode</span><span class="o">.</span><span class="n">_sample_vhost</span><span class="o">.</span><span class="n">set_vcore_count</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">TestComputeNode</span><span class="o">.</span><span class="n">_sample_vhost</span></div>
+
+    
+<div class="viewcode-block" id="TestComputeNode.sample_phost">
+<a class="viewcode-back" href="../../tests.html#tests.test_compute.TestComputeNode.sample_phost">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_phost</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ComputeNode</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">TestComputeNode</span><span class="o">.</span><span class="n">_sample_phost</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">TestComputeNode</span><span class="o">.</span><span class="n">_sample_phost</span> <span class="o">=</span> <span class="n">ComputeNode</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Host 001&#39;</span><span class="p">,</span>
+                                                         <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;Sample Physical Host&#39;</span><span class="p">,</span>
+                                                         <span class="n">hw_def</span><span class="o">=</span><span class="n">TestHWDef</span><span class="o">.</span><span class="n">sample_server_hw_def</span><span class="p">(),</span>
+                                                         <span class="n">memory_GB</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
+                                                         <span class="n">zone</span><span class="o">=</span><span class="n">TestZone</span><span class="o">.</span><span class="n">sample_intranet_zone</span><span class="p">(),</span>
+                                                         <span class="nb">type</span><span class="o">=</span><span class="n">ComputeNodeType</span><span class="o">.</span><span class="n">P_SERVER</span><span class="p">)</span>
+            <span class="n">TestComputeNode</span><span class="o">.</span><span class="n">_sample_phost</span><span class="o">.</span><span class="n">add_virtual_host</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">TestComputeNode</span><span class="o">.</span><span class="n">_sample_phost</span></div>
+</div>
+
+
+<div class="viewcode-block" id="TestServiceProvider">
+<a class="viewcode-back" href="../../tests.html#tests.test_compute.TestServiceProvider">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TestServiceProvider</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+<div class="viewcode-block" id="TestServiceProvider.test_create">
+<a class="viewcode-back" href="../../tests.html#tests.test_compute.TestServiceProvider.test_create">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_create</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">sp</span><span class="p">:</span> <span class="n">ServiceProvider</span> <span class="o">=</span> <span class="n">TestServiceProvider</span><span class="o">.</span><span class="n">sample_web_sp</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="s1">&#39;IIS&#39;</span><span class="p">,</span> <span class="n">sp</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">handler</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ComputeNode</span><span class="p">]</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">handler_node</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNotNone</span><span class="p">(</span><span class="n">handler</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">handler</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="s1">&#39;Web 001&#39;</span><span class="p">,</span> <span class="n">handler</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">sp</span><span class="o">.</span><span class="n">is_valid</span><span class="p">())</span>
+
+        <span class="n">sp</span> <span class="o">=</span> <span class="n">TestServiceProvider</span><span class="o">.</span><span class="n">sample_portal_sp</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="s1">&#39;Portal&#39;</span><span class="p">,</span> <span class="n">sp</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">sp</span><span class="o">.</span><span class="n">is_valid</span><span class="p">())</span>
+
+        <span class="n">sp</span> <span class="o">=</span> <span class="n">TestServiceProvider</span><span class="o">.</span><span class="n">sample_map_sp</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="s1">&#39;GIS Site&#39;</span><span class="p">,</span> <span class="n">sp</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">sp</span><span class="o">.</span><span class="n">is_valid</span><span class="p">())</span>
+
+        <span class="n">sp</span> <span class="o">=</span> <span class="n">TestServiceProvider</span><span class="o">.</span><span class="n">sample_ha_map_sp</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="s1">&#39;GIS Site&#39;</span><span class="p">,</span> <span class="n">sp</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">sp</span><span class="o">.</span><span class="n">is_valid</span><span class="p">())</span>
+        <span class="n">node1</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ComputeNode</span><span class="p">]</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">handler_node</span><span class="p">()</span>
+        <span class="n">node2</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ComputeNode</span><span class="p">]</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">handler_node</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertNotEqual</span><span class="p">(</span><span class="n">node1</span><span class="p">,</span> <span class="n">node2</span><span class="p">)</span> <span class="c1"># Calling handler_node rotates the round robin</span>
+
+        <span class="n">sp</span> <span class="o">=</span> <span class="n">TestServiceProvider</span><span class="o">.</span><span class="n">sample_dbms_sp</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="s1">&#39;SQL Server&#39;</span><span class="p">,</span> <span class="n">sp</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">sp</span><span class="o">.</span><span class="n">is_valid</span><span class="p">())</span>
+
+        <span class="n">sp</span> <span class="o">=</span> <span class="n">TestServiceProvider</span><span class="o">.</span><span class="n">sample_ha_datastore_sp</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="s1">&#39;Relational DS&#39;</span><span class="p">,</span> <span class="n">sp</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">sp</span><span class="o">.</span><span class="n">is_valid</span><span class="p">())</span>
+        <span class="n">node1</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">handler_node</span><span class="p">()</span>
+        <span class="n">node2</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">handler_node</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">node1</span><span class="p">,</span> <span class="n">node2</span><span class="p">)</span> <span class="c1"># Calling handler_node does not change the failover</span>
+
+        <span class="n">sp</span> <span class="o">=</span> <span class="n">TestServiceProvider</span><span class="o">.</span><span class="n">sample_file_sp</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="s1">&#39;File Server&#39;</span><span class="p">,</span> <span class="n">sp</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">sp</span><span class="o">.</span><span class="n">is_valid</span><span class="p">())</span>
+
+        <span class="n">sp</span> <span class="o">=</span> <span class="n">TestServiceProvider</span><span class="o">.</span><span class="n">sample_vdi_sp</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="s1">&#39;VDI&#39;</span><span class="p">,</span> <span class="n">sp</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">sp</span><span class="o">.</span><span class="n">is_valid</span><span class="p">())</span>
+
+        <span class="n">sp</span> <span class="o">=</span> <span class="n">TestServiceProvider</span><span class="o">.</span><span class="n">sample_browser_sp</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="s1">&#39;Chrome&#39;</span><span class="p">,</span> <span class="n">sp</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">sp</span><span class="o">.</span><span class="n">is_valid</span><span class="p">())</span>
+
+        <span class="n">sp</span> <span class="o">=</span> <span class="n">TestServiceProvider</span><span class="o">.</span><span class="n">sample_pro_sp</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="s1">&#39;Pro&#39;</span><span class="p">,</span> <span class="n">sp</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">sp</span><span class="o">.</span><span class="n">is_valid</span><span class="p">())</span></div>
+
+
+
+    <span class="n">_vm</span><span class="p">:</span> <span class="n">ComputeNode</span> <span class="o">=</span> <span class="n">TestComputeNode</span><span class="o">.</span><span class="n">sample_vhost</span><span class="p">()</span>
+
+<div class="viewcode-block" id="TestServiceProvider.vm">
+<a class="viewcode-back" href="../../tests.html#tests.test_compute.TestServiceProvider.vm">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">vm</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ComputeNode</span><span class="p">:</span>
+        <span class="n">vm_copy</span><span class="p">:</span> <span class="n">ComputeNode</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">TestServiceProvider</span><span class="o">.</span><span class="n">_vm</span><span class="p">)</span>
+        <span class="n">vm_copy</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="k">return</span> <span class="n">vm_copy</span></div>
+
+    
+<div class="viewcode-block" id="TestServiceProvider.sample_web_sp">
+<a class="viewcode-back" href="../../tests.html#tests.test_compute.TestServiceProvider.sample_web_sp">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_web_sp</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ServiceProvider</span><span class="p">:</span>
+        <span class="n">web_vm</span><span class="p">:</span> <span class="n">ComputeNode</span> <span class="o">=</span> <span class="n">TestServiceProvider</span><span class="o">.</span><span class="n">vm</span><span class="p">(</span><span class="s1">&#39;Web 001&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ServiceProvider</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;IIS&#39;</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;Web Server&#39;</span><span class="p">,</span> <span class="n">service</span><span class="o">=</span><span class="n">TestServiceDef</span><span class="o">.</span><span class="n">sample_service</span><span class="p">(</span><span class="s1">&#39;web&#39;</span><span class="p">),</span> <span class="n">nodes</span><span class="o">=</span><span class="p">[</span><span class="n">web_vm</span><span class="p">])</span></div>
+
+    
+<div class="viewcode-block" id="TestServiceProvider.sample_portal_sp">
+<a class="viewcode-back" href="../../tests.html#tests.test_compute.TestServiceProvider.sample_portal_sp">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_portal_sp</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ServiceProvider</span><span class="p">:</span>
+        <span class="n">my_vm</span><span class="p">:</span> <span class="n">ComputeNode</span> <span class="o">=</span> <span class="n">TestServiceProvider</span><span class="o">.</span><span class="n">vm</span><span class="p">(</span><span class="s1">&#39;Portal 001&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ServiceProvider</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Portal&#39;</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;Portal Server&#39;</span><span class="p">,</span> <span class="n">service</span><span class="o">=</span><span class="n">TestServiceDef</span><span class="o">.</span><span class="n">sample_service</span><span class="p">(</span><span class="s1">&#39;portal&#39;</span><span class="p">),</span> <span class="n">nodes</span><span class="o">=</span><span class="p">[</span><span class="n">my_vm</span><span class="p">])</span></div>
+
+    
+<div class="viewcode-block" id="TestServiceProvider.sample_map_sp">
+<a class="viewcode-back" href="../../tests.html#tests.test_compute.TestServiceProvider.sample_map_sp">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_map_sp</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ServiceProvider</span><span class="p">:</span>
+        <span class="n">my_vm</span><span class="p">:</span> <span class="n">ComputeNode</span> <span class="o">=</span> <span class="n">TestServiceProvider</span><span class="o">.</span><span class="n">vm</span><span class="p">(</span><span class="s1">&#39;GIS 001&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ServiceProvider</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;GIS Site&#39;</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;Map Server Site&#39;</span><span class="p">,</span> <span class="n">service</span><span class="o">=</span><span class="n">TestServiceDef</span><span class="o">.</span><span class="n">sample_service</span><span class="p">(</span><span class="s1">&#39;map&#39;</span><span class="p">),</span> <span class="n">nodes</span><span class="o">=</span><span class="p">[</span><span class="n">my_vm</span><span class="p">])</span></div>
+
+    
+<div class="viewcode-block" id="TestServiceProvider.sample_ha_map_sp">
+<a class="viewcode-back" href="../../tests.html#tests.test_compute.TestServiceProvider.sample_ha_map_sp">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_ha_map_sp</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ServiceProvider</span><span class="p">:</span>
+        <span class="n">my_vm1</span><span class="p">:</span> <span class="n">ComputeNode</span> <span class="o">=</span> <span class="n">TestServiceProvider</span><span class="o">.</span><span class="n">vm</span><span class="p">(</span><span class="s1">&#39;GIS 001&#39;</span><span class="p">)</span>
+        <span class="n">my_vm2</span><span class="p">:</span> <span class="n">ComputeNode</span> <span class="o">=</span> <span class="n">TestServiceProvider</span><span class="o">.</span><span class="n">vm</span><span class="p">(</span><span class="s1">&#39;GIS 002&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ServiceProvider</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;GIS Site&#39;</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;HA Map Server Site&#39;</span><span class="p">,</span> <span class="n">service</span><span class="o">=</span><span class="n">TestServiceDef</span><span class="o">.</span><span class="n">sample_service</span><span class="p">(</span><span class="s1">&#39;map&#39;</span><span class="p">),</span> <span class="n">nodes</span><span class="o">=</span><span class="p">[</span><span class="n">my_vm1</span><span class="p">,</span> <span class="n">my_vm2</span><span class="p">])</span></div>
+
+    
+<div class="viewcode-block" id="TestServiceProvider.sample_dbms_sp">
+<a class="viewcode-back" href="../../tests.html#tests.test_compute.TestServiceProvider.sample_dbms_sp">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_dbms_sp</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ServiceProvider</span><span class="p">:</span>
+        <span class="n">my_vm</span><span class="p">:</span> <span class="n">ComputeNode</span> <span class="o">=</span> <span class="n">TestServiceProvider</span><span class="o">.</span><span class="n">vm</span><span class="p">(</span><span class="s1">&#39;SQL 001&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ServiceProvider</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;SQL Server&#39;</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;Geodatabase&#39;</span><span class="p">,</span> <span class="n">service</span><span class="o">=</span><span class="n">TestServiceDef</span><span class="o">.</span><span class="n">sample_service</span><span class="p">(</span><span class="s1">&#39;dbms&#39;</span><span class="p">),</span> <span class="n">nodes</span><span class="o">=</span><span class="p">[</span><span class="n">my_vm</span><span class="p">])</span></div>
+
+    
+<div class="viewcode-block" id="TestServiceProvider.sample_ha_datastore_sp">
+<a class="viewcode-back" href="../../tests.html#tests.test_compute.TestServiceProvider.sample_ha_datastore_sp">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_ha_datastore_sp</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ServiceProvider</span><span class="p">:</span>
+        <span class="n">my_vm1</span><span class="p">:</span> <span class="n">ComputeNode</span> <span class="o">=</span> <span class="n">TestServiceProvider</span><span class="o">.</span><span class="n">vm</span><span class="p">(</span><span class="s1">&#39;DS 001&#39;</span><span class="p">)</span>
+        <span class="n">my_vm2</span><span class="p">:</span> <span class="n">ComputeNode</span> <span class="o">=</span> <span class="n">TestServiceProvider</span><span class="o">.</span><span class="n">vm</span><span class="p">(</span><span class="s1">&#39;DS 002&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ServiceProvider</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Relational DS&#39;</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;HA Datastore&#39;</span><span class="p">,</span> <span class="n">service</span><span class="o">=</span><span class="n">TestServiceDef</span><span class="o">.</span><span class="n">sample_service</span><span class="p">(</span><span class="s1">&#39;relational&#39;</span><span class="p">),</span> <span class="n">nodes</span><span class="o">=</span><span class="p">[</span><span class="n">my_vm1</span><span class="p">,</span> <span class="n">my_vm2</span><span class="p">])</span></div>
+
+    
+<div class="viewcode-block" id="TestServiceProvider.sample_file_sp">
+<a class="viewcode-back" href="../../tests.html#tests.test_compute.TestServiceProvider.sample_file_sp">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_file_sp</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ServiceProvider</span><span class="p">:</span>
+        <span class="n">my_vm</span><span class="p">:</span> <span class="n">ComputeNode</span> <span class="o">=</span> <span class="n">TestServiceProvider</span><span class="o">.</span><span class="n">vm</span><span class="p">(</span><span class="s1">&#39;File 001&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ServiceProvider</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;File Server&#39;</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;File Server&#39;</span><span class="p">,</span> <span class="n">service</span><span class="o">=</span><span class="n">TestServiceDef</span><span class="o">.</span><span class="n">sample_service</span><span class="p">(</span><span class="s1">&#39;file&#39;</span><span class="p">),</span> <span class="n">nodes</span><span class="o">=</span><span class="p">[</span><span class="n">my_vm</span><span class="p">])</span></div>
+
+    
+<div class="viewcode-block" id="TestServiceProvider.sample_vdi_sp">
+<a class="viewcode-back" href="../../tests.html#tests.test_compute.TestServiceProvider.sample_vdi_sp">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_vdi_sp</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ServiceProvider</span><span class="p">:</span>
+        <span class="n">my_vm</span><span class="p">:</span> <span class="n">ComputeNode</span> <span class="o">=</span> <span class="n">TestServiceProvider</span><span class="o">.</span><span class="n">vm</span><span class="p">(</span><span class="s1">&#39;Citrix 001&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ServiceProvider</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;VDI&#39;</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;Citrix Server&#39;</span><span class="p">,</span> <span class="n">service</span><span class="o">=</span><span class="n">TestServiceDef</span><span class="o">.</span><span class="n">sample_service</span><span class="p">(</span><span class="s1">&#39;vdi&#39;</span><span class="p">),</span> <span class="n">nodes</span><span class="o">=</span><span class="p">[</span><span class="n">my_vm</span><span class="p">])</span></div>
+
+    
+<div class="viewcode-block" id="TestServiceProvider.sample_browser_sp">
+<a class="viewcode-back" href="../../tests.html#tests.test_compute.TestServiceProvider.sample_browser_sp">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_browser_sp</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ServiceProvider</span><span class="p">:</span>
+        <span class="n">client</span><span class="p">:</span> <span class="n">ComputeNode</span> <span class="o">=</span> <span class="n">TestComputeNode</span><span class="o">.</span><span class="n">sample_client</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">ServiceProvider</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Chrome&#39;</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;PC Workstation&#39;</span><span class="p">,</span> <span class="n">service</span><span class="o">=</span><span class="n">TestServiceDef</span><span class="o">.</span><span class="n">sample_service</span><span class="p">(</span><span class="s1">&#39;browser&#39;</span><span class="p">),</span> <span class="n">nodes</span><span class="o">=</span><span class="p">[</span><span class="n">client</span><span class="p">])</span></div>
+
+    
+<div class="viewcode-block" id="TestServiceProvider.sample_pro_sp">
+<a class="viewcode-back" href="../../tests.html#tests.test_compute.TestServiceProvider.sample_pro_sp">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_pro_sp</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ServiceProvider</span><span class="p">:</span>
+        <span class="n">client</span><span class="p">:</span> <span class="n">ComputeNode</span> <span class="o">=</span> <span class="n">TestComputeNode</span><span class="o">.</span><span class="n">sample_client</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">ServiceProvider</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Pro&#39;</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;Pro Workstation&#39;</span><span class="p">,</span> <span class="n">service</span><span class="o">=</span><span class="n">TestServiceDef</span><span class="o">.</span><span class="n">sample_service</span><span class="p">(</span><span class="s1">&#39;pro&#39;</span><span class="p">),</span> <span class="n">nodes</span><span class="o">=</span><span class="p">[</span><span class="n">client</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="TestServiceProvider.sample_webgis_sps">
+<a class="viewcode-back" href="../../tests.html#tests.test_compute.TestServiceProvider.sample_webgis_sps">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_webgis_sps</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Set</span><span class="p">[</span><span class="n">ServiceProvider</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="nb">set</span><span class="p">([</span><span class="n">TestServiceProvider</span><span class="o">.</span><span class="n">sample_browser_sp</span><span class="p">(),</span> <span class="n">TestServiceProvider</span><span class="o">.</span><span class="n">sample_pro_sp</span><span class="p">(),</span>
+                    <span class="n">TestServiceProvider</span><span class="o">.</span><span class="n">sample_vdi_sp</span><span class="p">(),</span> <span class="n">TestServiceProvider</span><span class="o">.</span><span class="n">sample_file_sp</span><span class="p">(),</span>
+                    <span class="n">TestServiceProvider</span><span class="o">.</span><span class="n">sample_ha_datastore_sp</span><span class="p">(),</span> <span class="n">TestServiceProvider</span><span class="o">.</span><span class="n">sample_dbms_sp</span><span class="p">(),</span>
+                    <span class="n">TestServiceProvider</span><span class="o">.</span><span class="n">sample_map_sp</span><span class="p">(),</span> <span class="n">TestServiceProvider</span><span class="o">.</span><span class="n">sample_portal_sp</span><span class="p">(),</span>
+                    <span class="n">TestServiceProvider</span><span class="o">.</span><span class="n">sample_web_sp</span><span class="p">()])</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Simon Biickert.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

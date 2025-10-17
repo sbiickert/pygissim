@@ -1,0 +1,444 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tests.test_network &mdash; pygissim  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            pygissim
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">pygissim</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pygissim</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">tests.test_network</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for tests.test_network</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">unittest</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pygissim.engine</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+
+<div class="viewcode-block" id="TestZone">
+<a class="viewcode-back" href="../../tests.html#tests.test_network.TestZone">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TestZone</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+
+<div class="viewcode-block" id="TestZone.test_create_zone">
+<a class="viewcode-back" href="../../tests.html#tests.test_network.TestZone.test_create_zone">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_create_zone</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">z1</span><span class="p">:</span> <span class="n">Zone</span> <span class="o">=</span> <span class="n">TestZone</span><span class="o">.</span><span class="n">sample_intranet_zone</span><span class="p">()</span>
+        <span class="n">z2</span><span class="p">:</span> <span class="n">Zone</span> <span class="o">=</span> <span class="n">TestZone</span><span class="o">.</span><span class="n">sample_edge_zone</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">z1</span> <span class="o">==</span> <span class="n">z2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="s2">&quot;Local&quot;</span><span class="p">,</span> <span class="n">z1</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ZoneType</span><span class="o">.</span><span class="n">EDGE</span><span class="p">,</span> <span class="n">z2</span><span class="o">.</span><span class="n">type</span><span class="p">)</span></div>
+
+
+    <span class="n">_sample_internet_zone</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Zone</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<div class="viewcode-block" id="TestZone.sample_internet_zone">
+<a class="viewcode-back" href="../../tests.html#tests.test_network.TestZone.sample_internet_zone">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_internet_zone</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Zone</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_sample_internet_zone</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">_sample_internet_zone</span> <span class="o">=</span> <span class="n">Zone</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Internet&#39;</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;Internet Zone&#39;</span><span class="p">,</span> <span class="n">z_type</span><span class="o">=</span><span class="n">ZoneType</span><span class="o">.</span><span class="n">INTERNET</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_sample_internet_zone</span></div>
+
+
+    <span class="n">_sample_edge_zone</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Zone</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<div class="viewcode-block" id="TestZone.sample_edge_zone">
+<a class="viewcode-back" href="../../tests.html#tests.test_network.TestZone.sample_edge_zone">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_edge_zone</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Zone</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_sample_edge_zone</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">_sample_edge_zone</span> <span class="o">=</span> <span class="n">Zone</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;DMZ&#39;</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;Edge Zone&#39;</span><span class="p">,</span> <span class="n">z_type</span><span class="o">=</span><span class="n">ZoneType</span><span class="o">.</span><span class="n">EDGE</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_sample_edge_zone</span></div>
+
+
+    <span class="n">_sample_intranet_zone</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Zone</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<div class="viewcode-block" id="TestZone.sample_intranet_zone">
+<a class="viewcode-back" href="../../tests.html#tests.test_network.TestZone.sample_intranet_zone">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_intranet_zone</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Zone</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_sample_intranet_zone</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">_sample_intranet_zone</span> <span class="o">=</span> <span class="n">Zone</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Local&#39;</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;Intranet Zone&#39;</span><span class="p">,</span> <span class="n">z_type</span><span class="o">=</span><span class="n">ZoneType</span><span class="o">.</span><span class="n">LOCAL</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_sample_intranet_zone</span></div>
+
+
+    <span class="n">_sample_agol_zone</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Zone</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<div class="viewcode-block" id="TestZone.sample_agol_zone">
+<a class="viewcode-back" href="../../tests.html#tests.test_network.TestZone.sample_agol_zone">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_agol_zone</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Zone</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_sample_agol_zone</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">_sample_agol_zone</span> <span class="o">=</span> <span class="n">Zone</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;AGOL&#39;</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;ArcGIS Online Zone&#39;</span><span class="p">,</span> <span class="n">z_type</span><span class="o">=</span><span class="n">ZoneType</span><span class="o">.</span><span class="n">EDGE</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_sample_agol_zone</span></div>
+
+    
+    <span class="n">_sample_wan_zone</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Zone</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<div class="viewcode-block" id="TestZone.sample_wan_zone">
+<a class="viewcode-back" href="../../tests.html#tests.test_network.TestZone.sample_wan_zone">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_wan_zone</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Zone</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_sample_wan_zone</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">_sample_wan_zone</span> <span class="o">=</span> <span class="n">Zone</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;WAN Site&#39;</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;Second Office&#39;</span><span class="p">,</span> <span class="n">z_type</span><span class="o">=</span><span class="n">ZoneType</span><span class="o">.</span><span class="n">LOCAL</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_sample_wan_zone</span></div>
+</div>
+
+
+<div class="viewcode-block" id="TestConnection">
+<a class="viewcode-back" href="../../tests.html#tests.test_network.TestConnection">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TestConnection</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+
+<div class="viewcode-block" id="TestConnection.test_create_conn">
+<a class="viewcode-back" href="../../tests.html#tests.test_network.TestConnection.test_create_conn">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_create_conn</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">z1</span><span class="p">:</span> <span class="n">Zone</span> <span class="o">=</span> <span class="n">TestZone</span><span class="o">.</span><span class="n">sample_intranet_zone</span><span class="p">()</span>
+        <span class="n">z2</span><span class="p">:</span> <span class="n">Zone</span> <span class="o">=</span> <span class="n">TestZone</span><span class="o">.</span><span class="n">sample_edge_zone</span><span class="p">()</span>
+        <span class="n">c1</span><span class="p">:</span> <span class="n">Connection</span> <span class="o">=</span> <span class="n">z1</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">z2</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">z1</span><span class="p">,</span> <span class="n">c1</span><span class="o">.</span><span class="n">source</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">z2</span><span class="p">,</span> <span class="n">c1</span><span class="o">.</span><span class="n">destination</span><span class="p">)</span>
+        <span class="n">c_inv</span><span class="p">:</span> <span class="n">Connection</span> <span class="o">=</span> <span class="n">c1</span><span class="o">.</span><span class="n">inverted</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">z1</span><span class="p">,</span> <span class="n">c_inv</span><span class="o">.</span><span class="n">destination</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">z2</span><span class="p">,</span> <span class="n">c_inv</span><span class="o">.</span><span class="n">source</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">c1</span><span class="o">.</span><span class="n">bandwidth</span><span class="p">,</span> <span class="n">c_inv</span><span class="o">.</span><span class="n">bandwidth</span><span class="p">)</span>
+        <span class="n">c_local</span><span class="p">:</span> <span class="n">Connection</span> <span class="o">=</span> <span class="n">z1</span><span class="o">.</span><span class="n">self_connect</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">z1</span><span class="p">,</span> <span class="n">c_local</span><span class="o">.</span><span class="n">source</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">z1</span><span class="p">,</span> <span class="n">c_local</span><span class="o">.</span><span class="n">destination</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="n">c_local</span><span class="o">.</span><span class="n">bandwidth</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TestConnection.sample_conn_intranet">
+<a class="viewcode-back" href="../../tests.html#tests.test_network.TestConnection.sample_conn_intranet">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_conn_intranet</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Connection</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">TestZone</span><span class="o">.</span><span class="n">sample_intranet_zone</span><span class="p">()</span><span class="o">.</span><span class="n">self_connect</span><span class="p">(</span><span class="n">bw</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">lat</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TestConnection.sample_conn_to_dmz">
+<a class="viewcode-back" href="../../tests.html#tests.test_network.TestConnection.sample_conn_to_dmz">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_conn_to_dmz</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Connection</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Connection</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="n">TestZone</span><span class="o">.</span><span class="n">sample_intranet_zone</span><span class="p">(),</span> 
+                          <span class="n">dest</span><span class="o">=</span><span class="n">TestZone</span><span class="o">.</span><span class="n">sample_edge_zone</span><span class="p">(),</span> 
+                          <span class="n">bw</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">lat</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TestConnection.sample_conn_to_internet">
+<a class="viewcode-back" href="../../tests.html#tests.test_network.TestConnection.sample_conn_to_internet">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_conn_to_internet</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Connection</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Connection</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="n">TestZone</span><span class="o">.</span><span class="n">sample_edge_zone</span><span class="p">(),</span> 
+                          <span class="n">dest</span><span class="o">=</span><span class="n">TestZone</span><span class="o">.</span><span class="n">sample_internet_zone</span><span class="p">(),</span> 
+                          <span class="n">bw</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">lat</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TestConnection.sample_conn_from_internet">
+<a class="viewcode-back" href="../../tests.html#tests.test_network.TestConnection.sample_conn_from_internet">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_conn_from_internet</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Connection</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Connection</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="n">TestZone</span><span class="o">.</span><span class="n">sample_internet_zone</span><span class="p">(),</span> 
+                          <span class="n">dest</span><span class="o">=</span><span class="n">TestZone</span><span class="o">.</span><span class="n">sample_edge_zone</span><span class="p">(),</span> 
+                          <span class="n">bw</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">lat</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TestConnection.sample_conn_to_agol">
+<a class="viewcode-back" href="../../tests.html#tests.test_network.TestConnection.sample_conn_to_agol">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_conn_to_agol</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Connection</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Connection</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="n">TestZone</span><span class="o">.</span><span class="n">sample_internet_zone</span><span class="p">(),</span> 
+                          <span class="n">dest</span><span class="o">=</span><span class="n">TestZone</span><span class="o">.</span><span class="n">sample_agol_zone</span><span class="p">(),</span> 
+                          <span class="n">bw</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">lat</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span></div>
+</div>
+
+
+<div class="viewcode-block" id="TestRoute1">
+<a class="viewcode-back" href="../../tests.html#tests.test_network.TestRoute1">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TestRoute1</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+<div class="viewcode-block" id="TestRoute1.test_network_find">
+<a class="viewcode-back" href="../../tests.html#tests.test_network.TestRoute1.test_network_find">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_network_find</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">z1</span><span class="p">:</span> <span class="n">Zone</span> <span class="o">=</span> <span class="n">TestZone</span><span class="o">.</span><span class="n">sample_intranet_zone</span><span class="p">()</span>
+        <span class="n">z2</span><span class="p">:</span> <span class="n">Zone</span> <span class="o">=</span> <span class="n">TestZone</span><span class="o">.</span><span class="n">sample_edge_zone</span><span class="p">()</span>
+        <span class="n">z3</span><span class="p">:</span> <span class="n">Zone</span> <span class="o">=</span> <span class="n">TestZone</span><span class="o">.</span><span class="n">sample_internet_zone</span><span class="p">()</span>
+        <span class="n">c1</span><span class="p">:</span><span class="n">Connection</span> <span class="o">=</span> <span class="n">z1</span><span class="o">.</span><span class="n">self_connect</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">c2</span><span class="p">:</span><span class="n">Connection</span> <span class="o">=</span> <span class="n">z2</span><span class="o">.</span><span class="n">self_connect</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">c3</span><span class="p">:</span><span class="n">Connection</span> <span class="o">=</span> <span class="n">z3</span><span class="o">.</span><span class="n">self_connect</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">c1_2</span><span class="p">:</span><span class="n">Connection</span> <span class="o">=</span> <span class="n">TestConnection</span><span class="o">.</span><span class="n">sample_conn_to_dmz</span><span class="p">()</span>
+        <span class="n">c2_1</span><span class="p">:</span><span class="n">Connection</span> <span class="o">=</span> <span class="n">c1_2</span><span class="o">.</span><span class="n">inverted</span><span class="p">()</span>
+        <span class="n">c2_3</span><span class="p">:</span><span class="n">Connection</span> <span class="o">=</span> <span class="n">TestConnection</span><span class="o">.</span><span class="n">sample_conn_to_internet</span><span class="p">()</span>
+        <span class="n">c3_2</span><span class="p">:</span><span class="n">Connection</span> <span class="o">=</span> <span class="n">TestConnection</span><span class="o">.</span><span class="n">sample_conn_from_internet</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="s2">&quot;DMZ to Local&quot;</span><span class="p">,</span> <span class="n">c2_1</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">net</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Connection</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">c1</span><span class="p">,</span><span class="n">c2</span><span class="p">,</span><span class="n">c3</span><span class="p">,</span><span class="n">c1_2</span><span class="p">,</span><span class="n">c2_1</span><span class="p">,</span><span class="n">c2_3</span><span class="p">,</span><span class="n">c3_2</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">z1</span><span class="o">.</span><span class="n">local_connection</span><span class="p">(</span><span class="n">net</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">c2</span><span class="p">,</span> <span class="n">z2</span><span class="o">.</span><span class="n">local_connection</span><span class="p">(</span><span class="n">net</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">c3</span><span class="p">,</span> <span class="n">z3</span><span class="o">.</span><span class="n">local_connection</span><span class="p">(</span><span class="n">net</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">z1</span><span class="o">.</span><span class="n">entry_connections</span><span class="p">(</span><span class="n">net</span><span class="p">)))</span>
+        <span class="n">z1_exit</span><span class="p">:</span> <span class="n">Connection</span> <span class="o">=</span> <span class="n">z1</span><span class="o">.</span><span class="n">exit_connections</span><span class="p">(</span><span class="n">net</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">c1_2</span><span class="p">,</span> <span class="n">z1_exit</span><span class="p">)</span>
+        <span class="n">z4</span><span class="p">:</span> <span class="n">Zone</span> <span class="o">=</span> <span class="n">Zone</span><span class="p">(</span><span class="s2">&quot;Zone 4&quot;</span><span class="p">,</span> <span class="s2">&quot;The fourth zone&quot;</span><span class="p">,</span> <span class="n">ZoneType</span><span class="o">.</span><span class="n">INTERNET</span><span class="p">)</span>
+        <span class="n">c3_4</span><span class="p">:</span><span class="n">Connection</span> <span class="o">=</span> <span class="n">z3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">z4</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">net</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c3_4</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">z4</span><span class="o">.</span><span class="n">is_a_destination</span><span class="p">(</span><span class="n">net</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">z4</span><span class="o">.</span><span class="n">is_a_source</span><span class="p">(</span><span class="n">net</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="TestRoute1.test_find_route">
+<a class="viewcode-back" href="../../tests.html#tests.test_network.TestRoute1.test_find_route">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_find_route</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">z1</span><span class="p">:</span> <span class="n">Zone</span> <span class="o">=</span> <span class="n">TestZone</span><span class="o">.</span><span class="n">sample_intranet_zone</span><span class="p">()</span>
+        <span class="n">z2</span><span class="p">:</span> <span class="n">Zone</span> <span class="o">=</span> <span class="n">TestZone</span><span class="o">.</span><span class="n">sample_edge_zone</span><span class="p">()</span>
+        <span class="n">z3</span><span class="p">:</span> <span class="n">Zone</span> <span class="o">=</span> <span class="n">TestZone</span><span class="o">.</span><span class="n">sample_internet_zone</span><span class="p">()</span>
+        <span class="n">z4</span><span class="p">:</span> <span class="n">Zone</span> <span class="o">=</span> <span class="n">TestZone</span><span class="o">.</span><span class="n">sample_agol_zone</span><span class="p">()</span>
+        <span class="n">c1</span><span class="p">:</span><span class="n">Connection</span> <span class="o">=</span> <span class="n">z1</span><span class="o">.</span><span class="n">self_connect</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">c2</span><span class="p">:</span><span class="n">Connection</span> <span class="o">=</span> <span class="n">z2</span><span class="o">.</span><span class="n">self_connect</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">c3</span><span class="p">:</span><span class="n">Connection</span> <span class="o">=</span> <span class="n">z3</span><span class="o">.</span><span class="n">self_connect</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">c4</span><span class="p">:</span><span class="n">Connection</span> <span class="o">=</span> <span class="n">z4</span><span class="o">.</span><span class="n">self_connect</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">c1_2</span><span class="p">:</span><span class="n">Connection</span> <span class="o">=</span> <span class="n">TestConnection</span><span class="o">.</span><span class="n">sample_conn_to_dmz</span><span class="p">()</span>
+        <span class="n">c2_1</span><span class="p">:</span><span class="n">Connection</span> <span class="o">=</span> <span class="n">c1_2</span><span class="o">.</span><span class="n">inverted</span><span class="p">()</span>
+        <span class="n">c2_3</span><span class="p">:</span><span class="n">Connection</span> <span class="o">=</span> <span class="n">TestConnection</span><span class="o">.</span><span class="n">sample_conn_to_internet</span><span class="p">()</span>
+        <span class="n">c3_2</span><span class="p">:</span><span class="n">Connection</span> <span class="o">=</span> <span class="n">TestConnection</span><span class="o">.</span><span class="n">sample_conn_from_internet</span><span class="p">()</span>
+        <span class="n">c3_4</span><span class="p">:</span><span class="n">Connection</span> <span class="o">=</span> <span class="n">TestConnection</span><span class="o">.</span><span class="n">sample_conn_to_agol</span><span class="p">()</span>
+        <span class="c1"># c4_3:Connection = c3_4.inverted()</span>
+        <span class="n">net</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Connection</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">c1</span><span class="p">,</span><span class="n">c2</span><span class="p">,</span><span class="n">c3</span><span class="p">,</span><span class="n">c4</span><span class="p">,</span><span class="n">c1_2</span><span class="p">,</span><span class="n">c2_1</span><span class="p">,</span><span class="n">c2_3</span><span class="p">,</span><span class="n">c3_2</span><span class="p">,</span><span class="n">c3_4</span><span class="p">]</span>
+
+        <span class="n">r1_4</span><span class="p">:</span><span class="n">Optional</span><span class="p">[</span><span class="n">Route</span><span class="p">]</span> <span class="o">=</span> <span class="n">find_route</span><span class="p">(</span><span class="n">z1</span><span class="p">,</span><span class="n">z4</span><span class="p">,</span><span class="n">net</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNotNone</span><span class="p">(</span><span class="n">r1_4</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">r1_4</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertListEqual</span><span class="p">([</span><span class="n">c1</span><span class="p">,</span><span class="n">c1_2</span><span class="p">,</span><span class="n">c2_3</span><span class="p">,</span><span class="n">c3_4</span><span class="p">],</span> <span class="n">r1_4</span><span class="o">.</span><span class="n">connections</span><span class="p">)</span>
+        <span class="n">r4_1</span><span class="p">:</span><span class="n">Optional</span><span class="p">[</span><span class="n">Route</span><span class="p">]</span> <span class="o">=</span> <span class="n">find_route</span><span class="p">(</span><span class="n">z4</span><span class="p">,</span><span class="n">z1</span><span class="p">,</span><span class="n">net</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNone</span><span class="p">(</span><span class="n">r4_1</span><span class="p">)</span>
+        <span class="n">r3_1</span><span class="p">:</span><span class="n">Optional</span><span class="p">[</span><span class="n">Route</span><span class="p">]</span> <span class="o">=</span> <span class="n">find_route</span><span class="p">(</span><span class="n">z3</span><span class="p">,</span><span class="n">z1</span><span class="p">,</span><span class="n">net</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">r3_1</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertListEqual</span><span class="p">([</span><span class="n">c3</span><span class="p">,</span><span class="n">c3_2</span><span class="p">,</span><span class="n">c2_1</span><span class="p">],</span> <span class="n">r3_1</span><span class="o">.</span><span class="n">connections</span><span class="p">)</span></div>
+</div>
+
+
+<div class="viewcode-block" id="TestRoute2">
+<a class="viewcode-back" href="../../tests.html#tests.test_network.TestRoute2">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TestRoute2</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+<div class="viewcode-block" id="TestRoute2.test_intranet">
+<a class="viewcode-back" href="../../tests.html#tests.test_network.TestRoute2.test_intranet">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_intranet</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">net</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Connection</span><span class="p">]</span> <span class="o">=</span> <span class="n">TestRoute2</span><span class="o">.</span><span class="n">sample_intranet</span><span class="p">()</span>
+        <span class="n">source_z</span><span class="p">:</span> <span class="n">Zone</span> <span class="o">=</span> <span class="n">TestZone</span><span class="o">.</span><span class="n">sample_intranet_zone</span><span class="p">()</span>
+        <span class="n">route</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Route</span><span class="p">]</span> <span class="o">=</span> <span class="n">find_route</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="n">source_z</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">source_z</span><span class="p">,</span> <span class="n">in_network</span><span class="o">=</span><span class="n">net</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNotNone</span><span class="p">(</span><span class="n">route</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">route</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">route</span><span class="o">.</span><span class="n">connections</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="TestRoute2.test_network">
+<a class="viewcode-back" href="../../tests.html#tests.test_network.TestRoute2.test_network">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_network</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">net</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Connection</span><span class="p">]</span> <span class="o">=</span> <span class="n">TestRoute2</span><span class="o">.</span><span class="n">sample_network</span><span class="p">()</span>
+        <span class="n">source_z</span><span class="p">:</span> <span class="n">Zone</span> <span class="o">=</span> <span class="n">TestZone</span><span class="o">.</span><span class="n">sample_intranet_zone</span><span class="p">()</span>
+        <span class="n">dest_z</span><span class="p">:</span> <span class="n">Zone</span> <span class="o">=</span> <span class="n">TestZone</span><span class="o">.</span><span class="n">sample_internet_zone</span><span class="p">()</span>
+        <span class="n">route</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Route</span><span class="p">]</span> <span class="o">=</span> <span class="n">find_route</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="n">source_z</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">dest_z</span><span class="p">,</span> <span class="n">in_network</span><span class="o">=</span><span class="n">net</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNotNone</span><span class="p">(</span><span class="n">route</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">route</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">route</span><span class="o">.</span><span class="n">connections</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">source_z</span><span class="p">,</span> <span class="n">route</span><span class="o">.</span><span class="n">connections</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">source</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">dest_z</span><span class="p">,</span> <span class="n">route</span><span class="o">.</span><span class="n">connections</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">destination</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TestRoute2.test_complex_network">
+<a class="viewcode-back" href="../../tests.html#tests.test_network.TestRoute2.test_complex_network">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_complex_network</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">net</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Connection</span><span class="p">]</span> <span class="o">=</span> <span class="n">TestRoute2</span><span class="o">.</span><span class="n">sample_complex_network</span><span class="p">()</span>
+        <span class="n">source_z</span><span class="p">:</span> <span class="n">Zone</span> <span class="o">=</span> <span class="n">TestZone</span><span class="o">.</span><span class="n">sample_intranet_zone</span><span class="p">()</span>
+        <span class="n">dest_z</span><span class="p">:</span> <span class="n">Zone</span> <span class="o">=</span> <span class="n">TestZone</span><span class="o">.</span><span class="n">sample_agol_zone</span><span class="p">()</span>
+        <span class="n">route</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Route</span><span class="p">]</span> <span class="o">=</span> <span class="n">find_route</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="n">source_z</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">dest_z</span><span class="p">,</span> <span class="n">in_network</span><span class="o">=</span><span class="n">net</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNotNone</span><span class="p">(</span><span class="n">route</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">route</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">route</span><span class="o">.</span><span class="n">connections</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">source_z</span><span class="p">,</span> <span class="n">route</span><span class="o">.</span><span class="n">connections</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">source</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">dest_z</span><span class="p">,</span> <span class="n">route</span><span class="o">.</span><span class="n">connections</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">destination</span><span class="p">)</span>
+        <span class="n">dest_z</span> <span class="o">=</span> <span class="n">TestZone</span><span class="o">.</span><span class="n">sample_wan_zone</span><span class="p">()</span>
+        <span class="n">route</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Route</span><span class="p">]</span> <span class="o">=</span> <span class="n">find_route</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="n">source_z</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">dest_z</span><span class="p">,</span> <span class="n">in_network</span><span class="o">=</span><span class="n">net</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNotNone</span><span class="p">(</span><span class="n">route</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">route</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">route</span><span class="o">.</span><span class="n">connections</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">source_z</span><span class="p">,</span> <span class="n">route</span><span class="o">.</span><span class="n">connections</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">source</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">dest_z</span><span class="p">,</span> <span class="n">route</span><span class="o">.</span><span class="n">connections</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">destination</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TestRoute2.test_looping_network">
+<a class="viewcode-back" href="../../tests.html#tests.test_network.TestRoute2.test_looping_network">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_looping_network</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">net</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Connection</span><span class="p">]</span> <span class="o">=</span> <span class="n">TestRoute2</span><span class="o">.</span><span class="n">sample_looping_network</span><span class="p">()</span>
+       
+        <span class="n">route_ac</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Route</span><span class="p">]</span> <span class="o">=</span> <span class="n">find_route</span><span class="p">(</span><span class="n">TestRoute2</span><span class="o">.</span><span class="n">zone_a</span><span class="p">,</span> <span class="n">TestRoute2</span><span class="o">.</span><span class="n">zone_c</span><span class="p">,</span> <span class="n">net</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNotNone</span><span class="p">(</span><span class="n">route_ac</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">route_ac</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">route_ac</span><span class="o">.</span><span class="n">connections</span><span class="p">))</span>
+
+        <span class="n">route_ab</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Route</span><span class="p">]</span> <span class="o">=</span> <span class="n">find_route</span><span class="p">(</span><span class="n">TestRoute2</span><span class="o">.</span><span class="n">zone_a</span><span class="p">,</span> <span class="n">TestRoute2</span><span class="o">.</span><span class="n">zone_b</span><span class="p">,</span> <span class="n">net</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNotNone</span><span class="p">(</span><span class="n">route_ab</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">route_ab</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">route_ab</span><span class="o">.</span><span class="n">connections</span><span class="p">))</span>
+
+        <span class="n">route_bc</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Route</span><span class="p">]</span> <span class="o">=</span> <span class="n">find_route</span><span class="p">(</span><span class="n">TestRoute2</span><span class="o">.</span><span class="n">zone_b</span><span class="p">,</span> <span class="n">TestRoute2</span><span class="o">.</span><span class="n">zone_c</span><span class="p">,</span> <span class="n">net</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNotNone</span><span class="p">(</span><span class="n">route_bc</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">route_bc</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">route_bc</span><span class="o">.</span><span class="n">connections</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="TestRoute2.sample_intranet">
+<a class="viewcode-back" href="../../tests.html#tests.test_network.TestRoute2.sample_intranet">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_intranet</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Connection</span><span class="p">]:</span>
+        <span class="n">local</span><span class="p">:</span> <span class="n">Connection</span> <span class="o">=</span> <span class="n">TestZone</span><span class="o">.</span><span class="n">sample_intranet_zone</span><span class="p">()</span><span class="o">.</span><span class="n">self_connect</span><span class="p">(</span><span class="n">bw</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">lat</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">local</span><span class="p">]</span></div>
+
+    
+<div class="viewcode-block" id="TestRoute2.sample_network">
+<a class="viewcode-back" href="../../tests.html#tests.test_network.TestRoute2.sample_network">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_network</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Connection</span><span class="p">]:</span>
+        <span class="n">network</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Connection</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">intranet</span><span class="p">:</span> <span class="n">Zone</span> <span class="o">=</span> <span class="n">TestZone</span><span class="o">.</span><span class="n">sample_intranet_zone</span><span class="p">()</span>
+        <span class="n">dmz</span><span class="p">:</span> <span class="n">Zone</span> <span class="o">=</span> <span class="n">TestZone</span><span class="o">.</span><span class="n">sample_edge_zone</span><span class="p">()</span>
+        <span class="n">internet</span><span class="p">:</span> <span class="n">Zone</span> <span class="o">=</span> <span class="n">TestZone</span><span class="o">.</span><span class="n">sample_internet_zone</span><span class="p">()</span>
+
+        <span class="n">network</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">intranet</span><span class="o">.</span><span class="n">self_connect</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
+
+        <span class="n">network</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dmz</span><span class="o">.</span><span class="n">self_connect</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
+        <span class="n">network</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">TestConnection</span><span class="o">.</span><span class="n">sample_conn_to_dmz</span><span class="p">())</span>
+        <span class="n">network</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">TestConnection</span><span class="o">.</span><span class="n">sample_conn_to_dmz</span><span class="p">()</span><span class="o">.</span><span class="n">inverted</span><span class="p">())</span>
+
+        <span class="n">network</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">internet</span><span class="o">.</span><span class="n">self_connect</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+        <span class="n">network</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">TestConnection</span><span class="o">.</span><span class="n">sample_conn_to_internet</span><span class="p">())</span>
+        <span class="n">network</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">TestConnection</span><span class="o">.</span><span class="n">sample_conn_from_internet</span><span class="p">())</span>
+
+        <span class="k">return</span> <span class="n">network</span></div>
+
+    
+<div class="viewcode-block" id="TestRoute2.sample_complex_network">
+<a class="viewcode-back" href="../../tests.html#tests.test_network.TestRoute2.sample_complex_network">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_complex_network</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Connection</span><span class="p">]:</span>
+        <span class="n">network</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Connection</span><span class="p">]</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">sample_network</span><span class="p">()</span>
+
+        <span class="n">intranet</span><span class="p">:</span> <span class="n">Zone</span> <span class="o">=</span> <span class="n">TestZone</span><span class="o">.</span><span class="n">sample_intranet_zone</span><span class="p">()</span>
+        <span class="n">internet</span><span class="p">:</span> <span class="n">Zone</span> <span class="o">=</span> <span class="n">TestZone</span><span class="o">.</span><span class="n">sample_internet_zone</span><span class="p">()</span>
+        <span class="n">wan</span><span class="p">:</span> <span class="n">Zone</span> <span class="o">=</span> <span class="n">TestZone</span><span class="o">.</span><span class="n">sample_wan_zone</span><span class="p">()</span>
+        <span class="n">agol</span><span class="p">:</span> <span class="n">Zone</span> <span class="o">=</span> <span class="n">TestZone</span><span class="o">.</span><span class="n">sample_agol_zone</span><span class="p">()</span>
+
+        <span class="c1"># Add connections to WAN and AGOL</span>
+        <span class="n">network</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wan</span><span class="o">.</span><span class="n">self_connect</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
+        <span class="n">network</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wan</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">intranet</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>
+        <span class="n">network</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">intranet</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">wan</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>
+
+        <span class="n">network</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">agol</span><span class="o">.</span><span class="n">self_connect</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
+        <span class="n">network</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">agol</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">internet</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+        <span class="n">network</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">internet</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">agol</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">network</span></div>
+
+
+    <span class="n">zone_a</span><span class="p">:</span> <span class="n">Zone</span> <span class="o">=</span> <span class="n">Zone</span><span class="p">(</span><span class="s1">&#39;Zone A&#39;</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">z_type</span><span class="o">=</span><span class="n">ZoneType</span><span class="o">.</span><span class="n">LOCAL</span><span class="p">)</span>
+    <span class="n">zone_b</span><span class="p">:</span> <span class="n">Zone</span> <span class="o">=</span> <span class="n">Zone</span><span class="p">(</span><span class="s1">&#39;Zone B&#39;</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">z_type</span><span class="o">=</span><span class="n">ZoneType</span><span class="o">.</span><span class="n">LOCAL</span><span class="p">)</span>
+    <span class="n">zone_c</span><span class="p">:</span> <span class="n">Zone</span> <span class="o">=</span> <span class="n">Zone</span><span class="p">(</span><span class="s1">&#39;Zone C&#39;</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">z_type</span><span class="o">=</span><span class="n">ZoneType</span><span class="o">.</span><span class="n">LOCAL</span><span class="p">)</span>
+    
+<div class="viewcode-block" id="TestRoute2.sample_looping_network">
+<a class="viewcode-back" href="../../tests.html#tests.test_network.TestRoute2.sample_looping_network">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_looping_network</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Connection</span><span class="p">]:</span>
+        <span class="n">network</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Connection</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">network</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">zone_a</span><span class="o">.</span><span class="n">self_connect</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
+        <span class="n">network</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">zone_b</span><span class="o">.</span><span class="n">self_connect</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
+        <span class="n">network</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">zone_c</span><span class="o">.</span><span class="n">self_connect</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
+
+        <span class="n">network</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">zone_a</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">zone_b</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">network</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">zone_a</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">zone_c</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+
+        <span class="n">network</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">zone_b</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">zone_a</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">network</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">zone_b</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">zone_c</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+
+        <span class="n">network</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">zone_c</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">zone_a</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">network</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">zone_c</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">zone_b</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">network</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Simon Biickert.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

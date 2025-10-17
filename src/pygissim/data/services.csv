@@ -1,0 +1,26 @@
+name, description, service_type, balancing_model
+Pro, ArcGIS Pro, pro, 1
+Browser, Web Browser, browser, 1
+Mobile, Mobile GIS App, mobile, 1
+Map, Map Service, map, ROUNDROBIN
+Feature, Feature Service, feature, ROUNDROBIN
+Image, Image Service, image, ROUNDROBIN
+Geocode, Geocode Service, geocode, ROUNDROBIN
+Geoevent, Geoevent Service, geoevent, 1
+Geometry, Geometry Service, geometry, ROUNDROBIN
+GP, GP Service, gp, ROUNDROBIN
+Network, Network Service, network, ROUNDROBIN
+Scene, Scene Service, scene, ROUNDROBIN
+Sync, Sync Service, sync, ROUNDROBIN
+Stream, Stream Service, stream, ROUNDROBIN
+Ranalytics, Raster Analytics Service, ranalytics, ROUNDROBIN
+UN, UN Service, un, ROUNDROBIN
+Custom, Custom Service, custom, 1
+VDI, VDI Service, vdi, FAILOVER
+Web, Web Service, web, ROUNDROBIN
+Portal, Portal Service, portal, FAILOVER
+DBMS, DBMS Service, dbms, FAILOVER
+Relational, Relational Service, relational, FAILOVER
+Object, Object Service, object, FAILOVER
+STBDS, Spatio-Temporal Service Data Store, stbds, ROUNDROBIN
+File, File Service, file, FAILOVER

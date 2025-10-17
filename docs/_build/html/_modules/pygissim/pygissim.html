@@ -1,0 +1,613 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pygissim.pygissim &mdash; pygissim  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            pygissim
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">pygissim</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pygissim</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pygissim.pygissim</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pygissim.pygissim</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Tuple</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pygissim.engine</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+
+<div class="viewcode-block" id="Design">
+<a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Design</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">desc</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> 
+                 <span class="n">zones</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Zone</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
+                 <span class="n">network</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Connection</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
+                 <span class="n">services</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ServiceDef</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">service_providers</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">ServiceProvider</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">workflow_definitions</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">WorkflowDef</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">desc</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">zones</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Zone</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span> <span class="k">if</span> <span class="n">zones</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">zones</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Connection</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span> <span class="k">if</span> <span class="n">network</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">network</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">services</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ServiceDef</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span> <span class="k">if</span> <span class="n">services</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">services</span>                    <span class="c1"># Just defining &quot;map&quot;, &quot;dbms&quot;, etc.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">service_providers</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ServiceProvider</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span> <span class="k">if</span> <span class="n">service_providers</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">service_providers</span>  <span class="c1"># All service providers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">workflow_definitions</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">WorkflowDef</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span> <span class="k">if</span> <span class="n">workflow_definitions</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">workflow_definitions</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_workflows</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Workflow</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_compute_nodes</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ComputeNode</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+<div class="viewcode-block" id="Design.compute_nodes">
+<a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.compute_nodes">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">ComputeNode</span><span class="p">]:</span>
+        <span class="n">result</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ComputeNode</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_nodes</span><span class="p">:</span>
+            <span class="k">match</span> <span class="n">node</span><span class="o">.</span><span class="n">type</span><span class="p">:</span>
+                <span class="k">case</span> <span class="n">ComputeNodeType</span><span class="o">.</span><span class="n">CLIENT</span><span class="p">:</span>
+                    <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+                <span class="k">case</span> <span class="n">ComputeNodeType</span><span class="o">.</span><span class="n">P_SERVER</span><span class="p">:</span>
+                    <span class="n">result</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">node</span><span class="p">]</span> <span class="o">+</span> <span class="n">node</span><span class="o">.</span><span class="n">_v_hosts</span><span class="p">)</span>
+                <span class="k">case</span> <span class="n">ComputeNodeType</span><span class="o">.</span><span class="n">V_SERVER</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Virtual servers should not be in the _compute_nodes property&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+    
+<div class="viewcode-block" id="Design.is_valid">
+<a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.is_valid">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">())</span> <span class="o">==</span> <span class="mi">0</span></div>
+
+
+<div class="viewcode-block" id="Design.validate">
+<a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.validate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">ValidationMessage</span><span class="p">]:</span>
+        <span class="n">messages</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ValidationMessage</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">all_sps_valid</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">sp</span><span class="p">:</span> <span class="p">(</span><span class="n">sp</span><span class="o">.</span><span class="n">is_valid</span><span class="p">()</span> <span class="o">==</span> <span class="kc">False</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">service_providers</span><span class="p">)))</span> <span class="o">==</span> <span class="mi">0</span>
+        <span class="n">all_zones_connected</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">z</span><span class="p">:</span> <span class="p">(</span><span class="n">z</span><span class="o">.</span><span class="n">is_fully_connected</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="p">)</span> <span class="o">==</span> <span class="kc">False</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">zones</span><span class="p">)))</span> <span class="o">==</span> <span class="mi">0</span>
+        <span class="n">all_workflows_valid</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">is_valid</span><span class="p">()</span> <span class="o">==</span> <span class="kc">False</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_workflows</span><span class="p">)))</span> <span class="o">==</span> <span class="mi">0</span>
+
+        <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_workflows</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">chain</span> <span class="ow">in</span> <span class="n">w</span><span class="o">.</span><span class="n">definition</span><span class="o">.</span><span class="n">chains</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">sp</span> <span class="ow">in</span> <span class="n">chain</span><span class="o">.</span><span class="n">service_providers</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">sp</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
+                        <span class="n">in_net</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">zone</span> <span class="ow">in</span> <span class="n">Zone</span><span class="o">.</span><span class="n">all_zones</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="n">in_net</span><span class="p">:</span> <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ValidationMessage</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Node </span><span class="si">{</span><span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1"> is in zone </span><span class="si">{</span><span class="n">node</span><span class="o">.</span><span class="n">zone</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1"> which is not in network&#39;</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="n">sp</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+        
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">all_sps_valid</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ValidationMessage</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s1">&#39;Not all service providers are valid.&#39;</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">all_zones_connected</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ValidationMessage</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s1">&#39;Not all zones are fully connected.&#39;</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">all_workflows_valid</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ValidationMessage</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s1">&#39;One or more invalid workflows.&#39;</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">zones</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ValidationMessage</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s1">&#39;No zones defined.&#39;</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ValidationMessage</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s1">&#39;No network defined.&#39;</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compute_nodes</span><span class="p">())</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ValidationMessage</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s1">&#39;No compute nodes configured.&#39;</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">workflow_definitions</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ValidationMessage</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s1">&#39;No workflows defined.&#39;</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_workflows</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ValidationMessage</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s1">&#39;No workflows configured.&#39;</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">services</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ValidationMessage</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s1">&#39;No service types defined.&#39;</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">messages</span></div>
+
+    
+
+<div class="viewcode-block" id="Design.add_zone">
+<a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.add_zone">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_zone</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">zone</span><span class="p">:</span> <span class="n">Zone</span><span class="p">,</span> <span class="n">local_bw_mbps</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">local_latency_ms</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">zone</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">zones</span><span class="p">:</span> <span class="k">return</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">zones</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">zone</span><span class="p">)</span>
+        <span class="n">internal_conn</span><span class="p">:</span> <span class="n">Connection</span> <span class="o">=</span> <span class="n">zone</span><span class="o">.</span><span class="n">self_connect</span><span class="p">(</span><span class="n">bw</span><span class="o">=</span><span class="n">local_bw_mbps</span><span class="p">,</span> <span class="n">lat</span><span class="o">=</span><span class="n">local_latency_ms</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">internal_conn</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Design.remove_zone">
+<a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.remove_zone">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">remove_zone</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">zone</span><span class="p">:</span> <span class="n">Zone</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">zones</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">zone</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">network</span> <span class="o">=</span> <span class="n">zone</span><span class="o">.</span><span class="n">other_connections</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_compute_nodes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">c</span><span class="p">:</span> <span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">zone</span> <span class="o">!=</span> <span class="n">zone</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_nodes</span><span class="p">))</span>
+        <span class="c1"># May have removed one or more ComputeNodes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_service_providers</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_workflow_definitions</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Design.get_zone">
+<a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.get_zone">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_zone</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Zone</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">zone</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">zones</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">zone</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span> <span class="k">return</span> <span class="n">zone</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+    
+
+<div class="viewcode-block" id="Design.add_connection">
+<a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.add_connection">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_connection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conn</span><span class="p">:</span> <span class="n">Connection</span><span class="p">,</span> <span class="n">add_reciprocal</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">conn</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">add_reciprocal</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">conn</span><span class="o">.</span><span class="n">inverted</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="Design.remove_connection">
+<a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.remove_connection">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">remove_connection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conn</span><span class="p">:</span> <span class="n">Connection</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">conn</span><span class="p">)</span></div>
+
+    
+
+<div class="viewcode-block" id="Design.add_compute">
+<a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.add_compute">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_compute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">ComputeNode</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">ComputeNodeType</span><span class="o">.</span><span class="n">V_SERVER</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Cannot add a virtual server to design. Add to physical host.&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_compute_nodes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Design.remove_compute">
+<a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.remove_compute">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">remove_compute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">ComputeNode</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">ComputeNodeType</span><span class="o">.</span><span class="n">V_SERVER</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Cannot remove a virtual server from design. Remove from physical host.&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_compute_nodes</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_service_providers</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_workflow_definitions</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Design.get_compute_node">
+<a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.get_compute_node">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_compute_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ComputeNode</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_nodes</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span> <span class="k">return</span> <span class="n">node</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="Design.add_servicedef">
+<a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.add_servicedef">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_servicedef</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sd</span><span class="p">:</span> <span class="n">ServiceDef</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">services</span><span class="p">[</span><span class="n">sd</span><span class="o">.</span><span class="n">service_type</span><span class="p">]</span> <span class="o">=</span> <span class="n">sd</span></div>
+
+
+<div class="viewcode-block" id="Design.remove_servicedef">
+<a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.remove_servicedef">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">remove_servicedef</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sd</span><span class="p">:</span> <span class="n">ServiceDef</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">sd</span><span class="o">.</span><span class="n">service_type</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">sd</span><span class="o">.</span><span class="n">service_type</span><span class="p">)</span>
+        <span class="c1"># Might have removed a whole type of provider</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_service_providers</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_workflow_definitions</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="Design.add_service_provider">
+<a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.add_service_provider">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_service_provider</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sp</span><span class="p">:</span> <span class="n">ServiceProvider</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">sp</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">service_providers</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">service_providers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sp</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Design.remove_service_provider">
+<a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.remove_service_provider">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">remove_service_provider</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sp</span><span class="p">:</span> <span class="n">ServiceProvider</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">service_providers</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">sp</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_workflow_definitions</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="Design.add_workflowdef">
+<a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.add_workflowdef">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_workflowdef</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wdef</span><span class="p">:</span> <span class="n">WorkflowDef</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">workflow_definitions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wdef</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Design.remove_workflowdef">
+<a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.remove_workflowdef">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">remove_workflowdef</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wdef</span><span class="p">:</span> <span class="n">WorkflowDef</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">workflow_definitions</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">wdef</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_configured_workflows</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Design.get_workflowdef">
+<a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.get_workflowdef">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_workflowdef</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">WorkflowDef</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">wdef</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">workflow_definitions</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">wdef</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span> <span class="k">return</span> <span class="n">wdef</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="Design.add_client_workflow">
+<a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.add_client_workflow">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_client_workflow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span> <span class="n">desc</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">wdef</span><span class="p">:</span> <span class="n">WorkflowDef</span><span class="p">,</span> <span class="n">users</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">productivity</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="n">w</span><span class="p">:</span> <span class="n">Workflow</span> <span class="o">=</span> <span class="n">Workflow</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="n">desc</span><span class="p">,</span> 
+                               <span class="nb">type</span><span class="o">=</span><span class="n">WorkflowType</span><span class="o">.</span><span class="n">USER</span><span class="p">,</span> <span class="n">definition</span><span class="o">=</span><span class="n">wdef</span><span class="p">,</span> 
+                               <span class="n">user_count</span><span class="o">=</span><span class="n">users</span><span class="p">,</span> <span class="n">productivity</span><span class="o">=</span><span class="n">productivity</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_workflows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">w</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Design.add_transactional_workflow">
+<a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.add_transactional_workflow">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_transactional_workflow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span> <span class="n">desc</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">wdef</span><span class="p">:</span> <span class="n">WorkflowDef</span><span class="p">,</span> <span class="n">tph</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="n">w</span><span class="p">:</span> <span class="n">Workflow</span> <span class="o">=</span> <span class="n">Workflow</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="n">desc</span><span class="p">,</span> 
+                               <span class="nb">type</span><span class="o">=</span><span class="n">WorkflowType</span><span class="o">.</span><span class="n">TRANSACTIONAL</span><span class="p">,</span> <span class="n">definition</span><span class="o">=</span><span class="n">wdef</span><span class="p">,</span> 
+                               <span class="n">tph</span><span class="o">=</span><span class="n">tph</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_workflows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">w</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Design.remove_workflow">
+<a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.remove_workflow">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">remove_workflow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">w</span><span class="p">:</span> <span class="n">Workflow</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_workflows</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">w</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Design.get_workflow">
+<a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.get_workflow">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_workflow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Workflow</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_workflows</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">w</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span> <span class="k">return</span> <span class="n">w</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+    
+<div class="viewcode-block" id="Design.all_workflows">
+<a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.all_workflows">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">all_workflows</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Workflow</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_workflows</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span></div>
+
+
+    <span class="c1">### A ServiceDef or ComputeNode has been removed. ###</span>
+<div class="viewcode-block" id="Design.update_service_providers">
+<a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.update_service_providers">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_service_providers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">remaining</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ServiceProvider</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">sp</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">service_providers</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">sp</span><span class="o">.</span><span class="n">service</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">values</span><span class="p">():</span> <span class="n">remaining</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sp</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">sp</span> <span class="ow">in</span> <span class="n">remaining</span><span class="p">:</span>
+            <span class="n">remaining_nodes</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ComputeNode</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">all_nodes</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ComputeNode</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_nodes</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">sp</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">all_nodes</span><span class="p">:</span>
+                    <span class="n">remaining_nodes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+            <span class="n">sp</span><span class="o">.</span><span class="n">nodes</span> <span class="o">=</span> <span class="n">remaining_nodes</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">service_providers</span> <span class="o">=</span> <span class="n">remaining</span></div>
+
+
+    <span class="c1">### A ServiceProvider has been removed. ###</span>
+<div class="viewcode-block" id="Design.update_workflow_definitions">
+<a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.update_workflow_definitions">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_workflow_definitions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">wdef</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">workflow_definitions</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">chain</span> <span class="ow">in</span> <span class="n">wdef</span><span class="o">.</span><span class="n">chains</span><span class="p">:</span>
+                <span class="n">remaining</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ServiceProvider</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">sp</span> <span class="ow">in</span> <span class="n">chain</span><span class="o">.</span><span class="n">service_providers</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="n">sp</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">service_providers</span><span class="p">:</span>
+                        <span class="n">remaining</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">service_type</span><span class="p">]</span> <span class="o">=</span> <span class="n">sp</span>
+                <span class="n">chain</span><span class="o">.</span><span class="n">service_providers</span> <span class="o">=</span> <span class="n">remaining</span></div>
+
+
+    <span class="c1">### WorkflowDef has been removed. ###</span>
+<div class="viewcode-block" id="Design.update_configured_workflows">
+<a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.update_configured_workflows">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_configured_workflows</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">remaining</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Workflow</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_workflows</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">w</span><span class="o">.</span><span class="n">definition</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">workflow_definitions</span><span class="p">:</span>
+                <span class="n">remaining</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_workflows</span> <span class="o">=</span> <span class="n">remaining</span></div>
+
+
+<div class="viewcode-block" id="Design.provide_queues">
+<a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.provide_queues">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">provide_queues</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">MultiQueue</span><span class="p">]:</span>
+        <span class="n">conn_queues</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">MultiQueue</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">c</span><span class="p">:</span> <span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">provide_queue</span><span class="p">()),</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="p">))</span>
+        <span class="n">comp_queues</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">MultiQueue</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">c</span><span class="p">:</span> <span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">provide_queue</span><span class="p">()),</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_nodes</span><span class="p">()))</span>
+        <span class="k">return</span> <span class="n">conn_queues</span> <span class="o">+</span> <span class="n">comp_queues</span></div>
+
+
+<div class="viewcode-block" id="Design.print_validation_messages">
+<a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.print_validation_messages">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">print_validation_messages</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">vm</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">():</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Design </span><span class="si">{</span><span class="n">vm</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_workflows</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">vm</span> <span class="ow">in</span> <span class="n">w</span><span class="o">.</span><span class="n">validate</span><span class="p">():</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Workflow </span><span class="si">{</span><span class="n">vm</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">chain</span> <span class="ow">in</span> <span class="n">w</span><span class="o">.</span><span class="n">definition</span><span class="o">.</span><span class="n">chains</span><span class="p">:</span>
+                        <span class="k">for</span> <span class="n">wc_vm</span> <span class="ow">in</span> <span class="n">chain</span><span class="o">.</span><span class="n">validate</span><span class="p">():</span>
+                            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Workflow chain </span><span class="si">{</span><span class="n">vm</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">sp</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">service_providers</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">vm</span> <span class="ow">in</span> <span class="n">sp</span><span class="o">.</span><span class="n">validate</span><span class="p">():</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Service provider </span><span class="si">{</span><span class="n">vm</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+
+    <span class="n">_next_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+<div class="viewcode-block" id="Design.next_id">
+<a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.next_id">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">next_id</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">_next_id</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_next_id</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_next_id</span></div>
+
+
+<div class="viewcode-block" id="Design.next_name">
+<a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.next_name">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">next_name</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;Design </span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">next_id</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span></div>
+</div>
+
+
+<div class="viewcode-block" id="Simulator">
+<a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Simulator">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Simulator</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">desc</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">design</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Design</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">desc</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">design</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Design</span><span class="p">]</span> <span class="o">=</span> <span class="n">design</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">clock</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_generating_new_requests</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">finished_requests</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ClientRequest</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">queues</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">MultiQueue</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_next_event_time_for_workflows</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">queue_metrics</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">QueueMetric</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">request_metrics</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">RequestMetric</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Simulator.start">
+<a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Simulator.start">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">design</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;design has not been set&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">design</span><span class="o">.</span><span class="n">is_valid</span><span class="p">()</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">design</span><span class="o">.</span><span class="n">print_validation_messages</span><span class="p">()</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;design is not valid&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_generating_new_requests</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">for</span> <span class="n">wf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">design</span><span class="o">.</span><span class="n">all_workflows</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_next_event_time_for_workflows</span><span class="p">[</span><span class="n">wf</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">wf</span><span class="o">.</span><span class="n">calculate_next_event_time</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">clock</span><span class="p">)</span></div>
+
+        
+<div class="viewcode-block" id="Simulator.stop">
+<a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Simulator.stop">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_generating_new_requests</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="Simulator.reset">
+<a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Simulator.reset">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clock</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">finished_requests</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_next_event_time_for_workflows</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">queue_metrics</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">request_metrics</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">queues</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">design</span><span class="o">.</span><span class="n">provide_queues</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">design</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">[]</span></div>
+
+
+<div class="viewcode-block" id="Simulator.next_event_time">
+<a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Simulator.next_event_time">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">next_event_time</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+        <span class="n">times</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">wf_t</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Workflow</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_next_workflow</span><span class="p">()</span>
+        <span class="n">q_t</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">MultiQueue</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_next_queue</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">wf_t</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span> <span class="n">times</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wf_t</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> 
+        <span class="k">if</span> <span class="n">q_t</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span> <span class="n">times</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">q_t</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">times</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span> <span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="n">times</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_next_workflow</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Workflow</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
+        <span class="n">result</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Workflow</span><span class="p">,</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">design</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_generating_new_requests</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">time</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_next_event_time_for_workflows</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">wf</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Workflow</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">design</span><span class="o">.</span><span class="n">get_workflow</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">wf</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Could not find workflow named </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1"> in design workflows.&#39;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">time</span> <span class="o">&lt;</span> <span class="n">result</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                    <span class="n">result</span> <span class="o">=</span> <span class="p">(</span><span class="n">wf</span><span class="p">,</span> <span class="n">time</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_next_queue</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">MultiQueue</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
+        <span class="n">result</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">MultiQueue</span><span class="p">,</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">queues</span><span class="p">:</span>
+            <span class="n">q_t</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">next_event_time</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">q_t</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">q_t</span> <span class="o">&lt;</span> <span class="n">result</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                    <span class="n">result</span> <span class="o">=</span> <span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">q_t</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span>
+    
+<div class="viewcode-block" id="Simulator.advance_time_by">
+<a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Simulator.advance_time_by">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">advance_time_by</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ms</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">ms</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span> <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Cannot advance time by a negative amount or zero.&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">advance_time_to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">clock</span> <span class="o">+</span> <span class="n">ms</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Simulator.advance_time_to">
+<a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Simulator.advance_time_to">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">advance_time_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clock</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">clock</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">clock</span><span class="p">:</span> <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Cannot set clock to </span><span class="si">{</span><span class="n">clock</span><span class="si">}</span><span class="s1">, which is before or equal to current clock (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">clock</span><span class="si">}</span><span class="s1">).&#39;</span><span class="p">)</span>
+        
+        <span class="n">time</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">next_event_time</span><span class="p">()</span>
+        <span class="k">while</span> <span class="n">time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">time</span> <span class="o">&lt;=</span> <span class="n">clock</span><span class="p">:</span>
+            <span class="c1"># print(f&#39;{time} &lt;= {clock}&#39;)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">do_the_next_task</span><span class="p">()</span>
+            <span class="n">time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">next_event_time</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">clock</span> <span class="o">=</span> <span class="n">clock</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">clock</span></div>
+
+
+<div class="viewcode-block" id="Simulator.do_the_next_task">
+<a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Simulator.do_the_next_task">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">do_the_next_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">design</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="k">return</span>
+        <span class="n">next_work</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Workflow</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_next_workflow</span><span class="p">()</span>
+        <span class="n">next_queue</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">MultiQueue</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_next_queue</span><span class="p">()</span>
+
+        <span class="n">requests</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ClientRequest</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">now</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="n">next_work</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="p">(</span><span class="n">next_queue</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">next_work</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">next_queue</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+            <span class="c1"># print(next_work[0].name)</span>
+            <span class="n">g_r</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">ClientRequestGroup</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">ClientRequest</span><span class="p">]]</span> <span class="o">=</span> <span class="n">next_work</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">create_client_requests</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">design</span><span class="o">.</span><span class="n">network</span><span class="p">,</span> <span class="n">next_work</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">requests</span> <span class="o">=</span> <span class="n">g_r</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">now</span> <span class="o">=</span> <span class="n">next_work</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_next_event_time_for_workflows</span><span class="p">[</span><span class="n">next_work</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">next_work</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">calculate_next_event_time</span><span class="p">(</span><span class="n">now</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">next_queue</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="p">(</span><span class="n">next_work</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">next_queue</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">next_work</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+            <span class="c1"># print(next_queue[0].name())</span>
+            <span class="n">reqs_and_metrics</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">ClientRequest</span><span class="p">,</span> <span class="n">RequestMetric</span><span class="p">]]</span> <span class="o">=</span> <span class="n">next_queue</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">remove_finished_requests</span><span class="p">(</span><span class="n">next_queue</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">for</span> <span class="n">rm</span> <span class="ow">in</span> <span class="n">reqs_and_metrics</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">request_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rm</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                <span class="n">rm</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">solution</span><span class="o">.</span><span class="n">goto_next_step</span><span class="p">()</span>
+                <span class="n">requests</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rm</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">now</span> <span class="o">=</span> <span class="n">next_queue</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="c1"># print(f&#39;There are {len(requests)} requests&#39;)</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">requests</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
+
+        <span class="k">for</span> <span class="n">req</span> <span class="ow">in</span> <span class="n">requests</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">req</span><span class="o">.</span><span class="n">is_finished</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">finished_requests</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">req</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">step</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ClientRequestSolutionStep</span><span class="p">]</span> <span class="o">=</span> <span class="n">req</span><span class="o">.</span><span class="n">solution</span><span class="o">.</span><span class="n">current_step</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">step</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;No step in solution that is not finished?&#39;</span><span class="p">)</span>
+                <span class="n">st_calc</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">st_calculator</span>
+                <span class="n">queue</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">MultiQueue</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_queue</span><span class="p">(</span><span class="n">st_calc</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">queue</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Could not find queue corresponding to ST Calculator </span><span class="si">{</span><span class="n">st_calc</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span> <span class="c1"># type: ignore</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># print(f&#39;Putting request {req.name} in queue {queue.name()}&#39;)</span>
+                    <span class="n">queue</span><span class="o">.</span><span class="n">enqueue</span><span class="p">(</span><span class="n">req</span><span class="p">,</span> <span class="n">clock</span><span class="o">=</span><span class="n">now</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Simulator.find_queue">
+<a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Simulator.find_queue">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">find_queue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">st_calc</span><span class="p">:</span> <span class="n">ServiceTimeCalculator</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">MultiQueue</span><span class="p">]:</span>
+        <span class="n">result</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">MultiQueue</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">queues</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">q</span><span class="o">.</span><span class="n">service_time_calculator</span> <span class="o">==</span> <span class="n">st_calc</span><span class="p">:</span> <span class="k">return</span> <span class="n">q</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="Simulator.active_requests">
+<a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Simulator.active_requests">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">active_requests</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">WaitingRequest</span><span class="p">]:</span>
+        <span class="n">result</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">WaitingRequest</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">queues</span><span class="p">:</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">q</span><span class="o">.</span><span class="n">all_waiting_requests</span><span class="p">())</span>
+
+        <span class="k">return</span> <span class="n">result</span></div>
+
+    
+<div class="viewcode-block" id="Simulator.gather_queue_metrics">
+<a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Simulator.gather_queue_metrics">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">gather_queue_metrics</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">queues</span><span class="p">:</span>
+            <span class="n">qm</span><span class="p">:</span> <span class="n">QueueMetric</span> <span class="o">=</span> <span class="n">QueueMetric</span><span class="p">(</span><span class="n">q</span><span class="o">.</span><span class="n">name</span><span class="p">(),</span> <span class="n">clock</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">clock</span><span class="p">,</span> <span class="n">channel_count</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">q</span><span class="o">.</span><span class="n">channels</span><span class="p">),</span> <span class="n">request_count</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">q</span><span class="o">.</span><span class="n">all_waiting_requests</span><span class="p">()))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">queue_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">qm</span><span class="p">)</span></div>
+</div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;pygissim is a library.&quot;</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Simon Biickert.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

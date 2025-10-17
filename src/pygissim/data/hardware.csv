@@ -1,0 +1,460 @@
+processor, cores, spec, architecture
+Apple M Series, 8, 50.0, aarm64
+Apple A Series, 8, 50.0, aarm64
+Qualcomm Snapdragon, 8, 50.0, armv7
+Samsung Exynos, 8, 50.0, armv7
+Xeon Gold 5122, 4, 27.9, Intel
+Xeon E3-1280v6, 4, 27.4, Intel
+Xeon E3-1270v6, 4, 27.4, Intel
+Xeon E3-1240v6, 4, 26.9, Intel
+Xeon E3-1230v6, 4, 25.8, Intel
+Intel Core i7-6700K, 4, 26.2, Intel
+Intel Core i7-6700, 4, 24.7, Intel
+Intel Core i7-5960X, 8, 52.9, Intel
+Intel E3-1270v5, 4, 25.8, Intel
+Intel E3-1280v5, 4, 25.2, Intel
+Intel i7-5960X, 8, 52.9, Intel
+Intel Core i7-4790, 4, 21.5, Intel
+Intel Core i7-4770K, 4, 20.4, Intel
+Intel Core i3-4330, 2, 11.1, Intel
+Xeon E3-1270v3, 4, 21.2, Intel
+Intel Core i7-4770, 4, 20.9, Intel
+Xeon E3-1280 v3, 4, 21.2, Intel
+Xeon E5-1620, 4, 19.8, Intel
+Intel Xeon E5-2637, 4, 18.5, Intel
+Intel Core i7-2860QM, 4, 12.2, Intel
+Intel Core i7-2600 , 4, 14.8, Intel
+Intel Core i5-2500 , 4, 12.1, Intel
+Intel Core i5-2400 , 4, 11.6, Intel
+Intel Core i3-2120, 2, 7.4, Intel
+Intel Core i5-680 , 2, 6.9, Intel
+Intel Xeon X5667, 8, 24.9, Intel
+Intel Xeon X5677 Tboost, 8, 25.5, Intel
+Intel Core i7-965 Tboost, 4, 12.6, Intel
+Intel Core i7-975 Tboost, 4, 12.1, Intel
+Intel Core i7-860 Tboost, 4, 12.1, Intel
+Intel Core i7-620M Tboost, 4, 10.3, Intel
+Intel Core i7-610E , 2, 4.9, Intel
+Intel Core 2 Extreem X6800, 2, 3.1, Intel
+Intel Pentium Extreem 965, 2, 2.2, Intel
+Intel PentiumD , 2, 1.9, Intel
+Intel Core 2 Quad Q9650, 4, 8.0, Intel
+Intel Core 2 Duo E8500, 2, 3.8, Intel
+Intel Core 2 Duo E6850, 2, 3.4, Intel
+Intel Core 2 Duo T9700, 2, 3.3, Intel
+Intel Core 2 Duo T9500, 2, 3.2, Intel
+Intel Core 2 Duo T7700, 2, 2.7, Intel
+Intel Core 2 Duo T7600, 2, 2.4, Intel
+AMD EPYC 4124P, 4, 58.9, Intel
+Xeon E3-1280v6, 4, 29.0, Intel
+Xeon Gold 5122, 4, 28.6, Intel
+Xeon Gold 5122, 8, 57.3, Intel
+Xeon Gold 6128, 12, 85.5, Intel
+Xeon Gold 6144, 16, 120.0, Intel
+Xeon Gold 5115, 20, 105.0, Intel
+Xeon Gold 6146, 24, 168.0, Intel
+Xeon Gold 6132, 28, 166.0, Intel
+Xeon Gold 6142, 32, 186.0, Intel
+Xeon Gold 6154, 36, 226.0, Intel
+Xeon Gold 6148, 40, 221.0, Intel
+Xeon Gold 6152, 44, 221.0, Intel
+Xeon Gold 5122, 16, 112.0, Intel
+Xeon Gold 6128, 24, 165.0, Intel
+Xeon Gold 6134, 32, 217.0, Intel
+Xeon Gold 5115, 40, 206.0, Intel
+Xeon Gold 6136, 48, 310.0, Intel
+Xeon Gold 6132, 56, 328.0, Intel
+Xeon Gold 6142, 64, 368.0, Intel
+Xeon Gold 6154, 72, 445.0, Intel
+Xeon Gold 6148, 80, 430.0, Intel
+Xeon Gold 6152, 88, 425.0, Intel
+Xeon E3-1280v5, 4, 25.2, Intel
+Xeon E3-1270v5, 4, 25.8, Intel
+Xeon E5-2637v4, 4, 24.0, Intel
+Xeon E5-2637v4, 8, 47.9, Intel
+Xeon E5-2643v4, 12, 70.2, Intel
+Xeon E5-2667v4, 16, 88.8, Intel
+Xeon E5-2689v4, 20, 104.0, Intel
+Xeon E5-2687Wv4, 24, 118.0, Intel
+Xeon E5-2690v4, 28, 133.0, Intel
+Xeon E5-2697Av4, 32, 142.0, Intel
+Xeon E5-2697v4, 36, 151.0, Intel
+Xeon E5-2673v4, 40, 165.1, Intel
+Xeon E5-2699Av4, 44, 181.0, Intel
+Xeon E5-2699v4, 44, 178.0, Intel
+Xeon E5-2637v3, 4, 23.5, Intel
+Xeon E5-2637v3, 8, 45.9, Intel
+Xeon E5-2643v3, 6, 34.4, Intel
+Xeon E5-2643v3, 12, 67.1, Intel
+Xeon E3-1231v3, 4, 21.0, Intel
+Xeon E5-2623v3, 8, 41.1, Intel
+Xeon E5-2623v3, 16, 80.5, Intel
+Xeon E5-2667v3, 8, 41.7, Intel
+Xeon E5-2667v3, 16, 81.6, Intel
+Xeon E5-2687Wv3, 20, 95.4, Intel
+Xeon E5-2680v3, 12, 53.2, Intel
+Xeon E5-2676v3, 24, 101.5, Intel
+Xeon E5-2673Wv3, 24, 104.2, Intel
+Xeon E5-2680v3, 24, 105.0, Intel
+Xeon E5-2690v3, 24, 110.0, Intel
+Xeon E5-2660v3, 10, 45.0, Intel
+Xeon E5-2660v3, 20, 89.3, Intel
+Xeon E5-2640v3, 16, 70.3, Intel
+Xeon E5-2695v3, 28, 116.0, Intel
+Xeon E5-2697v3, 28, 121.0, Intel
+Xeon E5-2698v3, 32, 129.0, Intel
+Xeon E5-2699v3, 36, 144.0, Intel
+Xeon E7-8891v3, 40, 192.0, Intel
+Xeon E7-8891v3, 80, 378.0, Intel
+Xeon E5-2637v2, 4, 21.1, Intel
+Xeon E5-2637v2, 8, 41.2, Intel
+Xeon E5-2643v2, 12, 61.7, Intel
+Xeon E5-2667v2, 16, 78.5, Intel
+Xeon E5-2670v2, 20, 79.1, Intel
+Xeon E5-2690v2, 20, 87.1, Intel
+Xeon E5-2680v2, 20, 83.0, Intel
+Xeon E5-2695v2, 24, 89.4, Intel
+Xeon E7-8893v2, 24, 115.0, Intel
+Xeon E7-2890v2, 30, 117.0, Intel
+Xeon E7-4890v2, 60, 232.0, Intel
+Xeon E7-8891v2, 40, 175.0, Intel
+Xeon E7-8890v2, 120, 457.0, Intel
+Xeon E3-1290V2, 4, 19.7, Intel
+Xeon E3-1280V2, 4, 19.2, Intel
+Xeon E3-1270V2, 4, 19.1, Intel
+Xeon E5-1620V2, 4, 20.7, Intel
+Xeon E3-1270V2, 20, 78.8, Intel
+Xeon E5-2637, 8, 18.8, Intel
+Xeon E5-2643, 4, 18.5, Intel
+Xeon E5-2670, 16, 63.2, Intel
+Xeon E5-2690, 16, 66.9, Intel
+Xeon E5-2690, 8, 33.1, Intel
+Xeon E5-2697v2, 24, 88.9, Intel
+Xeon E5-2637, 4, 18.5, Intel
+Xeon E5-2400, 8, 20.0, Intel
+Xeon E5-2403, 4, 8.5, Intel
+Xeon E5-2403, 8, 16.7, Intel
+Xeon E5-2407, 4, 10.2, Intel
+Xeon E5-2407, 8, 20.0, Intel
+Xeon E5-2418, 8, 22.3, Intel
+Xeon E5-2420, 6, 18.1, Intel
+Xeon E5-2420, 12, 35.4, Intel
+Xeon E5-2428, 12, 29.4, Intel
+Xeon E5-2430, 6, 20.4, Intel
+Xeon E5-2430, 12, 39.5, Intel
+Xeon E5-2430L, 12, 36.9, Intel
+Xeon E5-2440, 6, 21.5, Intel
+Xeon E5-2440, 12, 42.2, Intel
+Xeon E5-2448L, 16, 38.5, Intel
+Xeon E5-2450, 16, 53.6, Intel
+Xeon E5-2450L, 16, 42.8, Intel
+Xeon E5-2470, 16, 56.7, Intel
+Xeon E5-2643, 4, 18.0, Intel
+Xeon E5-2643, 8, 36.2, Intel
+Xeon E5-2609, 8, 21.7, Intel
+Xeon E5-2603, 8, 16.7, Intel
+Xeon E5-1660, 6, 28.2, Intel
+Xeon E5-1650, 6, 26.9, Intel
+Xeon E5-2667, 6, 25.1, Intel
+Xeon E5-2667, 12, 50.6, Intel
+Xeon E5-2640, 12, 44.3, Intel
+Xeon E5-2630, 12, 41.6, Intel
+Xeon E5-2620, 12, 37.5, Intel
+Xeon E5-2630L, 12, 37.4, Intel
+Xeon E5-2687W, 16, 68.3, Intel
+Xeon E5-2690, 16, 66.7, Intel
+Xeon E5-2680, 16, 63.8, Intel
+Xeon E5-2680, 8, 31.5, Intel
+Xeon E5-2660, 16, 57.5, Intel
+Xeon E5-2665, 16, 59.2, Intel
+Xeon E5-2670, 16, 61.8, Intel
+Xeon E5-2648L, 16, 40.1, Intel
+Xeon E5-2650, 16, 51.6, Intel
+Xeon E5-2650L, 16, 44.0, Intel
+Xeon E5-2658, 16, 46.2, Intel
+Xeon E7-2850, 20, 46.2, Intel
+Xeon E7-2860, 20, 51.9, Intel
+Xeon E5-4603, 16, 44.0, Intel
+Xeon E5-4607, 24, 68.6, Intel
+Xeon E5-4610, 24, 85.1, Intel
+Xeon E5-4617, 24, 83.4, Intel
+Xeon E5-4620, 32, 95.2, Intel
+Xeon E5-4640, 32, 106.0, Intel
+Xeon E5-4650, 32, 119.0, Intel
+Xeon E5-4650L, 32, 115.0, Intel
+Xeon E7-4807, 24, 49.2, Intel
+Xeon E7-8837, 32, 77.2, Intel
+Xeon E7-4850, 40, 86.4, Intel
+Xeon E7-4870, 20, 53.6, Intel
+Xeon E7-4870, 40, 110.0, Intel
+Xeon E3-1280, 4, 16.0, Intel
+Xeon E3-1270, 4, 15.6, Intel
+Xeon E3-1240, 4, 15.4, Intel
+Xeon E3-1230, 4, 15.2, Intel
+Xeon E3-1220, 4, 12.6, Intel
+Xeon E7-2870, 20, 50.8, Intel
+Xeon E7-4870, 40, 101.0, Intel
+Xeon E7-4860, 40, 95.0, Intel
+Xeon E7-4850, 40, 85.1, Intel
+Xeon E7-8837, 32, 74.3, Intel
+Xeon E7-4830, 32, 73.6, Intel
+Xeon E7-4820, 32, 68.4, Intel
+Xeon X5687, 8, 30.7, Intel
+Xeon X5687, 4, 15.4, Intel
+Xeon X5672, 8, 28.9, Intel
+Xeon X5672, 4, 14.5, Intel
+Xeon X5690, 12, 38.6, Intel
+Xeon X5677, 8, 28.3, Intel
+Xeon X5677, 4, 14.2, Intel
+Xeon X5667, 8, 26.7, Intel
+Xeon X3480, 4, 12.3, Intel
+Xeon E5640, 8, 22.4, Intel
+Xeon E5640, 4, 11.2, Intel
+Xeon E5620, 4, 10.6, Intel
+Xeon X5690, 12, 38.5, Intel
+Xeon X5680, 12, 35.5, Intel
+Xeon X5680, 6, 17.8, Intel
+Xeon X5675, 12, 36.7, Intel
+Xeon X5675, 6, 18.5, Intel
+Xeon X5670, 12, 34.0, Intel
+Xeon X5660, 12, 32.7, Intel
+Xeon X5650, 12, 31.8, Intel
+Xeon L5640, 12, 26.1, Intel
+Xeon L5640, 6, 13.1, Intel
+Xeon E7560 E, 64, 140.0, Intel
+Xeon E7560, 32, 71.0, Intel
+Xeon E7550, 32, 64.0, Intel
+Xeon L7555, 32, 60.4, Intel
+Xeon X6550, 16, 32.1, Intel
+Xeon E7540, 24, 49.3, Intel
+Xeon L7545, 24, 46.6, Intel
+Xeon E7530, 24, 44.7, Intel
+Xeon E7520, 16, 31.4, Intel
+Intel Xeon MP, 1, 0.5, Intel
+Intel Xeon MP, 2, 0.9, Intel
+Intel Xeon MP, 4, 1.7, Intel
+Intel Xeon MP, 6, 2.0, Intel
+Intel Xeon MP, 8, 2.4, Intel
+Intel Xeon, 2, 1.3, Intel
+Intel Xeon, 1, 0.8, Intel
+Intel PentiumD, 2, 1.7, Intel
+Intel Xeon, 2, 1.5, Intel
+Intel Xeon, 2, 1.7, Intel
+Intel Xeon, 4, 2.8, Intel
+Intel PentiumD, 2, 1.8, Intel
+Intel Xeon, 1, 0.9, Intel
+Intel Xeon, 2, 1.8, Intel
+AMD Opteron 6338P, 24, 35.7, AMD
+AMD Opteron 6338P, 48, 70.8, AMD
+AMD Opteron 6370P, 32, 41.0, AMD
+AMD Opteron 6370P, 64, 81.7, AMD
+AMD Opteron 6309, 4, 8.9, AMD
+AMD Opteron 6308, 8, 17.8, AMD
+AMD Opteron 6308, 16, 35.5, AMD
+AMD Opteron 4340, 12, 24.5, AMD
+AMD Opteron 6328, 32, 65.0, AMD
+AMD Opteron 6348, 24, 42.7, AMD
+AMD Opteron 6348, 48, 83.5, AMD
+AMD Opteron 6386 SE, 64, 107.0, AMD
+AMD Phenom II X4 B97, 4, 8.1, AMD
+AMD Opteron 4240, 12, 22.8, AMD
+AMD Opteron 6328, 16, 32.7, AMD
+AMD Opteron 6220, 32, 55.4, AMD
+AMD Opteron 6344, 24, 39.5, AMD
+AMD Opteron 6344, 48, 78.5, AMD
+AMD Opteron 6380, 64, 97.5, AMD
+AMD Phenom II X4 975, 4, 8.2, AMD
+AMD Opteron 6204, 8, 16.0, AMD
+AMD Opteron 4184, 12, 20.5, AMD
+AMD Opteron 6204, 16, 31.0, AMD
+AMD Opteron 6140, 32, 53.6, AMD
+AMD Opteron 6180 SE, 24, 37.1, AMD
+AMD Opteron 6238, 48, 72.8, AMD
+AMD Opteron 6282 SE, 64, 92.3, AMD
+AMD Opt 6174, 24, 30.3, AMD
+AMD Opt 6176SE, 24, 35.3, AMD
+AMD Opt 6136, 48, 67.5, AMD
+AMD Opt 6174, 48, 67.5, AMD
+AMD, 1, 1.1, AMD
+AMD, 2, 2.1, AMD
+AMD, 4, 4.0, AMD
+AMD, 2, 1.9, AMD
+AMD, 4, 3.9, AMD
+AMD, 1, 1.0, AMD
+AMD, 4, 3.7, AMD
+AMD, 4, 3.6, AMD
+AMD, 2, 1.8, AMD
+AMD, 8, 6.9, AMD
+Xeon E5-2686v4, 36, 157.7, Intel
+Xeon E5-2666v3, 20, 95.2, Intel
+Xeon E5-2680v2, 20, 83.1, Intel
+Xeon E5-8880v3, 72, 265.0, Intel
+Xeon E5-2673v3, 24, 104.2, Intel
+Xeon E5-2667v3, 16, 81.5, Intel
+AMI m4.large (2vc), 1, 4.2, Intel
+AMI m4.xlarge (4vc), 2, 8.5, Intel
+AMI m4.2xlarge (8vc), 4, 16.9, Intel
+AMI m4.4xlarge (16vc), 8, 33.8, Intel
+AMI m4.10xlarge (40vc), 20, 84.6, Intel
+Xeon E5-2676v4, 36, 157.7, Intel
+AMI m4.16xlarge (64vc), 32, 140.2, Intel
+AMI m3.medium (1vc), 1, 2.9, Intel
+AMI m3.large (2vc), 1, 3.8, Intel
+AMI m3.xlarge (4vc), 2, 7.6, Intel
+AMI m3.2xlarge (8vc), 4, 15.3, Intel
+AMI c4.large (2vc), 1, 4.8, Intel
+AMI c4.xlarge (4vc), 2, 9.5, Intel
+AMI c4.2xlarge (8vc), 4, 19.0, Intel
+AMI c4.4xlarge (16vc), 8, 38.1, Intel
+AMI c4.8xlarge (32vc), 16, 76.2, Intel
+AMI c3.large (2vc), 1, 4.2, Intel
+AMI c3.xlarge (4vc), 2, 8.3, Intel
+AMI c3.2xlarge (8vc), 4, 16.6, Intel
+AMI c3.4xlarge (16vc), 8, 33.2, Intel
+AMI c3.8xlarge (32vc), 16, 66.5, Intel
+AMI p2.xlarge (4vc), 2, 8.8, Intel
+AMI p2.8xlarge (8vc), 4, 17.5, Intel
+AMI p2.16xlarge (16vc), 8, 35.0, Intel
+AMI g3.4xlarge (16vc), 8, 35.0, Intel
+AMI g3.8xlarge (32vc), 16, 70.1, Intel
+AMI g3.16xlarge (64vc), 32, 140.2, Intel
+Xeon E7-8880v3, 72, 265.0, Intel
+AMI x1.16large (64vc), 32, 140.2, Intel
+AMI x1.32large (128vc), 64, 286.8, Intel
+AMI r4.large (2vc), 1, 4.4, Intel
+AMI r4.xlarge (4vc), 2, 8.8, Intel
+AMI r4.2xlarge (8vc), 4, 17.5, Intel
+AMI r4.4xlarge (16vc), 8, 35.0, Intel
+AMI r4.8xlarge (32vc), 16, 70.1, Intel
+AMI r4.16xlarge (64vc), 32, 140.2, Intel
+AMI r3.large (2vc), 1, 4.0, Intel
+AMI r3.xlarge (4vc), 2, 7.9, Intel
+AMI r3.2xlarge (8vc), 4, 15.8, Intel
+AMI r3.4xlarge (16vc), 8, 31.6, Intel
+AMI r3.8xlarge (32vc), 16, 63.3, Intel
+AMI i3.large (2vc), 1, 4.4, Intel
+AMI i3.xlarge (4vc), 2, 8.8, Intel
+AMI i3.2xlarge (8vc), 4, 17.5, Intel
+AMI i3.4xlarge (16vc), 8, 35.0, Intel
+AMI i3.8xlarge (32vc), 16, 70.1, Intel
+AMI i3.16xlarge (64vc), 32, 140.2, Intel
+AMI d2.xlarge (4vc), 2, 8.5, Intel
+AMI d2.2xlarge (8vc), 4, 16.9, Intel
+AMI d2.4xlarge (16vc), 8, 33.8, Intel
+AMI d2.8xlarge (36vc), 18, 76.1, Intel
+AMI db.m4.large (2vc), 1, 4.2, Intel
+AMI db.m4.xlarge (4vc), 2, 8.5, Intel
+AMI db.m4.2xlarge (8vc), 4, 16.9, Intel
+AMI db.m4.4xlarge (16vc), 8, 33.8, Intel
+AMI db.m4.10xlarge (40vc), 20, 84.6, Intel
+AMI db.m3.medium (1vc), 1, 2.9, Intel
+AMI db.m3.large (2vc), 1, 3.8, Intel
+AMI db.m3.xlarge (4vc), 2, 7.6, Intel
+AMI db.m3.2xlarge (8vc), 4, 15.3, Intel
+AMI db.r3.large (2vc), 1, 4.0, Intel
+AMI db.r3.xlarge (4vc), 2, 7.9, Intel
+AMI db.r3.2xlarge (8vc), 4, 15.8, Intel
+AMI db.r3.4xlarge (16vc), 8, 31.6, Intel
+AMI db.r3.8xlarge (32vc), 16, 63.3, Intel
+AZI D2v3 (2vc), 2, 6.7, Intel
+AZI D4v3 (4vc), 4, 12.5, Intel
+AZI D8v3 (8vc), 8, 23.2, Intel
+AZI D16v3 (16vc), 16, 43.1, Intel
+AZI D32v3 (32vc), 32, 79.3, Intel
+AZI D64v3 (64vc), 64, 144.8, Intel
+AZI D1v2 (1vc), 1, 2.9, Intel
+AZI D2v2 (2vc), 2, 7.0, Intel
+AZI D3v2 (4vc), 4, 13.1, Intel
+AZI D4v2 (8vc), 8, 24.5, Intel
+AZI D5v2 (16vc), 16, 45.3, Intel
+AZI F1 (2vc), 2, 7.0, Intel
+AZI F2 (4vc), 4, 13.1, Intel
+AZI F3 (8vc), 8, 24.5, Intel
+AZI F4 (16vc), 16, 45.3, Intel
+AZI F5 (32vc), 32, 83.4, Intel
+AZI E2v3 (2vc), 2, 6.7, Intel
+AZI E4v3 (4vc), 4, 12.5, Intel
+AZI E8v3 (8vc), 8, 23.2, Intel
+AZI E16v3 (16vc), 16, 43.1, Intel
+AZI E32v3 (32vc), 32, 79.3, Intel
+AZI E64v3 (64vc), 64, 144.8, Intel
+AZI D11v2 (2vc), 2, 7.0, Intel
+AZI D12v2 (4vc), 4, 13.1, Intel
+AZI D13v2 (8vc), 8, 24.5, Intel
+AZI D14v2 (16vc), 16, 45.3, Intel
+AZI D15v2 (20vc), 20, 55.2, Intel
+Xeon E5-2698Bv3, 32, 112.2, Intel
+AZI G1 (2vc), 2, 5.7, Intel
+AZI G2 (4vc), 4, 10.6, Intel
+AZI G3 (8vc), 8, 19.7, Intel
+AZI G4 (16vc), 16, 36.6, Intel
+AZI G5 (32vc), 32, 67.3, Intel
+AZI NC6 (6vc), 6, 15.3, Intel
+AZI NC12 (12vc), 12, 28.3, Intel
+AZI NC24 (24vc), 24, 52.3, Intel
+AZI NC24r (24vc), 24, 52.3, Intel
+AZI NV6 (6vc), 6, 15.3, Intel
+AZI NV12 (12vc), 12, 28.3, Intel
+AZI NV24 (24vc), 24, 52.3, Intel
+Xeon E5-2667v3, 16, 83.3, Intel
+AZI H8 (8vc), 8, 29.3, Intel
+AZI H16 (16vc), 16, 54.3, Intel
+AZI H8m (8vc), 8, 29.3, Intel
+AZI H16m (16vc), 16, 54.3, Intel
+AZI H16mr (16vc), 16, 54.3, Intel
+AZI H16r (16vc), 16, 54.3, Intel
+AZISQL S0 (1vc), 1, 2.9, Intel
+AZISQL S1 (1vc), 1, 2.9, Intel
+AZISQL S2 (1vc), 1, 2.9, Intel
+AZISQL S3 (1vc), 1, 2.9, Intel
+AZISQL P1 (2vc), 2, 7.0, Intel
+AZISQL P2 (2vc), 2, 7.0, Intel
+AZISQL P4 (2vc), 2, 7.0, Intel
+AZISQL P6 (4vc), 4, 13.1, Intel
+AZISQL P11 (8vc), 8, 24.5, Intel
+AZISQL P15 (16vc), 16, 45.3, Intel
+HP Xeon E3-1280v6, 4, 27.4, Intel
+Dell Xeon Gold 5122, 4, 27.9, Intel
+IBM Xeon E3-1280v5, 4, 25.2, Intel
+2013 Xeon E3-1270V2, 4, 19.1, Intel
+BB_Xeon Gold 5122, 4, 28.6, Intel
+BB_Xeon Gold 5122, 8, 57.3, Intel
+BB_Xeon Gold 6128, 12, 85.5, Intel
+BB_Xeon Gold 6144, 16, 120.0, Intel
+BB_Xeon Gold 5115, 20, 105.0, Intel
+BB_Xeon Gold 6146, 24, 168.0, Intel
+BB_Xeon Gold 6132, 28, 166.0, Intel
+BB_Xeon Gold 6142, 32, 186.0, Intel
+BB_Xeon Gold 6154, 36, 226.0, Intel
+BB_Xeon Gold 6148, 40, 221.0, Intel
+BB_Xeon Gold 6152, 44, 221.0, Intel
+2018 Xeon Gold 6144, 16, 120.0, Intel
+2018 Xeon Gold 5122, 4, 28.6, Intel
+2017 Xeon E5-2637v4, 4, 28.4, Intel
+2016 Xeon E5-2637v4, 4, 28.4, Intel
+2015 Xeon E5-2637v3, 4, 23.5, Intel
+2014 Xeon E5-2637v2, 4, 21.1, Intel
+2013 Xeon E3-1280V2, 4, 19.2, Intel
+2012 Xeon E5-2637, 4, 18.5, Intel
+2011 Xeon E3-1280, 4, 17.2, Intel
+2010 Xeon X5677, 4, 14.5, Intel
+Q8Xeon Gold 6144, 8, 60.0, Intel
+Q12Xeon Gold 6144, 12, 90.0, Intel
+Q16Xeon Gold 6144, 16, 120.0, Intel
+Arc25 Baseline, 4, 58.9, Intel
+Arc19 Baseline, 4, 29.6, Intel
+Arc18 Baseline, 4, 29.6, Intel
+Arc17 Baseline, 4, 25.6, Intel
+Arc16 Baseline, 4, 25.6, Intel
+Arc15 Baseline, 4, 23.2, Intel
+Arc14 Baseline, 4, 21.2, Intel
+Arc13 Baseline, 4, 20.0, Intel
+Arc12 Baseline, 4, 18.0, Intel
+Arc11 Baseline, 4, 16.0, Intel
+Arc10 Baseline, 4, 14.0, Intel
+Arc09 Baseline, 4, 12.0, Intel
+Arc08 Baseline, 4, 7.0, Intel
+Arc07 Baseline, 4, 5.6, Intel
+Arc06 Baseline, 2, 2.1, Intel
+Arc04/05 Baseline, 2, 1.7, Intel
+Arc03 Baseline, 2, 0.9, Intel

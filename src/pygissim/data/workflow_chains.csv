@@ -1,0 +1,15 @@
+name, description, steps
+Browser Web Hosted, Working with hosted feature service,Client Service 002;Web Service 001;Portal Service 001;Hosted Service 001;Relational Service 001
+Mobile Web Hosted, Working with hosted feature service,Client Service 003;Web Service 001;Portal Service 001;Hosted Service 001;Relational Service 001
+Pro Hosted, Working with hosted feature service,Client Service 001;Web Service 001;Portal Service 001;Hosted Service 001;Relational Service 001
+VDI Pro Hosted, Working with hosted feature service,VDI Service 001;Client Service 001;Web Service 001;Portal Service 001;Hosted Service 001;Relational Service 001
+Browser Basemap, Basemap,Client Service 002;Web Service 001;Portal Service 001;Map Service 002;File Service 001
+Mobile Basemap, Basemap,Client Service 003;Web Service 001;Portal Service 001;Map Service 002;File Service 001
+Pro Basemap, Basemap,Client Service 001;Web Service 001;Portal Service 001;Map Service 002;File Service 001
+VDI Pro Basemap, Basemap,VDI Service 001;Client Service 001;Web Service 001;Portal Service 001;Map Service 002;File Service 001
+Pro DC, Pro Direct Connect,Client Service 001;DBMS Service 001
+VDI Pro DC, Pro Direct Connect,VDI Service 001;Client Service 001;DBMS Service 001
+Pro Dynamic Map, Dynamic Map Image Service,Client Service 001;Web Service 001;Portal Service 001;Map Service 001;DBMS Service 001
+VDI Pro Dynamic Map, Dynamic Map Image Service,VDI Service 001;Client Service 001;Web Service 001;Portal Service 001;Map Service 001;DBMS Service 001
+Browser Dynamic Map, Dynamic Map Image Service,Client Service 002;Web Service 001;Portal Service 001;Map Service 001;DBMS Service 001
+Mobile Dynamic Map, Dynamic Map Image Service,Client Service 003;Web Service 001;Portal Service 001;Map Service 001;DBMS Service 001

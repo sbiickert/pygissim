@@ -1,0 +1,493 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tests.test_work &mdash; pygissim  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            pygissim
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">pygissim</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pygissim</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">tests.test_work</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for tests.test_work</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">unittest</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pygissim.engine</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tests.test_network</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tests.test_compute</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tests.test_queue</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+
+<div class="viewcode-block" id="TestWorkflowDefStep">
+<a class="viewcode-back" href="../../tests.html#tests.test_work.TestWorkflowDefStep">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TestWorkflowDefStep</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+<div class="viewcode-block" id="TestWorkflowDefStep.test_create">
+<a class="viewcode-back" href="../../tests.html#tests.test_work.TestWorkflowDefStep.test_create">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_create</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">wds</span><span class="p">:</span> <span class="n">WorkflowDefStep</span> <span class="o">=</span> <span class="n">TestWorkflowDefStep</span><span class="o">.</span><span class="n">sample_browser_wds</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">2134</span><span class="p">,</span> <span class="n">wds</span><span class="o">.</span><span class="n">response_size_kb</span><span class="p">)</span>
+        <span class="n">wds</span><span class="p">:</span> <span class="n">WorkflowDefStep</span> <span class="o">=</span> <span class="n">TestWorkflowDefStep</span><span class="o">.</span><span class="n">sample_cachemap_wds</span><span class="p">()</span>
+        <span class="n">wds</span><span class="p">:</span> <span class="n">WorkflowDefStep</span> <span class="o">=</span> <span class="n">TestWorkflowDefStep</span><span class="o">.</span><span class="n">sample_dbms_wds</span><span class="p">()</span>
+        <span class="n">wds</span><span class="p">:</span> <span class="n">WorkflowDefStep</span> <span class="o">=</span> <span class="n">TestWorkflowDefStep</span><span class="o">.</span><span class="n">sample_dynmap_wds</span><span class="p">()</span>
+        <span class="n">wds</span><span class="p">:</span> <span class="n">WorkflowDefStep</span> <span class="o">=</span> <span class="n">TestWorkflowDefStep</span><span class="o">.</span><span class="n">sample_file_wds</span><span class="p">()</span>
+        <span class="n">wds</span><span class="p">:</span> <span class="n">WorkflowDefStep</span> <span class="o">=</span> <span class="n">TestWorkflowDefStep</span><span class="o">.</span><span class="n">sample_host_wds</span><span class="p">()</span>
+        <span class="n">wds</span><span class="p">:</span> <span class="n">WorkflowDefStep</span> <span class="o">=</span> <span class="n">TestWorkflowDefStep</span><span class="o">.</span><span class="n">sample_mobile_wds</span><span class="p">()</span>
+        <span class="n">wds</span><span class="p">:</span> <span class="n">WorkflowDefStep</span> <span class="o">=</span> <span class="n">TestWorkflowDefStep</span><span class="o">.</span><span class="n">sample_portal_wds</span><span class="p">()</span>
+        <span class="n">wds</span><span class="p">:</span> <span class="n">WorkflowDefStep</span> <span class="o">=</span> <span class="n">TestWorkflowDefStep</span><span class="o">.</span><span class="n">sample_pro_wds</span><span class="p">()</span>
+        <span class="n">wds</span><span class="p">:</span> <span class="n">WorkflowDefStep</span> <span class="o">=</span> <span class="n">TestWorkflowDefStep</span><span class="o">.</span><span class="n">sample_relds_wds</span><span class="p">()</span>
+        <span class="n">wds</span><span class="p">:</span> <span class="n">WorkflowDefStep</span> <span class="o">=</span> <span class="n">TestWorkflowDefStep</span><span class="o">.</span><span class="n">sample_vdi_wds</span><span class="p">()</span>
+        <span class="n">wds</span><span class="p">:</span> <span class="n">WorkflowDefStep</span> <span class="o">=</span> <span class="n">TestWorkflowDefStep</span><span class="o">.</span><span class="n">sample_web_wds</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="TestWorkflowDefStep.sample_pro_wds">
+<a class="viewcode-back" href="../../tests.html#tests.test_work.TestWorkflowDefStep.sample_pro_wds">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_pro_wds</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">WorkflowDefStep</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">WorkflowDefStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Pro Client Step&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Sample Pro Step&#39;</span><span class="p">,</span> <span class="n">service_type</span><span class="o">=</span><span class="s1">&#39;pro&#39;</span><span class="p">,</span>
+                               <span class="n">service_time</span><span class="o">=</span><span class="mi">831</span><span class="p">,</span> <span class="n">chatter</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">request_size_kb</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">response_size_kb</span><span class="o">=</span><span class="mi">13340</span><span class="p">,</span> 
+                               <span class="n">data_source_type</span><span class="o">=</span><span class="n">DataSourceType</span><span class="o">.</span><span class="n">DBMS</span><span class="p">,</span> <span class="n">cache_pct</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TestWorkflowDefStep.sample_browser_wds">
+<a class="viewcode-back" href="../../tests.html#tests.test_work.TestWorkflowDefStep.sample_browser_wds">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_browser_wds</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">WorkflowDefStep</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">WorkflowDefStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Browser Client Step&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Sample Browser Step&#39;</span><span class="p">,</span> <span class="n">service_type</span><span class="o">=</span><span class="s1">&#39;browser&#39;</span><span class="p">,</span>
+                               <span class="n">service_time</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">chatter</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">request_size_kb</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">response_size_kb</span><span class="o">=</span><span class="mi">2134</span><span class="p">,</span> 
+                               <span class="n">data_source_type</span><span class="o">=</span><span class="n">DataSourceType</span><span class="o">.</span><span class="n">NONE</span><span class="p">,</span> <span class="n">cache_pct</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TestWorkflowDefStep.sample_mobile_wds">
+<a class="viewcode-back" href="../../tests.html#tests.test_work.TestWorkflowDefStep.sample_mobile_wds">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_mobile_wds</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">WorkflowDefStep</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">WorkflowDefStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Mobile Client Step&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Sample Mobile Step&#39;</span><span class="p">,</span> <span class="n">service_type</span><span class="o">=</span><span class="s1">&#39;mobile&#39;</span><span class="p">,</span>
+                               <span class="n">service_time</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">chatter</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">request_size_kb</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">response_size_kb</span><span class="o">=</span><span class="mi">2134</span><span class="p">,</span> 
+                               <span class="n">data_source_type</span><span class="o">=</span><span class="n">DataSourceType</span><span class="o">.</span><span class="n">NONE</span><span class="p">,</span> <span class="n">cache_pct</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TestWorkflowDefStep.sample_vdi_wds">
+<a class="viewcode-back" href="../../tests.html#tests.test_work.TestWorkflowDefStep.sample_vdi_wds">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_vdi_wds</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">WorkflowDefStep</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">WorkflowDefStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;VDI Client Step&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Sample VDI Step&#39;</span><span class="p">,</span> <span class="n">service_type</span><span class="o">=</span><span class="s1">&#39;vdi&#39;</span><span class="p">,</span>
+                               <span class="n">service_time</span><span class="o">=</span><span class="mi">831</span><span class="p">,</span> <span class="n">chatter</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">request_size_kb</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">response_size_kb</span><span class="o">=</span><span class="mi">3691</span><span class="p">,</span> 
+                               <span class="n">data_source_type</span><span class="o">=</span><span class="n">DataSourceType</span><span class="o">.</span><span class="n">DBMS</span><span class="p">,</span> <span class="n">cache_pct</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="TestWorkflowDefStep.sample_web_wds">
+<a class="viewcode-back" href="../../tests.html#tests.test_work.TestWorkflowDefStep.sample_web_wds">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_web_wds</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">WorkflowDefStep</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">WorkflowDefStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Web Service Step&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Sample Web Step&#39;</span><span class="p">,</span> <span class="n">service_type</span><span class="o">=</span><span class="s1">&#39;web&#39;</span><span class="p">,</span>
+                               <span class="n">service_time</span><span class="o">=</span><span class="mi">18</span><span class="p">,</span> <span class="n">chatter</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">request_size_kb</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">response_size_kb</span><span class="o">=</span><span class="mi">2134</span><span class="p">,</span> 
+                               <span class="n">data_source_type</span><span class="o">=</span><span class="n">DataSourceType</span><span class="o">.</span><span class="n">NONE</span><span class="p">,</span> <span class="n">cache_pct</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TestWorkflowDefStep.sample_portal_wds">
+<a class="viewcode-back" href="../../tests.html#tests.test_work.TestWorkflowDefStep.sample_portal_wds">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_portal_wds</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">WorkflowDefStep</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">WorkflowDefStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Portal Service Step&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Sample Portal Step&#39;</span><span class="p">,</span> <span class="n">service_type</span><span class="o">=</span><span class="s1">&#39;portal&#39;</span><span class="p">,</span>
+                               <span class="n">service_time</span><span class="o">=</span><span class="mi">19</span><span class="p">,</span> <span class="n">chatter</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">request_size_kb</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">response_size_kb</span><span class="o">=</span><span class="mi">2134</span><span class="p">,</span> 
+                               <span class="n">data_source_type</span><span class="o">=</span><span class="n">DataSourceType</span><span class="o">.</span><span class="n">FILE</span><span class="p">,</span> <span class="n">cache_pct</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TestWorkflowDefStep.sample_dynmap_wds">
+<a class="viewcode-back" href="../../tests.html#tests.test_work.TestWorkflowDefStep.sample_dynmap_wds">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_dynmap_wds</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">WorkflowDefStep</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">WorkflowDefStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Dynamic Map Service Step&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Sample Dynamic Map Step&#39;</span><span class="p">,</span> <span class="n">service_type</span><span class="o">=</span><span class="s1">&#39;map&#39;</span><span class="p">,</span>
+                               <span class="n">service_time</span><span class="o">=</span><span class="mi">141</span><span class="p">,</span> <span class="n">chatter</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">request_size_kb</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">response_size_kb</span><span class="o">=</span><span class="mi">2134</span><span class="p">,</span> 
+                               <span class="n">data_source_type</span><span class="o">=</span><span class="n">DataSourceType</span><span class="o">.</span><span class="n">DBMS</span><span class="p">,</span> <span class="n">cache_pct</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TestWorkflowDefStep.sample_cachemap_wds">
+<a class="viewcode-back" href="../../tests.html#tests.test_work.TestWorkflowDefStep.sample_cachemap_wds">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_cachemap_wds</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">WorkflowDefStep</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">WorkflowDefStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Cached Map Service Step&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Sample Cached Map Step&#39;</span><span class="p">,</span> <span class="n">service_type</span><span class="o">=</span><span class="s1">&#39;map&#39;</span><span class="p">,</span>
+                               <span class="n">service_time</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">chatter</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">request_size_kb</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">response_size_kb</span><span class="o">=</span><span class="mi">2134</span><span class="p">,</span> 
+                               <span class="n">data_source_type</span><span class="o">=</span><span class="n">DataSourceType</span><span class="o">.</span><span class="n">FILE</span><span class="p">,</span> <span class="n">cache_pct</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TestWorkflowDefStep.sample_host_wds">
+<a class="viewcode-back" href="../../tests.html#tests.test_work.TestWorkflowDefStep.sample_host_wds">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_host_wds</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">WorkflowDefStep</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">WorkflowDefStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Hosted Service Step&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Sample Hosted Step&#39;</span><span class="p">,</span> <span class="n">service_type</span><span class="o">=</span><span class="s1">&#39;feature&#39;</span><span class="p">,</span>
+                               <span class="n">service_time</span><span class="o">=</span><span class="mi">70</span><span class="p">,</span> <span class="n">chatter</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">request_size_kb</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">response_size_kb</span><span class="o">=</span><span class="mi">4000</span><span class="p">,</span> 
+                               <span class="n">data_source_type</span><span class="o">=</span><span class="n">DataSourceType</span><span class="o">.</span><span class="n">RELATIONAL</span><span class="p">,</span> <span class="n">cache_pct</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TestWorkflowDefStep.sample_dbms_wds">
+<a class="viewcode-back" href="../../tests.html#tests.test_work.TestWorkflowDefStep.sample_dbms_wds">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_dbms_wds</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">WorkflowDefStep</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">WorkflowDefStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;DBMS Service Step&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Sample DBMS Step&#39;</span><span class="p">,</span> <span class="n">service_type</span><span class="o">=</span><span class="s1">&#39;dbms&#39;</span><span class="p">,</span>
+                               <span class="n">service_time</span><span class="o">=</span><span class="mi">24</span><span class="p">,</span> <span class="n">chatter</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">request_size_kb</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">response_size_kb</span><span class="o">=</span><span class="mi">13340</span><span class="p">,</span> 
+                               <span class="n">data_source_type</span><span class="o">=</span><span class="n">DataSourceType</span><span class="o">.</span><span class="n">FILE</span><span class="p">,</span> <span class="n">cache_pct</span><span class="o">=</span><span class="mi">75</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TestWorkflowDefStep.sample_file_wds">
+<a class="viewcode-back" href="../../tests.html#tests.test_work.TestWorkflowDefStep.sample_file_wds">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_file_wds</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">WorkflowDefStep</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">WorkflowDefStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;File Service Step&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Sample File Step&#39;</span><span class="p">,</span> <span class="n">service_type</span><span class="o">=</span><span class="s1">&#39;file&#39;</span><span class="p">,</span>
+                               <span class="n">service_time</span><span class="o">=</span><span class="mi">24</span><span class="p">,</span> <span class="n">chatter</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">request_size_kb</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">response_size_kb</span><span class="o">=</span><span class="mi">13340</span><span class="p">,</span> 
+                               <span class="n">data_source_type</span><span class="o">=</span><span class="n">DataSourceType</span><span class="o">.</span><span class="n">FILE</span><span class="p">,</span> <span class="n">cache_pct</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TestWorkflowDefStep.sample_relds_wds">
+<a class="viewcode-back" href="../../tests.html#tests.test_work.TestWorkflowDefStep.sample_relds_wds">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_relds_wds</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">WorkflowDefStep</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">WorkflowDefStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Relational Service Step&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Sample Relational Step&#39;</span><span class="p">,</span> <span class="n">service_type</span><span class="o">=</span><span class="s1">&#39;relational&#39;</span><span class="p">,</span>
+                               <span class="n">service_time</span><span class="o">=</span><span class="mi">24</span><span class="p">,</span> <span class="n">chatter</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">request_size_kb</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">response_size_kb</span><span class="o">=</span><span class="mi">13340</span><span class="p">,</span> 
+                               <span class="n">data_source_type</span><span class="o">=</span><span class="n">DataSourceType</span><span class="o">.</span><span class="n">FILE</span><span class="p">,</span> <span class="n">cache_pct</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="TestWorkflowDef">
+<a class="viewcode-back" href="../../tests.html#tests.test_work.TestWorkflowDef">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TestWorkflowDef</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+<div class="viewcode-block" id="TestWorkflowDef.test_create">
+<a class="viewcode-back" href="../../tests.html#tests.test_work.TestWorkflowDef.test_create">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_create</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">wfd</span><span class="p">:</span> <span class="n">WorkflowDef</span> <span class="o">=</span> <span class="n">TestWorkflowDef</span><span class="o">.</span><span class="n">sample_web_wfdef</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="s1">&#39;Web Map Definition&#39;</span><span class="p">,</span> <span class="n">wfd</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="s1">&#39;Sample Web Map&#39;</span><span class="p">,</span> <span class="n">wfd</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">wfd</span><span class="o">.</span><span class="n">chains</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="s1">&#39;map&#39;</span><span class="p">,</span> <span class="n">wfd</span><span class="o">.</span><span class="n">chains</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">service_type</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="s1">&#39;dbms&#39;</span><span class="p">,</span> <span class="n">wfd</span><span class="o">.</span><span class="n">chains</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">service_type</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="s1">&#39;map&#39;</span><span class="p">,</span> <span class="n">wfd</span><span class="o">.</span><span class="n">chains</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">service_type</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertSetEqual</span><span class="p">(</span><span class="nb">set</span><span class="p">([</span><span class="s2">&quot;portal&quot;</span><span class="p">,</span> <span class="s2">&quot;file&quot;</span><span class="p">,</span> <span class="s2">&quot;browser&quot;</span><span class="p">,</span> <span class="s2">&quot;map&quot;</span><span class="p">,</span> <span class="s2">&quot;dbms&quot;</span><span class="p">,</span> <span class="s2">&quot;web&quot;</span><span class="p">]),</span> <span class="n">wfd</span><span class="o">.</span><span class="n">all_required_service_types</span><span class="p">())</span>
+        <span class="n">wfd</span> <span class="o">=</span> <span class="n">TestWorkflowDef</span><span class="o">.</span><span class="n">sample_mobile_wfdef</span><span class="p">()</span>
+        <span class="n">wfd</span> <span class="o">=</span> <span class="n">TestWorkflowDef</span><span class="o">.</span><span class="n">sample_vdi_wfdef</span><span class="p">()</span>
+        <span class="n">wfd</span> <span class="o">=</span> <span class="n">TestWorkflowDef</span><span class="o">.</span><span class="n">sample_workstation_wfdef</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="TestWorkflowDef.test_add_chain">
+<a class="viewcode-back" href="../../tests.html#tests.test_work.TestWorkflowDef.test_add_chain">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_add_chain</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">wfd</span><span class="p">:</span> <span class="n">WorkflowDef</span> <span class="o">=</span> <span class="n">TestWorkflowDef</span><span class="o">.</span><span class="n">sample_web_wfdef</span><span class="p">()</span>
+        <span class="n">overlay</span><span class="p">:</span> <span class="n">WorkflowChain</span> <span class="o">=</span> <span class="n">WorkflowChain</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Hosted Features&quot;</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> 
+                                               <span class="n">service_providers</span><span class="o">=</span><span class="nb">dict</span><span class="p">(),</span> 
+                                               <span class="n">steps</span><span class="o">=</span><span class="p">[</span>
+                                                   <span class="n">TestWorkflowDefStep</span><span class="o">.</span><span class="n">sample_browser_wds</span><span class="p">(),</span>
+                                                   <span class="n">TestWorkflowDefStep</span><span class="o">.</span><span class="n">sample_web_wds</span><span class="p">(),</span>
+                                                   <span class="n">TestWorkflowDefStep</span><span class="o">.</span><span class="n">sample_portal_wds</span><span class="p">(),</span>
+                                                   <span class="n">TestWorkflowDefStep</span><span class="o">.</span><span class="n">sample_host_wds</span><span class="p">(),</span>
+                                                   <span class="n">TestWorkflowDefStep</span><span class="o">.</span><span class="n">sample_relds_wds</span><span class="p">()</span>
+                                               <span class="p">])</span>
+        <span class="n">wfd</span><span class="o">.</span><span class="n">chains</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">overlay</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">wfd</span><span class="o">.</span><span class="n">chains</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="s1">&#39;feature&#39;</span><span class="p">,</span> <span class="n">wfd</span><span class="o">.</span><span class="n">chains</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">service_type</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="s1">&#39;relational&#39;</span><span class="p">,</span> <span class="n">wfd</span><span class="o">.</span><span class="n">chains</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">service_type</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertSetEqual</span><span class="p">(</span><span class="nb">set</span><span class="p">([</span><span class="s2">&quot;portal&quot;</span><span class="p">,</span> <span class="s2">&quot;file&quot;</span><span class="p">,</span> <span class="s2">&quot;browser&quot;</span><span class="p">,</span> <span class="s2">&quot;map&quot;</span><span class="p">,</span> <span class="s2">&quot;dbms&quot;</span><span class="p">,</span> <span class="s2">&quot;web&quot;</span><span class="p">,</span> <span class="s2">&quot;feature&quot;</span><span class="p">,</span> <span class="s2">&quot;relational&quot;</span><span class="p">]),</span> <span class="n">wfd</span><span class="o">.</span><span class="n">all_required_service_types</span><span class="p">())</span></div>
+
+    
+<div class="viewcode-block" id="TestWorkflowDef.test_remove_chain">
+<a class="viewcode-back" href="../../tests.html#tests.test_work.TestWorkflowDef.test_remove_chain">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_remove_chain</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">wfd</span><span class="p">:</span> <span class="n">WorkflowDef</span> <span class="o">=</span> <span class="n">TestWorkflowDef</span><span class="o">.</span><span class="n">sample_web_wfdef</span><span class="p">()</span>
+        <span class="n">wfd</span><span class="o">.</span><span class="n">chains</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">wfd</span><span class="o">.</span><span class="n">chains</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="s1">&#39;map&#39;</span><span class="p">,</span> <span class="n">wfd</span><span class="o">.</span><span class="n">chains</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">service_type</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="s1">&#39;file&#39;</span><span class="p">,</span> <span class="n">wfd</span><span class="o">.</span><span class="n">chains</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">service_type</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertSetEqual</span><span class="p">(</span><span class="nb">set</span><span class="p">([</span><span class="s2">&quot;portal&quot;</span><span class="p">,</span> <span class="s2">&quot;file&quot;</span><span class="p">,</span> <span class="s2">&quot;browser&quot;</span><span class="p">,</span> <span class="s2">&quot;map&quot;</span><span class="p">,</span> <span class="s2">&quot;web&quot;</span><span class="p">]),</span> <span class="n">wfd</span><span class="o">.</span><span class="n">all_required_service_types</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="TestWorkflowDef.test_swap_clients">
+<a class="viewcode-back" href="../../tests.html#tests.test_work.TestWorkflowDef.test_swap_clients">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_swap_clients</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">dyn_chain</span><span class="p">:</span> <span class="n">WorkflowChain</span> <span class="o">=</span> <span class="n">TestWorkflowDef</span><span class="o">.</span><span class="n">sample_dynmap_chain</span><span class="p">(</span><span class="n">TestWorkflowDefStep</span><span class="o">.</span><span class="n">sample_browser_wds</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="s1">&#39;browser&#39;</span><span class="p">,</span> <span class="n">dyn_chain</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">service_type</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">dyn_chain</span><span class="o">.</span><span class="n">steps</span><span class="p">))</span>
+        <span class="n">dyn_chain</span><span class="o">.</span><span class="n">update_client_step</span><span class="p">(</span><span class="n">TestWorkflowDefStep</span><span class="o">.</span><span class="n">sample_mobile_wds</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="s1">&#39;mobile&#39;</span><span class="p">,</span> <span class="n">dyn_chain</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">service_type</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">dyn_chain</span><span class="o">.</span><span class="n">steps</span><span class="p">))</span></div>
+
+
+
+    <span class="c1"># Sample Chains</span>
+<div class="viewcode-block" id="TestWorkflowDef.sample_dynmap_chain">
+<a class="viewcode-back" href="../../tests.html#tests.test_work.TestWorkflowDef.sample_dynmap_chain">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_dynmap_chain</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">client</span><span class="p">:</span> <span class="n">WorkflowDefStep</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">WorkflowChain</span><span class="p">:</span>
+        <span class="n">steps</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">WorkflowDefStep</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">TestWorkflowDefStep</span><span class="o">.</span><span class="n">sample_web_wds</span><span class="p">(),</span>
+                                        <span class="n">TestWorkflowDefStep</span><span class="o">.</span><span class="n">sample_portal_wds</span><span class="p">(),</span>
+                                        <span class="n">TestWorkflowDefStep</span><span class="o">.</span><span class="n">sample_dynmap_wds</span><span class="p">(),</span>
+                                        <span class="n">TestWorkflowDefStep</span><span class="o">.</span><span class="n">sample_dbms_wds</span><span class="p">()]</span>
+        <span class="k">return</span> <span class="n">WorkflowChain</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Dynamic Map Image&#39;</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="n">steps</span><span class="p">,</span> <span class="n">service_providers</span><span class="o">=</span><span class="nb">dict</span><span class="p">(),</span> <span class="n">additional_client_step</span><span class="o">=</span><span class="n">client</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TestWorkflowDef.sample_basemap_chain">
+<a class="viewcode-back" href="../../tests.html#tests.test_work.TestWorkflowDef.sample_basemap_chain">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_basemap_chain</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">client</span><span class="p">:</span> <span class="n">WorkflowDefStep</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">WorkflowChain</span><span class="p">:</span>
+        <span class="n">steps</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">WorkflowDefStep</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">TestWorkflowDefStep</span><span class="o">.</span><span class="n">sample_web_wds</span><span class="p">(),</span>
+                                        <span class="n">TestWorkflowDefStep</span><span class="o">.</span><span class="n">sample_portal_wds</span><span class="p">(),</span>
+                                        <span class="n">TestWorkflowDefStep</span><span class="o">.</span><span class="n">sample_cachemap_wds</span><span class="p">(),</span>
+                                        <span class="n">TestWorkflowDefStep</span><span class="o">.</span><span class="n">sample_file_wds</span><span class="p">()]</span>
+        <span class="k">return</span> <span class="n">WorkflowChain</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Cached Map Image&#39;</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="n">steps</span><span class="p">,</span> <span class="n">service_providers</span><span class="o">=</span><span class="nb">dict</span><span class="p">(),</span> <span class="n">additional_client_step</span><span class="o">=</span><span class="n">client</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TestWorkflowDef.sample_hosted_chain">
+<a class="viewcode-back" href="../../tests.html#tests.test_work.TestWorkflowDef.sample_hosted_chain">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_hosted_chain</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">client</span><span class="p">:</span> <span class="n">WorkflowDefStep</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">WorkflowChain</span><span class="p">:</span>
+        <span class="n">steps</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">WorkflowDefStep</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">TestWorkflowDefStep</span><span class="o">.</span><span class="n">sample_web_wds</span><span class="p">(),</span>
+                                        <span class="n">TestWorkflowDefStep</span><span class="o">.</span><span class="n">sample_portal_wds</span><span class="p">(),</span>
+                                        <span class="n">TestWorkflowDefStep</span><span class="o">.</span><span class="n">sample_host_wds</span><span class="p">(),</span>
+                                        <span class="n">TestWorkflowDefStep</span><span class="o">.</span><span class="n">sample_relds_wds</span><span class="p">()]</span>
+        <span class="k">return</span> <span class="n">WorkflowChain</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Hosted Features&#39;</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="n">steps</span><span class="p">,</span> <span class="n">service_providers</span><span class="o">=</span><span class="nb">dict</span><span class="p">(),</span> <span class="n">additional_client_step</span><span class="o">=</span><span class="n">client</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TestWorkflowDef.sample_pro_chain">
+<a class="viewcode-back" href="../../tests.html#tests.test_work.TestWorkflowDef.sample_pro_chain">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_pro_chain</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">WorkflowChain</span><span class="p">:</span>
+        <span class="n">steps</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">WorkflowDefStep</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">TestWorkflowDefStep</span><span class="o">.</span><span class="n">sample_pro_wds</span><span class="p">(),</span>
+                                        <span class="n">TestWorkflowDefStep</span><span class="o">.</span><span class="n">sample_dbms_wds</span><span class="p">()]</span>
+        <span class="k">return</span> <span class="n">WorkflowChain</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Pro DC&#39;</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="n">steps</span><span class="p">,</span> <span class="n">service_providers</span><span class="o">=</span><span class="nb">dict</span><span class="p">(),</span> <span class="n">additional_client_step</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TestWorkflowDef.sample_provdi_chain">
+<a class="viewcode-back" href="../../tests.html#tests.test_work.TestWorkflowDef.sample_provdi_chain">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_provdi_chain</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">WorkflowChain</span><span class="p">:</span>
+        <span class="n">steps</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">WorkflowDefStep</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">TestWorkflowDefStep</span><span class="o">.</span><span class="n">sample_vdi_wds</span><span class="p">(),</span>
+                                        <span class="n">TestWorkflowDefStep</span><span class="o">.</span><span class="n">sample_pro_wds</span><span class="p">(),</span>
+                                        <span class="n">TestWorkflowDefStep</span><span class="o">.</span><span class="n">sample_dbms_wds</span><span class="p">()]</span>
+        <span class="k">return</span> <span class="n">WorkflowChain</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Pro VDI DC&#39;</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="n">steps</span><span class="p">,</span> <span class="n">service_providers</span><span class="o">=</span><span class="nb">dict</span><span class="p">(),</span> <span class="n">additional_client_step</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></div>
+
+
+    <span class="c1"># Sample Workflow Definitions</span>
+<div class="viewcode-block" id="TestWorkflowDef.sample_web_wfdef">
+<a class="viewcode-back" href="../../tests.html#tests.test_work.TestWorkflowDef.sample_web_wfdef">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_web_wfdef</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">WorkflowDef</span><span class="p">:</span>
+        <span class="n">chains</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">WorkflowChain</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">TestWorkflowDef</span><span class="o">.</span><span class="n">sample_dynmap_chain</span><span class="p">(</span><span class="n">TestWorkflowDefStep</span><span class="o">.</span><span class="n">sample_browser_wds</span><span class="p">()),</span>
+                                       <span class="n">TestWorkflowDef</span><span class="o">.</span><span class="n">sample_basemap_chain</span><span class="p">(</span><span class="n">TestWorkflowDefStep</span><span class="o">.</span><span class="n">sample_browser_wds</span><span class="p">())]</span>
+        <span class="k">return</span> <span class="n">WorkflowDef</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Web Map Definition&#39;</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;Sample Web Map&#39;</span><span class="p">,</span> <span class="n">think_time_s</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">chains</span><span class="o">=</span><span class="n">chains</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TestWorkflowDef.sample_mobile_wfdef">
+<a class="viewcode-back" href="../../tests.html#tests.test_work.TestWorkflowDef.sample_mobile_wfdef">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_mobile_wfdef</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">WorkflowDef</span><span class="p">:</span>
+        <span class="n">chains</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">WorkflowChain</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">TestWorkflowDef</span><span class="o">.</span><span class="n">sample_hosted_chain</span><span class="p">(</span><span class="n">TestWorkflowDefStep</span><span class="o">.</span><span class="n">sample_mobile_wds</span><span class="p">()),</span>
+                                       <span class="n">TestWorkflowDef</span><span class="o">.</span><span class="n">sample_basemap_chain</span><span class="p">(</span><span class="n">TestWorkflowDefStep</span><span class="o">.</span><span class="n">sample_mobile_wds</span><span class="p">())]</span>
+        <span class="k">return</span> <span class="n">WorkflowDef</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Mobile Map Definition&#39;</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;Sample Mobile Map&#39;</span><span class="p">,</span> <span class="n">think_time_s</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">chains</span><span class="o">=</span><span class="n">chains</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TestWorkflowDef.sample_workstation_wfdef">
+<a class="viewcode-back" href="../../tests.html#tests.test_work.TestWorkflowDef.sample_workstation_wfdef">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_workstation_wfdef</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">WorkflowDef</span><span class="p">:</span>
+        <span class="n">chains</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">WorkflowChain</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">TestWorkflowDef</span><span class="o">.</span><span class="n">sample_pro_chain</span><span class="p">(),</span>
+                                       <span class="n">TestWorkflowDef</span><span class="o">.</span><span class="n">sample_basemap_chain</span><span class="p">(</span><span class="n">TestWorkflowDefStep</span><span class="o">.</span><span class="n">sample_pro_wds</span><span class="p">())]</span>
+        <span class="k">return</span> <span class="n">WorkflowDef</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Workstation Map Definition&#39;</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;Sample Workstation Map&#39;</span><span class="p">,</span> <span class="n">think_time_s</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">chains</span><span class="o">=</span><span class="n">chains</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TestWorkflowDef.sample_vdi_wfdef">
+<a class="viewcode-back" href="../../tests.html#tests.test_work.TestWorkflowDef.sample_vdi_wfdef">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_vdi_wfdef</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">WorkflowDef</span><span class="p">:</span>
+        <span class="n">chains</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">WorkflowChain</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">TestWorkflowDef</span><span class="o">.</span><span class="n">sample_provdi_chain</span><span class="p">(),</span>
+                                       <span class="n">TestWorkflowDef</span><span class="o">.</span><span class="n">sample_basemap_chain</span><span class="p">(</span><span class="n">TestWorkflowDefStep</span><span class="o">.</span><span class="n">sample_vdi_wds</span><span class="p">())]</span>
+        <span class="k">return</span> <span class="n">WorkflowDef</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;VDI Map Definition&#39;</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;Sample VDI Map&#39;</span><span class="p">,</span> <span class="n">think_time_s</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">chains</span><span class="o">=</span><span class="n">chains</span><span class="p">)</span></div>
+</div>
+
+
+<div class="viewcode-block" id="TestWorkflow">
+<a class="viewcode-back" href="../../tests.html#tests.test_work.TestWorkflow">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TestWorkflow</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+<div class="viewcode-block" id="TestWorkflow.test_create">
+<a class="viewcode-back" href="../../tests.html#tests.test_work.TestWorkflow.test_create">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_create</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">wf_pro</span><span class="p">:</span> <span class="n">Workflow</span> <span class="o">=</span> <span class="n">TestWorkflow</span><span class="o">.</span><span class="n">sample_workstation_wf</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="s1">&#39;Pro&#39;</span><span class="p">,</span> <span class="n">wf_pro</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertListEqual</span><span class="p">([],</span> <span class="n">wf_pro</span><span class="o">.</span><span class="n">definition</span><span class="o">.</span><span class="n">missing_service_providers</span><span class="p">())</span>
+        <span class="n">wf_vdi</span><span class="p">:</span> <span class="n">Workflow</span> <span class="o">=</span> <span class="n">TestWorkflow</span><span class="o">.</span><span class="n">sample_vdi_wf</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="s1">&#39;VDI&#39;</span><span class="p">,</span> <span class="n">wf_vdi</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertListEqual</span><span class="p">([],</span> <span class="n">wf_vdi</span><span class="o">.</span><span class="n">definition</span><span class="o">.</span><span class="n">missing_service_providers</span><span class="p">())</span>
+        <span class="n">wf_web</span><span class="p">:</span> <span class="n">Workflow</span> <span class="o">=</span> <span class="n">TestWorkflow</span><span class="o">.</span><span class="n">sample_web_wf</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="s1">&#39;Web&#39;</span><span class="p">,</span> <span class="n">wf_web</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertListEqual</span><span class="p">([],</span> <span class="n">wf_web</span><span class="o">.</span><span class="n">definition</span><span class="o">.</span><span class="n">missing_service_providers</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="TestWorkflow.test_missing_sps">
+<a class="viewcode-back" href="../../tests.html#tests.test_work.TestWorkflow.test_missing_sps">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_missing_sps</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">wf</span><span class="p">:</span> <span class="n">Workflow</span> <span class="o">=</span> <span class="n">TestWorkflow</span><span class="o">.</span><span class="n">sample_web_wf</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">chain</span> <span class="ow">in</span> <span class="n">wf</span><span class="o">.</span><span class="n">definition</span><span class="o">.</span><span class="n">chains</span><span class="p">:</span>
+            <span class="n">chain</span><span class="o">.</span><span class="n">service_providers</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">wf</span><span class="o">.</span><span class="n">definition</span><span class="o">.</span><span class="n">chains</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">service_providers</span><span class="o">.</span><span class="n">items</span><span class="p">()))</span>
+        <span class="n">sps</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ServiceProvider</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">TestServiceProvider</span><span class="o">.</span><span class="n">sample_browser_sp</span><span class="p">(),</span>
+                                      <span class="n">TestServiceProvider</span><span class="o">.</span><span class="n">sample_file_sp</span><span class="p">(),</span>
+                                      <span class="n">TestServiceProvider</span><span class="o">.</span><span class="n">sample_web_sp</span><span class="p">()]</span>
+        <span class="k">for</span> <span class="n">sp</span> <span class="ow">in</span> <span class="n">sps</span><span class="p">:</span> <span class="n">wf</span><span class="o">.</span><span class="n">definition</span><span class="o">.</span><span class="n">assign_service_provider</span><span class="p">(</span><span class="n">sp</span><span class="p">)</span>
+        <span class="c1"># print(f&#39;all required for wdef {wf.definition.name}: {wf.definition.all_required_service_types()}&#39;)</span>
+        <span class="n">missing</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">wf</span><span class="o">.</span><span class="n">definition</span><span class="o">.</span><span class="n">missing_service_providers</span><span class="p">()</span>
+        <span class="c1"># print(f&#39;all missing for wdef {wf.definition.name}: {missing}&#39;)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">missing</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertSetEqual</span><span class="p">(</span><span class="nb">set</span><span class="p">([</span><span class="s1">&#39;map&#39;</span><span class="p">,</span> <span class="s1">&#39;dbms&#39;</span><span class="p">,</span> <span class="s1">&#39;portal&#39;</span><span class="p">]),</span> <span class="nb">set</span><span class="p">(</span><span class="n">missing</span><span class="p">))</span></div>
+
+    
+<div class="viewcode-block" id="TestWorkflow.sample_workstation_wf">
+<a class="viewcode-back" href="../../tests.html#tests.test_work.TestWorkflow.sample_workstation_wf">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_workstation_wf</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Workflow</span><span class="p">:</span>
+        <span class="n">w</span><span class="p">:</span> <span class="n">Workflow</span> <span class="o">=</span> <span class="n">Workflow</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Pro&#39;</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;Local workstation&#39;</span><span class="p">,</span> 
+                        <span class="nb">type</span><span class="o">=</span><span class="n">WorkflowType</span><span class="o">.</span><span class="n">USER</span><span class="p">,</span> 
+                        <span class="n">definition</span><span class="o">=</span><span class="n">TestWorkflowDef</span><span class="o">.</span><span class="n">sample_workstation_wfdef</span><span class="p">(),</span> 
+                        <span class="n">user_count</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">productivity</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">sp</span> <span class="ow">in</span> <span class="n">TestServiceProvider</span><span class="o">.</span><span class="n">sample_webgis_sps</span><span class="p">():</span>
+            <span class="n">w</span><span class="o">.</span><span class="n">definition</span><span class="o">.</span><span class="n">assign_service_provider</span><span class="p">(</span><span class="n">sp</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">w</span></div>
+
+    
+<div class="viewcode-block" id="TestWorkflow.sample_vdi_wf">
+<a class="viewcode-back" href="../../tests.html#tests.test_work.TestWorkflow.sample_vdi_wf">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_vdi_wf</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Workflow</span><span class="p">:</span>
+        <span class="n">w</span><span class="p">:</span> <span class="n">Workflow</span> <span class="o">=</span> <span class="n">Workflow</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;VDI&#39;</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;VDI workstation&#39;</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="n">WorkflowType</span><span class="o">.</span><span class="n">USER</span><span class="p">,</span>
+                        <span class="n">definition</span><span class="o">=</span><span class="n">TestWorkflowDef</span><span class="o">.</span><span class="n">sample_vdi_wfdef</span><span class="p">(),</span>
+                        <span class="n">user_count</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">productivity</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">sp</span> <span class="ow">in</span> <span class="n">TestServiceProvider</span><span class="o">.</span><span class="n">sample_webgis_sps</span><span class="p">():</span>
+            <span class="n">w</span><span class="o">.</span><span class="n">definition</span><span class="o">.</span><span class="n">assign_service_provider</span><span class="p">(</span><span class="n">sp</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">w</span></div>
+
+    
+<div class="viewcode-block" id="TestWorkflow.sample_web_wf">
+<a class="viewcode-back" href="../../tests.html#tests.test_work.TestWorkflow.sample_web_wf">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_web_wf</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Workflow</span><span class="p">:</span>
+        <span class="n">w</span><span class="p">:</span> <span class="n">Workflow</span> <span class="o">=</span> <span class="n">Workflow</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Web&#39;</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;Web application&#39;</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="n">WorkflowType</span><span class="o">.</span><span class="n">TRANSACTIONAL</span><span class="p">,</span>
+                        <span class="n">definition</span><span class="o">=</span><span class="n">TestWorkflowDef</span><span class="o">.</span><span class="n">sample_web_wfdef</span><span class="p">(),</span>
+                        <span class="n">tph</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">sp</span> <span class="ow">in</span> <span class="n">TestServiceProvider</span><span class="o">.</span><span class="n">sample_webgis_sps</span><span class="p">():</span>
+            <span class="n">w</span><span class="o">.</span><span class="n">definition</span><span class="o">.</span><span class="n">assign_service_provider</span><span class="p">(</span><span class="n">sp</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">w</span></div>
+</div>
+
+    
+<div class="viewcode-block" id="TestClientRequestSolution">
+<a class="viewcode-back" href="../../tests.html#tests.test_work.TestClientRequestSolution">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TestClientRequestSolution</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+    
+<div class="viewcode-block" id="TestClientRequestSolution.test_create">
+<a class="viewcode-back" href="../../tests.html#tests.test_work.TestClientRequestSolution.test_create">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_create</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">crs</span> <span class="o">=</span> <span class="n">TestClientRequestSolution</span><span class="o">.</span><span class="n">sample_intranet_crs</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">19</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">crs</span><span class="o">.</span><span class="n">steps</span><span class="p">))</span></div>
+
+        <span class="c1"># for step in crs.steps:</span>
+        <span class="c1">#     print(step.st_calculator.name) # type: ignore</span>
+
+    
+<div class="viewcode-block" id="TestClientRequestSolution.sample_intranet_crs">
+<a class="viewcode-back" href="../../tests.html#tests.test_work.TestClientRequestSolution.sample_intranet_crs">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_intranet_crs</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ClientRequestSolution</span><span class="p">:</span>
+        <span class="n">chain</span><span class="p">:</span> <span class="n">WorkflowChain</span> <span class="o">=</span> <span class="n">TestWorkflowDef</span><span class="o">.</span><span class="n">sample_dynmap_chain</span><span class="p">(</span><span class="n">TestWorkflowDefStep</span><span class="o">.</span><span class="n">sample_browser_wds</span><span class="p">())</span>
+        <span class="k">for</span> <span class="n">sp</span> <span class="ow">in</span> <span class="n">TestServiceProvider</span><span class="o">.</span><span class="n">sample_webgis_sps</span><span class="p">():</span>
+            <span class="n">chain</span><span class="o">.</span><span class="n">service_providers</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">service_type</span><span class="p">]</span> <span class="o">=</span> <span class="n">sp</span>
+        <span class="k">return</span> <span class="n">create_solution</span><span class="p">(</span><span class="n">chain</span><span class="p">,</span> <span class="n">TestRoute2</span><span class="o">.</span><span class="n">sample_intranet</span><span class="p">())</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Simon Biickert.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
