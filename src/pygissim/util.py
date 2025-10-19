@@ -68,7 +68,7 @@ class LibManager:
             for row in csv_reader:
                 sd: ServiceDef = ServiceDef(row['name'], row['description'], row['service_type'], 
                                             balancing_model=BalancingModel.from_str(row['balancing_model']))
-                self.service_definitions[sd.name] = sd
+                self.service_definitions[sd.service_type] = sd
 
     def load_wf_steps_local(self):
         """ Loads the performance metrics for individual workflow steps. """
@@ -111,3 +111,68 @@ class LibManager:
                 wdef: WorkflowDef = WorkflowDef(row['name'], row['description'], int(row['think']), chains)
                 self.workflow_definitions[wdef.name] = wdef
 
+network_list: list[str] = ["Local Only", "Local and ArcGIS Online", "Branch Offices", "Cloudy", "Backhaul Cloudy"]
+
+def load_network(name: str) -> Tuple[list[Zone], list[Connection]]:
+    zones: list[Zone] = []
+    conns: list[Connection] = []
+
+    lan: Zone = Zone("Local", "Local network", ZoneType.LOCAL)
+    lan_local: Connection = lan.self_connect(1000,0)
+    
+    dmz: Zone = Zone("DMZ", "Edge network", ZoneType.EDGE)
+    dmz_local: Connection = dmz.self_connect(1000,0)
+
+    internet: Zone = Zone("Internet", "Internet", ZoneType.INTERNET)
+    internet_local: Connection = internet.self_connect(10000,0)
+
+    agol: Zone = Zone("ArcGIS Online", "AWS US West", ZoneType.EDGE)
+    agol_local: Connection = agol.self_connect(10000,0)
+
+    cloud: Zone = Zone("Cloud", "Public cloud", ZoneType.LOCAL)
+    cloud_local: Connection = cloud.self_connect(1000,0)
+
+    cloud_edge: Zone = Zone("Gateway", "Cloud gateway", ZoneType.EDGE)
+    cloud_edge_local: Connection = cloud_edge.self_connect(1000, 0)
+
+    wan1: Zone = Zone("WAN 1", "Branch office 1", ZoneType.LOCAL)
+    wan1_local: Connection = wan1.self_connect(100, 0)
+
+    wan2: Zone = Zone("WAN 2", "Branch office 2", ZoneType.LOCAL)
+    wan2_local: Connection = wan2.self_connect(100, 0)
+
+    match name.upper():
+        case "LOCAL ONLY":
+            zones = [lan]
+            conns = [lan_local]
+        case"LOCAL AND ARCGIS ONLINE":
+            zones = [lan, dmz, internet, agol]
+            conns = [lan_local, dmz_local, internet_local, agol_local]
+            conns.extend(lan.connect_both_ways(dmz, 500, 1))
+            conns.append(dmz.connect(internet, 250, 10))
+            conns.append(internet.connect(dmz, 500, 10))
+            conns.extend(internet.connect_both_ways(agol, 10000, 1))
+        case"BRANCH OFFICES":
+            zones = [lan, wan1, wan2]
+            conns = [lan_local, wan1_local, wan2_local]
+            conns.extend(lan.connect_both_ways(wan1, 300, 1))
+            conns.extend(lan.connect_both_ways(wan2, 100, 10))
+        case"CLOUDY":
+            zones = [cloud, cloud_edge, internet, agol]
+            conns = [cloud_local, cloud_edge_local, internet_local, agol_local]
+            conns.extend(cloud.connect_both_ways(cloud_edge, 1000, 0))
+            conns.extend(cloud_edge.connect_both_ways(internet, 1000, 10))
+            conns.extend(internet.connect_both_ways(agol, 10000, 1))
+        case"BACKHAUL CLOUDY":
+            zones = [lan, dmz, internet, agol, cloud, cloud_edge]
+            conns = [lan_local, dmz_local, internet_local, agol_local, cloud_local, cloud_edge_local]
+            conns.extend(lan.connect_both_ways(dmz, 500, 1))
+            conns.append(dmz.connect(internet, 250, 10))
+            conns.append(internet.connect(dmz, 500, 10))
+            conns.extend(internet.connect_both_ways(agol, 10000, 1))
+            conns.extend(cloud.connect_both_ways(cloud_edge, 1000, 0))
+            conns.extend(cloud_edge.connect_both_ways(internet, 1000, 10))
+            conns.extend(internet.connect_both_ways(agol, 10000, 1))
+            conns.extend(lan.connect_both_ways(cloud, 1000, 5))
+
+    return (zones,conns)

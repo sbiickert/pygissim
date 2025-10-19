@@ -176,6 +176,11 @@ class Zone:
 
     def connect(self, other: 'Zone', bw: int, lat: int) -> Connection:
         return Connection(self, other, bw, lat)
+
+    def connect_both_ways(self, other: 'Zone', bw: int, lat: int) -> Tuple[Connection, Connection]:
+        c1: Connection = Connection(self, other, bw, lat)
+        c2 = c1.inverted()
+        return (c1,c2)
     
     def self_connect(self, bw: int, lat: int) -> Connection:
         return Connection(self, self, bw, lat)
@@ -331,6 +336,9 @@ class ComputeNode(ServiceTimeCalculator):
         self._v_cores: int = 0                   # if ComputeNodeType.V_SERVER
         self._v_hosts: list['ComputeNode'] = []    # if ComputeNodeType.P_SERVER
 
+    def __str__(self) -> str:
+        return f'CNode {self.name} {self.type} in {self.zone.name}'
+    
     def vcore_count(self) -> int:
         return self._v_cores
     

@@ -1,8 +1,11 @@
 from typing import Optional, Dict
 import numpy as np
 import pandas as pd
+from yfiles_jupyter_graphs import GraphWidget
+
 
 from pygissim.engine import *
+from pygissim.pygissim import *
 
 # .88b  d88. d88888b d888888b d8888b. d888888b  .o88b. .d8888.
 # 88'YbdP`88 88'     `~~88~~' 88  `8D   `88'   d8P  Y8 88'  YP
@@ -143,3 +146,128 @@ def describe_worflowdefstep(step: WorkflowDefStep, indent: int = 0) -> str:
 
 def describe_service_provider(sp: ServiceProvider, indent: int = 0) -> str:
     return f'{indent * "\t"}{sp.name} ({sp.description}) service: {sp.service.name}; nodes: [{",".join(map(lambda n: (n.name), sp.nodes))}]'
+
+def zones_to_graph_nodes(zones: list[Zone]) -> list:
+    nodes = []
+    for zone in zones:
+        nodes.append({"id": zone.id, 
+                      "properties":{'label': zone.name, 'type': str(zone.type)}})
+    return nodes
+
+def connections_to_graph_edges(net: list[Connection], metrics: Optional[list[QueueMetric]] = None):
+    edges = []
+    util_stats: Optional[pd.DataFrame] = None
+    if metrics is not None:
+        util_stats = util_stats_for_queues(metrics, queue_type='CONNECTION')
+    for conn in net:
+        if util_stats is not None:
+            conn_stats = util_stats[util_stats['Queue'] == conn.name].reset_index(drop=True)
+            avg = conn_stats.at[0, 'Avg']
+        else:
+            avg = 0
+        edges.append({"id": conn.name, 'start': conn.source.id, 'end': conn.destination.id, 
+                      "properties":{'name': conn.name, 'label': f'{conn.bandwidth}/{conn.latency_ms}', 'bw': conn.bandwidth, 'lat': conn.latency_ms, 'util': avg}})
+    return edges
+
+def network_node_color_mapping(node: Dict) -> str:
+    match node['properties']['type']:
+        case 'ZoneType.LOCAL': return '#9999FF'
+        case 'ZoneType.EDGE': return '#FF9911'
+        case 'ZoneType.INTERNET': return '#DDDDDD'
+        case _: return '#000000'
+
+def network_edge_color_mapping(edge: Dict) -> str:
+    util: float = edge['properties']['util']
+    if util < .01: return '#CCCCCC'
+    elif util < .10: return '#0000FF'
+    elif util < .25: return '#00FF00'
+    elif util < 0.5: return '#DDDD00'
+    elif util < 0.9: return '#FFA500'
+    else: return '#FF0000'
+
+def draw_network(zones: list[Zone], connections: list[Connection]) -> GraphWidget:
+    w = GraphWidget()
+    w.nodes = zones_to_graph_nodes(zones)
+    w.edges = connections_to_graph_edges(connections)
+    w.directed = True
+    w.graph_layout = 'orthogonal'
+    w.set_node_color_mapping(network_node_color_mapping)
+    w.set_edge_color_mapping(network_edge_color_mapping)
+    return w
+
+def compute_to_graph(c_nodes: list[ComputeNode]) -> Tuple[list, list]:
+    nodes = []
+    edges = []
+    for c in c_nodes:
+        if c.type == ComputeNodeType.V_SERVER: continue
+        # print(f'adding {c.name}')
+        nodes.append({"id": c.name, 
+                      "properties":{'label': c.name, 'type': str(c.type)}})
+        edges.append({"id": f'{c.name}-{c.zone.id}', 'start': c.name, 'end': c.zone.id})
+        if c.type == ComputeNodeType.P_SERVER:
+            for v in c._v_hosts:
+                # print(f'adding {v.name}')
+                nodes.append({"id": v.name, 
+                              "properties":{'label': v.name, 'type': str(v.type)}})
+                edges.append({"id": f'{c.name}-{v.name}', 'start': c.name, 'end': v.name})
+    return (nodes, edges)
+
+def sp_to_graph(sps: list[ServiceProvider]) -> Tuple[list, list]:
+    nodes = []
+    edges = []
+
+    for sp in sps:
+        nodes.append({"id": sp.name, 
+                      "properties":{'label': sp.name, 'type': 'Service Provider', 'service_type': sp.service.name}})
+        for node in sp.nodes:
+            edges.append({"id": f'{sp.name}-{node.name}', 'start':sp.name, 'end':node.name})
+
+    return (nodes, edges)
+
+def zone_compute_sp_node_color_mapping(node: Dict) -> str:
+    if 'ZoneType' in node['properties']['type']:
+        return '#FF9911'
+    if node['properties']['type'] == str(ComputeNodeType.CLIENT):
+        return '#9900CC'
+    elif node['properties']['type'] == str(ComputeNodeType.P_SERVER):
+        return '#000099'
+    elif node['properties']['type'] == str(ComputeNodeType.V_SERVER):
+        return '#3333CC'
+    else:
+        return '#333333'
+    
+
+def draw_zone_compute_sp(d: Design) -> GraphWidget:
+    w = GraphWidget()
+
+    zone_nodes = zones_to_graph_nodes(d.zones)
+    compute_nodes, compute_edges = compute_to_graph(d.compute_nodes())
+    sp_nodes, sp_edges = sp_to_graph(d.service_providers)
+    w.nodes = zone_nodes + compute_nodes + sp_nodes
+    w.edges = compute_edges + sp_edges
+    w.set_node_color_mapping(zone_compute_sp_node_color_mapping)
+    w.graph_layout = 'hierarchic'
+    return w
+
+def create_service_provider(d: Design, name: str, service: str, node_names: list[str]):
+    nodes: list[ComputeNode] = []
+    for node_name in node_names:
+        node = d.get_compute_node(node_name)
+        if node is not None:
+            nodes.append(node)
+    d.add_service_provider(ServiceProvider(name, "", service=d.services[service], nodes=nodes))
+
+def create_agol_service_providers(d: Design, zone_name: str):
+    sp_agol: list[ServiceProvider] = list()
+    agol: Optional[Zone] = d.get_zone(zone_name)
+    if agol is None: raise ValueError(f'No zone named "{zone_name} found in design.')
+    servers: list[ComputeNode] = list(filter(lambda node: (node.zone == agol), d.compute_nodes()))
+    sp_agol.append(ServiceProvider(name='AGOL Edge', desc='', service=d.services['web'], nodes=servers))
+    sp_agol.append(ServiceProvider(name='AGOL Portal', desc='', service=d.services['portal'], nodes=servers))
+    sp_agol.append(ServiceProvider(name='AGOL GIS', desc='', service=d.services['feature'], nodes=servers))
+    sp_agol.append(ServiceProvider(name='AGOL Basemap', desc='', service=d.services['map'], nodes=servers))
+    sp_agol.append(ServiceProvider(name='AGOL DB', desc='', service=d.services['relational'], nodes=servers))
+    sp_agol.append(ServiceProvider(name='AGOL File', desc='', service=d.services['file'], nodes=servers))
+
+    for sp in sp_agol:
+        d.add_service_provider(sp)
