@@ -56,7 +56,6 @@ class LibManager:
                 hw: HardwareDef = HardwareDef(row['processor'], 
                                               int(row['cores']), 
                                               float(row['spec']), 
-                                              architecture=ComputeArchitecture.from_str(row['architecture']),
                                               threading=ThreadingModel.HYPERTHREADED if row['architecture'] == 'INTEL' else ThreadingModel.PHYSICAL)
                 self.hardware[hw.processor] = hw
 
@@ -117,28 +116,28 @@ def load_network(name: str) -> Tuple[list[Zone], list[Connection]]:
     zones: list[Zone] = []
     conns: list[Connection] = []
 
-    lan: Zone = Zone("Local", "Local network", ZoneType.LOCAL)
+    lan: Zone = Zone("Local", "Local network")
     lan_local: Connection = lan.self_connect(1000,0)
     
-    dmz: Zone = Zone("DMZ", "Edge network", ZoneType.EDGE)
+    dmz: Zone = Zone("DMZ", "Edge network")
     dmz_local: Connection = dmz.self_connect(1000,0)
 
-    internet: Zone = Zone("Internet", "Internet", ZoneType.INTERNET)
+    internet: Zone = Zone("Internet", "Internet")
     internet_local: Connection = internet.self_connect(10000,0)
 
-    agol: Zone = Zone("ArcGIS Online", "AWS US West", ZoneType.EDGE)
+    agol: Zone = Zone("ArcGIS Online", "AWS US West")
     agol_local: Connection = agol.self_connect(10000,0)
 
-    cloud: Zone = Zone("Cloud", "Public cloud", ZoneType.LOCAL)
+    cloud: Zone = Zone("Cloud", "Public cloud")
     cloud_local: Connection = cloud.self_connect(1000,0)
 
-    cloud_edge: Zone = Zone("Gateway", "Cloud gateway", ZoneType.EDGE)
+    cloud_edge: Zone = Zone("Gateway", "Cloud gateway")
     cloud_edge_local: Connection = cloud_edge.self_connect(1000, 0)
 
-    wan1: Zone = Zone("WAN 1", "Branch office 1", ZoneType.LOCAL)
+    wan1: Zone = Zone("WAN 1", "Branch office 1")
     wan1_local: Connection = wan1.self_connect(100, 0)
 
-    wan2: Zone = Zone("WAN 2", "Branch office 2", ZoneType.LOCAL)
+    wan2: Zone = Zone("WAN 2", "Branch office 2")
     wan2_local: Connection = wan2.self_connect(100, 0)
 
     match name.upper():

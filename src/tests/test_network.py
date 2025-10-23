@@ -9,41 +9,40 @@ class TestZone(unittest.TestCase):
         z2: Zone = TestZone.sample_edge_zone()
         self.assertFalse(z1 == z2)
         self.assertEqual("Local", z1.name)
-        self.assertEqual(ZoneType.EDGE, z2.type)
 
     _sample_internet_zone: Optional[Zone] = None
     @classmethod
     def sample_internet_zone(cls) -> Zone:
         if cls._sample_internet_zone is None:
-            cls._sample_internet_zone = Zone(name='Internet', desc='Internet Zone', z_type=ZoneType.INTERNET)
+            cls._sample_internet_zone = Zone(name='Internet', desc='Internet Zone')
         return cls._sample_internet_zone
 
     _sample_edge_zone: Optional[Zone] = None
     @classmethod
     def sample_edge_zone(cls) -> Zone:
         if cls._sample_edge_zone is None:
-            cls._sample_edge_zone = Zone(name='DMZ', desc='Edge Zone', z_type=ZoneType.EDGE)
+            cls._sample_edge_zone = Zone(name='DMZ', desc='Edge Zone')
         return cls._sample_edge_zone
 
     _sample_intranet_zone: Optional[Zone] = None
     @classmethod
     def sample_intranet_zone(cls) -> Zone:
         if cls._sample_intranet_zone is None:
-            cls._sample_intranet_zone = Zone(name='Local', desc='Intranet Zone', z_type=ZoneType.LOCAL)
+            cls._sample_intranet_zone = Zone(name='Local', desc='Intranet Zone')
         return cls._sample_intranet_zone
 
     _sample_agol_zone: Optional[Zone] = None
     @classmethod
     def sample_agol_zone(cls) -> Zone:
         if cls._sample_agol_zone is None:
-            cls._sample_agol_zone = Zone(name='AGOL', desc='ArcGIS Online Zone', z_type=ZoneType.EDGE)
+            cls._sample_agol_zone = Zone(name='AGOL', desc='ArcGIS Online Zone')
         return cls._sample_agol_zone
     
     _sample_wan_zone: Optional[Zone] = None
     @classmethod
     def sample_wan_zone(cls) -> Zone:
         if cls._sample_wan_zone is None:
-            cls._sample_wan_zone = Zone(name='WAN Site', desc='Second Office', z_type=ZoneType.LOCAL)
+            cls._sample_wan_zone = Zone(name='WAN Site', desc='Second Office')
         return cls._sample_wan_zone
 
 class TestConnection(unittest.TestCase):
@@ -111,7 +110,7 @@ class TestRoute1(unittest.TestCase):
         self.assertEqual(1, len(z1.entry_connections(net)))
         z1_exit: Connection = z1.exit_connections(net)[0]
         self.assertEqual(c1_2, z1_exit)
-        z4: Zone = Zone("Zone 4", "The fourth zone", ZoneType.INTERNET)
+        z4: Zone = Zone("Zone 4", "The fourth zone")
         c3_4:Connection = z3.connect(z4, 13, 1)
         net.append(c3_4)
         self.assertTrue(z4.is_a_destination(net))
@@ -241,9 +240,9 @@ class TestRoute2(unittest.TestCase):
 
         return network
 
-    zone_a: Zone = Zone('Zone A', desc='', z_type=ZoneType.LOCAL)
-    zone_b: Zone = Zone('Zone B', desc='', z_type=ZoneType.LOCAL)
-    zone_c: Zone = Zone('Zone C', desc='', z_type=ZoneType.LOCAL)
+    zone_a: Zone = Zone('Zone A', desc='')
+    zone_b: Zone = Zone('Zone B', desc='')
+    zone_c: Zone = Zone('Zone C', desc='')
     
     @classmethod
     def sample_looping_network(cls) -> list[Connection]:

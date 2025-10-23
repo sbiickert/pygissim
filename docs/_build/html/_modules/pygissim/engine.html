@@ -209,19 +209,23 @@
 <span class="c1"># 88  V888 88.        88    `8b d8&#39;8b d8&#39; `8b  d8&#39; 88 `88. 88 `88.</span>
 <span class="c1"># VP   V8P Y88888P    YP     `8b8&#39; `8d8&#39;   `Y88P&#39;  88   YD YP   YD</span>
 
-<span class="c1"># ------------------------------------------------------------</span>
-<div class="viewcode-block" id="ZoneType">
-<a class="viewcode-back" href="../../pygissim.html#pygissim.engine.ZoneType">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">ZoneType</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
-    <span class="n">LOCAL</span> <span class="o">=</span> <span class="s1">&#39;local&#39;</span>
-    <span class="n">EDGE</span> <span class="o">=</span> <span class="s1">&#39;edge&#39;</span>
-    <span class="n">INTERNET</span> <span class="o">=</span> <span class="s1">&#39;internet&#39;</span></div>
-
 
 <span class="c1"># ------------------------------------------------------------</span>
 <div class="viewcode-block" id="Connection">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.Connection">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Connection</span><span class="p">(</span><span class="n">ServiceTimeCalculator</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Represents a one-way link between Zones. The source and destination :class:`Zone` may be the same. </span>
+<span class="sd">    To connect Zones for two-way communication, there needs to be two Connections, upstream and downstream.</span>
+
+<span class="sd">    :param source: The upstream Zone. Information flows from the source.</span>
+<span class="sd">    :type source: Zone</span>
+<span class="sd">    :param dest: The downstream Zone. Information flows to the destination.</span>
+<span class="sd">    :type dest: Zone</span>
+<span class="sd">    :param bw: The stated bandwidth of the connection in megabits per second (Mbps).</span>
+<span class="sd">    :type bw: int</span>
+<span class="sd">    :param lat: The average latency of the connection in milliseconds (ms).</span>
+<span class="sd">    :type lat: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span><span class="s1">&#39;Zone&#39;</span><span class="p">,</span> <span class="n">dest</span><span class="p">:</span><span class="s1">&#39;Zone&#39;</span><span class="p">,</span> <span class="n">bw</span><span class="p">:</span><span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">lat</span><span class="p">:</span><span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="p">:</span> <span class="n">Zone</span> <span class="o">=</span> <span class="n">source</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">destination</span><span class="p">:</span> <span class="n">Zone</span> <span class="o">=</span> <span class="n">dest</span>
@@ -243,24 +247,45 @@
 <div class="viewcode-block" id="Connection.description">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.Connection.description">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">description</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">description</span><span class="si">}</span><span class="s1"> to </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">destination</span><span class="o">.</span><span class="n">description</span><span class="si">}</span><span class="s1">&#39;</span></div>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Describes the Connection using the namesx of the source and destination Zones.</span>
+<span class="sd">         </span>
+<span class="sd">        Example: &#39;Zone A to Zone B&#39; &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1"> to </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">destination</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span></div>
 
     
 <div class="viewcode-block" id="Connection.is_local">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.Connection.is_local">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">is_local</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Indication that the Connection&#39;s source and destination are the same Zone. </span>
+<span class="sd">        </span>
+<span class="sd">        :returns: True if the source and destination Zone are equal.</span>
+<span class="sd">        :rtype: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">source</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">destination</span></div>
 
     
 <div class="viewcode-block" id="Connection.inverted">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.Connection.inverted">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">inverted</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Connection&#39;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Inverts the Connection and returns it.  </span>
+<span class="sd">        </span>
+<span class="sd">        :returns: A copy of the Connection with the source and destination swapped.</span>
+<span class="sd">        :rtype: Connection</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">Connection</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">destination</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bandwidth</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">latency_ms</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Connection.calculate_service_time">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.Connection.calculate_service_time">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">calculate_service_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="s1">&#39;ClientRequest&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Calculates the service time for the ClientRequest&#39;s current step in this Connection.</span>
+<span class="sd">        This takes the data size and determines how many milliseconds it would take to transmit. </span>
+<span class="sd">        </span>
+<span class="sd">        :param request: The ClientRequest being transmitted over this Connection.</span>
+<span class="sd">        :type request: ClientRequest</span>
+<span class="sd">        :returns: The number of milliseconds to transmit the current step. Is None if the current step is None.</span>
+<span class="sd">        :rtype: Optional[int]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">step</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ClientRequestSolutionStep</span><span class="p">]</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">solution</span><span class="o">.</span><span class="n">current_step</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">step</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="k">return</span> <span class="kc">None</span>
         <span class="n">data_kb</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">data_size</span> <span class="o">*</span> <span class="mi">8</span>
@@ -272,6 +297,14 @@
 <div class="viewcode-block" id="Connection.calculate_latency">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.Connection.calculate_latency">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">calculate_latency</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Calculates the latency time for the ClientRequest&#39;s current step in this Connection. </span>
+<span class="sd">        This is the chatter of the current step times the latency of this Connection.</span>
+<span class="sd">        </span>
+<span class="sd">        :param request: The ClientRequest being transmitted over this Connection.</span>
+<span class="sd">        :type request: ClientRequest</span>
+<span class="sd">        :returns: The number of milliseconds of latency for the current step. Is None if the current step is None.</span>
+<span class="sd">        :rtype: Optional[int]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">step</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ClientRequestSolutionStep</span><span class="p">]</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">solution</span><span class="o">.</span><span class="n">current_step</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">step</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="k">return</span> <span class="kc">None</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">latency_ms</span> <span class="o">*</span> <span class="n">step</span><span class="o">.</span><span class="n">chatter</span></div>
@@ -280,6 +313,11 @@
 <div class="viewcode-block" id="Connection.provide_queue">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.Connection.provide_queue">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">provide_queue</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;MultiQueue&#39;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; A ServiceTimeCalculator provides a MultiQueue to the :class:`pygissim.pygissim.Simulator`.</span>
+<span class="sd">        </span>
+<span class="sd">        :returns: A queue for handling ClientRequests.</span>
+<span class="sd">        :rtype: MultiQueue</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">MultiQueue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">WaitMode</span><span class="o">.</span><span class="n">TRANSMITTING</span><span class="p">,</span> <span class="n">channel_count</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span></div>
 </div>
 
@@ -289,11 +327,18 @@
 <div class="viewcode-block" id="Zone">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.Zone">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Zone</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">desc</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">z_type</span><span class="p">:</span> <span class="n">ZoneType</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Represents a network environment that can host ComputeNodes. A network is formed by </span>
+<span class="sd">    Zones being connected by :class:`Connection` s. Many of the functions below accept an &#39;in_network&#39;</span>
+<span class="sd">    parameter, which is the list of Connections, usually maintained by the :class:`pygissim.pygissim.Design`</span>
+<span class="sd">    in its &#39;network&#39; property.</span>
+<span class="sd">    </span>
+<span class="sd">    :param name: A descriptive name. Should be unique in a :class:`pygissim.pygissim.Design`.</span>
+<span class="sd">    :param desc: Text that describes the Zone in more detail.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">desc</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid1</span><span class="p">())</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">desc</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">z_type</span>
     
     <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;Zone </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span>
@@ -301,12 +346,27 @@
 <div class="viewcode-block" id="Zone.connect">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.Zone.connect">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s1">&#39;Zone&#39;</span><span class="p">,</span> <span class="n">bw</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">lat</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Connection</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Creates a Connection to a Zone. </span>
+<span class="sd">        </span>
+<span class="sd">        :param bw: The bandwidth of the Connection, in megabits per second (Mbps).</span>
+<span class="sd">        :param lat: the latency of the Connection, in millseconds (ms).</span>
+<span class="sd">        :returns: The new Connection between Zones.</span>
+<span class="sd">        :rtype: Connection</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">Connection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="n">bw</span><span class="p">,</span> <span class="n">lat</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Zone.connect_both_ways">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.Zone.connect_both_ways">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">connect_both_ways</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s1">&#39;Zone&#39;</span><span class="p">,</span> <span class="n">bw</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">lat</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Connection</span><span class="p">,</span> <span class="n">Connection</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Creates a pair of Connections (forwards and backwards) between Zones.</span>
+<span class="sd">        The returned Connections are identical except for their direction.</span>
+<span class="sd">        </span>
+<span class="sd">        :param bw: The bandwidth of the Connection, in megabits per second (Mbps).</span>
+<span class="sd">        :param lat: the latency of the Connection, in millseconds (ms).</span>
+<span class="sd">        :returns: The new Connections between Zones.</span>
+<span class="sd">        :rtype: Tuple[Connection, Connection]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">c1</span><span class="p">:</span> <span class="n">Connection</span> <span class="o">=</span> <span class="n">Connection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="n">bw</span><span class="p">,</span> <span class="n">lat</span><span class="p">)</span>
         <span class="n">c2</span> <span class="o">=</span> <span class="n">c1</span><span class="o">.</span><span class="n">inverted</span><span class="p">()</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">c1</span><span class="p">,</span><span class="n">c2</span><span class="p">)</span></div>
@@ -315,12 +375,26 @@
 <div class="viewcode-block" id="Zone.self_connect">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.Zone.self_connect">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">self_connect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bw</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">lat</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Connection</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Convenience method to create a local connection for the Zone.</span>
+<span class="sd">        The source and destination will be this Zone.</span>
+
+<span class="sd">        :param bw: The bandwidth of the Connection, in megabits per second (Mbps).</span>
+<span class="sd">        :param lat: the latency of the Connection, in millseconds (ms).</span>
+<span class="sd">        :returns: A new local Connection for this Zone.</span>
+<span class="sd">        :rtype: Connection</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">Connection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">bw</span><span class="p">,</span> <span class="n">lat</span><span class="p">)</span></div>
 
     
 <div class="viewcode-block" id="Zone.local_connection">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.Zone.local_connection">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">local_connection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_network</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Connection</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Connection</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Finds a Connection in a list of Connections where the source and destination are this Zone.</span>
+<span class="sd">        </span>
+<span class="sd">        :param in_network: The list of Connections representing a network.</span>
+<span class="sd">        :returns: The first Connection with source and destination equal to this Zone. Returns None if not found.</span>
+<span class="sd">        :rtype: Optional[Connection]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">conns</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">conn</span><span class="p">:</span> <span class="p">(</span><span class="bp">self</span> <span class="o">==</span> <span class="n">conn</span><span class="o">.</span><span class="n">source</span> <span class="ow">and</span> <span class="bp">self</span> <span class="o">==</span> <span class="n">conn</span><span class="o">.</span><span class="n">destination</span><span class="p">),</span> <span class="n">in_network</span><span class="p">))</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">conns</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">conns</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -330,42 +404,81 @@
 <div class="viewcode-block" id="Zone.connections">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.Zone.connections">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">connections</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_network</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Connection</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Connection</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; All Connections in the list where either the source or destination is this Zone.</span>
+
+<span class="sd">        :param in_network: The list of Connections representing a network.</span>
+<span class="sd">        :returns: All Connections with source or destination equal to this Zone. Returns an empty list if none found.</span>
+<span class="sd">        :rtype: list[Connection]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">conn</span><span class="p">:</span> <span class="p">(</span><span class="bp">self</span> <span class="o">==</span> <span class="n">conn</span><span class="o">.</span><span class="n">source</span> <span class="ow">or</span> <span class="bp">self</span> <span class="o">==</span> <span class="n">conn</span><span class="o">.</span><span class="n">destination</span><span class="p">),</span> <span class="n">in_network</span><span class="p">))</span></div>
 
     
 <div class="viewcode-block" id="Zone.entry_connections">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.Zone.entry_connections">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">entry_connections</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_network</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Connection</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Connection</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; All Connections in the list where the destination is this Zone and the source is a different Zone.</span>
+
+<span class="sd">        :param in_network: The list of Connections representing a network.</span>
+<span class="sd">        :returns: All Connections with destination equal and source not equal to this Zone. Returns an empty list if none found.</span>
+<span class="sd">        :rtype: list[Connection]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">conn</span><span class="p">:</span> <span class="p">(</span><span class="n">conn</span><span class="o">.</span><span class="n">is_local</span><span class="p">()</span> <span class="o">==</span> <span class="kc">False</span> <span class="ow">and</span> <span class="bp">self</span> <span class="o">==</span> <span class="n">conn</span><span class="o">.</span><span class="n">destination</span><span class="p">),</span> <span class="n">in_network</span><span class="p">))</span></div>
 
     
 <div class="viewcode-block" id="Zone.exit_connections">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.Zone.exit_connections">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">exit_connections</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_network</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Connection</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Connection</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; All Connections in the list where the source is this Zone and the destination is a different Zone.</span>
+
+<span class="sd">        :param in_network: The list of Connections representing a network.</span>
+<span class="sd">        :returns: All Connections with source equal and destination not equal to this Zone. Returns an empty list if none found.</span>
+<span class="sd">        :rtype: list[Connection]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">conn</span><span class="p">:</span> <span class="p">(</span><span class="n">conn</span><span class="o">.</span><span class="n">is_local</span><span class="p">()</span> <span class="o">==</span> <span class="kc">False</span> <span class="ow">and</span> <span class="bp">self</span> <span class="o">==</span> <span class="n">conn</span><span class="o">.</span><span class="n">source</span><span class="p">),</span> <span class="n">in_network</span><span class="p">))</span></div>
 
     
 <div class="viewcode-block" id="Zone.other_connections">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.Zone.other_connections">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">other_connections</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_network</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Connection</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Connection</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; All Connections in the list where neither the source nor the destination is this Zone.</span>
+
+<span class="sd">        :param in_network: The list of Connections representing a network.</span>
+<span class="sd">        :returns: All Connections with neither source nor destination equal to this Zone. Returns an empty list if none found.</span>
+<span class="sd">        :rtype: list[Connection]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">conn</span><span class="p">:</span> <span class="p">(</span><span class="n">conn</span><span class="o">.</span><span class="n">source</span> <span class="o">!=</span> <span class="bp">self</span> <span class="ow">and</span> <span class="n">conn</span><span class="o">.</span><span class="n">destination</span> <span class="o">!=</span> <span class="bp">self</span><span class="p">),</span> <span class="n">in_network</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="Zone.is_a_source">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.Zone.is_a_source">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">is_a_source</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_network</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Connection</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param in_network: The list of Connections representing a network.</span>
+<span class="sd">        :returns: True if any Connections have this Zone as a source. </span>
+<span class="sd">        :rtype: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">conn</span><span class="p">:</span> <span class="p">(</span><span class="bp">self</span> <span class="o">==</span> <span class="n">conn</span><span class="o">.</span><span class="n">source</span><span class="p">),</span> <span class="n">in_network</span><span class="p">)))</span> <span class="o">&gt;</span> <span class="mi">0</span></div>
 
     
 <div class="viewcode-block" id="Zone.is_a_destination">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.Zone.is_a_destination">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">is_a_destination</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_network</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Connection</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param in_network: The list of Connections representing a network.</span>
+<span class="sd">        :returns: True if any Connections have this Zone as a destination. </span>
+<span class="sd">        :rtype: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">conn</span><span class="p">:</span> <span class="p">(</span><span class="bp">self</span> <span class="o">==</span> <span class="n">conn</span><span class="o">.</span><span class="n">destination</span><span class="p">),</span> <span class="n">in_network</span><span class="p">)))</span> <span class="o">&gt;</span> <span class="mi">0</span></div>
 
     
 <div class="viewcode-block" id="Zone.is_fully_connected">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.Zone.is_fully_connected">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">is_fully_connected</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_network</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Connection</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param in_network: The list of Connections representing a network.</span>
+<span class="sd">        :returns: True if this Zone has a local connection and at least one entry and exit connection. </span>
+<span class="sd">        :rtype: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">local_connection</span><span class="p">(</span><span class="n">in_network</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> \
             <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">entry_connections</span><span class="p">(</span><span class="n">in_network</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> \
             <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">exit_connections</span><span class="p">(</span><span class="n">in_network</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">0</span></div>
@@ -375,6 +488,12 @@
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.Zone.all_zones">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">all_zones</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">in_network</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Connection</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Set</span><span class="p">[</span><span class="s1">&#39;Zone&#39;</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; The Set of Zones in a list of Connections. </span>
+<span class="sd">        </span>
+<span class="sd">        :param in_network: The list of Connections representing a network.</span>
+<span class="sd">        :returns: All unique Zones that the Connections reference. </span>
+<span class="sd">        :rtype: Set[Zone]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">result</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">Zone</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
 
         <span class="k">for</span> <span class="n">conn</span> <span class="ow">in</span> <span class="n">in_network</span><span class="p">:</span>
@@ -390,6 +509,8 @@
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.Route">[docs]</a>
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Route</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Immutable data class. A list of Connections that constitute a path through</span>
+<span class="sd">    a network. Usually created by :func:`find_route`.&quot;&quot;&quot;</span>
     <span class="n">connections</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Connection</span><span class="p">]</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -401,6 +522,10 @@
 <div class="viewcode-block" id="Route.count">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.Route.count">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">count</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Convenience method to return the number of Connections in the Route. </span>
+
+<span class="sd">        :returns: The length of the Route in steps.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connections</span><span class="p">)</span></div>
 </div>
 
@@ -418,12 +543,16 @@
 <div class="viewcode-block" id="ThreadingModel">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.ThreadingModel">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ThreadingModel</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Enumeration of threading models. Physical represents 1:1 threads to cores.</span>
+<span class="sd">    Hyperthreaded represents 2:1 threads to cores. Used for :class:`ComputeNode` service time calculation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">PHYSICAL</span> <span class="o">=</span> <span class="s1">&#39;physical&#39;</span>
     <span class="n">HYPERTHREADED</span> <span class="o">=</span> <span class="s1">&#39;ht&#39;</span>
 
 <div class="viewcode-block" id="ThreadingModel.factor">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.ThreadingModel.factor">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">factor</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; The factor applied to the per-core performace for ComputeNodes. &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span> <span class="ow">is</span> <span class="n">ThreadingModel</span><span class="o">.</span><span class="n">PHYSICAL</span><span class="p">:</span>
             <span class="k">return</span> <span class="mf">1.0</span>
         <span class="k">else</span><span class="p">:</span>
@@ -435,6 +564,7 @@
 <div class="viewcode-block" id="BalancingModel">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.BalancingModel">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">BalancingModel</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Enumeration of ways requests can be balanced across multiple ComputeNodes in a :class:`ServiceProvider`. &quot;&quot;&quot;</span>
     <span class="n">SINGLE</span> <span class="o">=</span> <span class="s1">&#39;1&#39;</span>
     <span class="n">ROUND_ROBIN</span> <span class="o">=</span> <span class="s1">&#39;roundrobin&#39;</span>
     <span class="n">FAILOVER</span> <span class="o">=</span> <span class="s1">&#39;failover&#39;</span>
@@ -445,6 +575,12 @@
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.BalancingModel.from_str">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">from_str</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;BalancingModel&#39;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Convenience method for constructing BalancingModels from a string representation. </span>
+<span class="sd">        </span>
+<span class="sd">        :param value: The string representation.</span>
+<span class="sd">        :returns: The BalancingModel. Returns OTHER if the string is not a recognized type.</span>
+<span class="sd">        :rtype: BalancingModel</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">match</span> <span class="n">value</span><span class="o">.</span><span class="n">upper</span><span class="p">():</span>
             <span class="k">case</span> <span class="s1">&#39;1&#39;</span><span class="p">:</span> <span class="k">return</span> <span class="n">BalancingModel</span><span class="o">.</span><span class="n">SINGLE</span>
             <span class="k">case</span> <span class="s1">&#39;ROUNDROBIN&#39;</span> <span class="o">|</span> <span class="s1">&#39;armv7&#39;</span><span class="p">:</span> <span class="k">return</span> <span class="n">BalancingModel</span><span class="o">.</span><span class="n">ROUND_ROBIN</span>
@@ -454,31 +590,13 @@
 </div>
 
 
-<span class="c1"># ------------------------------------------------------------</span>
-<div class="viewcode-block" id="ComputeArchitecture">
-<a class="viewcode-back" href="../../pygissim.html#pygissim.engine.ComputeArchitecture">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">ComputeArchitecture</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
-    <span class="n">INTEL</span> <span class="o">=</span> <span class="s1">&#39;intel&#39;</span>
-    <span class="n">ARM64</span> <span class="o">=</span> <span class="s1">&#39;arm64&#39;</span>
-    <span class="n">RISCV</span> <span class="o">=</span> <span class="s1">&#39;riscv&#39;</span>
-    <span class="n">OTHER</span> <span class="o">=</span> <span class="s1">&#39;other&#39;</span>
-
-<div class="viewcode-block" id="ComputeArchitecture.from_str">
-<a class="viewcode-back" href="../../pygissim.html#pygissim.engine.ComputeArchitecture.from_str">[docs]</a>
-    <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">from_str</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;ComputeArchitecture&#39;</span><span class="p">:</span>
-        <span class="k">match</span> <span class="n">value</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
-            <span class="k">case</span> <span class="s1">&#39;intel&#39;</span><span class="p">:</span> <span class="k">return</span> <span class="n">ComputeArchitecture</span><span class="o">.</span><span class="n">INTEL</span>
-            <span class="k">case</span> <span class="s1">&#39;aarm64&#39;</span> <span class="o">|</span> <span class="s1">&#39;armv7&#39;</span><span class="p">:</span> <span class="k">return</span> <span class="n">ComputeArchitecture</span><span class="o">.</span><span class="n">ARM64</span>
-            <span class="k">case</span> <span class="s1">&#39;riscv&#39;</span><span class="p">:</span> <span class="k">return</span> <span class="n">ComputeArchitecture</span><span class="o">.</span><span class="n">RISCV</span>
-            <span class="k">case</span><span class="w"> </span><span class="k">_</span><span class="p">:</span> <span class="k">return</span> <span class="n">ComputeArchitecture</span><span class="o">.</span><span class="n">OTHER</span></div>
-</div>
-
 
 <span class="c1"># ------------------------------------------------------------</span>
 <div class="viewcode-block" id="ComputeNodeType">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.ComputeNodeType">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ComputeNodeType</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Enumeration of the functional classes of ComputeNode. Earlier iterations of this</span>
+<span class="sd">    framework used subclasses, but an enumeration works more clearly. &quot;&quot;&quot;</span>
     <span class="n">CLIENT</span> <span class="o">=</span> <span class="s1">&#39;client&#39;</span>
     <span class="n">P_SERVER</span> <span class="o">=</span> <span class="s1">&#39;physical&#39;</span>
     <span class="n">V_SERVER</span> <span class="o">=</span> <span class="s1">&#39;virtual&#39;</span></div>
@@ -489,6 +607,8 @@
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.ServiceDef">[docs]</a>
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">ServiceDef</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Read-only data class. A tag for :class:`ServiceProvider` to identify the service it</span>
+<span class="sd">    provides and how requests are balanced. &quot;&quot;&quot;</span>
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">description</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">service_type</span><span class="p">:</span> <span class="nb">str</span>
@@ -500,20 +620,28 @@
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.HardwareDef">[docs]</a>
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">HardwareDef</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Read-only data class representing a hardware platform.</span>
+<span class="sd">    </span>
+<span class="sd">    :param processor: A name for the hardware. It must be a unique string in a :class:`pygissim.pygissim.Design`.</span>
+<span class="sd">    :param cores: The number of physical cores in the hardware platform.</span>
+<span class="sd">    :param specint_rate2017: The performance of the hardware from https://www.spec.org/cpu2017/results/rint2017/</span>
+<span class="sd">    :param threading: The threading model will be used when calculating service times.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">processor</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">cores</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">specint_rate2017</span><span class="p">:</span> <span class="nb">float</span>
-    <span class="n">architecture</span><span class="p">:</span> <span class="n">ComputeArchitecture</span>
     <span class="n">threading</span><span class="p">:</span> <span class="n">ThreadingModel</span>
 
 <div class="viewcode-block" id="HardwareDef.specint_rate2017_per_core">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.HardwareDef.specint_rate2017_per_core">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">specint_rate2017_per_core</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Per-core performance of the hardware. Includes factor for :class:`ThreadingModel`. &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">specint_rate2017</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cores</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">threading</span><span class="o">.</span><span class="n">factor</span><span class="p">()</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;HW </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">processor</span><span class="si">}</span><span class="s1"> cores: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cores</span><span class="si">}</span><span class="s1"> spec: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">specint_rate2017</span><span class="si">}</span><span class="s1"> (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">architecture</span><span class="si">}</span><span class="s1">)&#39;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;HW </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">processor</span><span class="si">}</span><span class="s1"> cores: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cores</span><span class="si">}</span><span class="s1"> spec: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">specint_rate2017</span><span class="si">}</span><span class="s1">&#39;</span>
+    
     <span class="n">baseline_per_core</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10.0</span></div>
 
 
@@ -521,6 +649,15 @@
 <div class="viewcode-block" id="ComputeNode">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.ComputeNode">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ComputeNode</span><span class="p">(</span><span class="n">ServiceTimeCalculator</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Represents a computing resource that has a :class:`HardwareDef` and exists in a network :class:`Zone`.</span>
+<span class="sd">    </span>
+<span class="sd">    :param name: A descriptive name. Should be unique in a :class:`pygissim.pygissim.Design`.</span>
+<span class="sd">    :param desc: Additional descriptive text.</span>
+<span class="sd">    :param hw_def: The hardware definition of the ComputeNode. Determines its performance.</span>
+<span class="sd">    :param memory_GB: Configured memory in gigabytes (GB). Is mostly used for determining overallocation of physical host memory on virtual hosts.</span>
+<span class="sd">    :param zone: The network Zone that the ComputeNode is connected to.</span>
+<span class="sd">    :param type: The type of ComputeNode.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">desc</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> 
                  <span class="n">hw_def</span><span class="p">:</span> <span class="n">HardwareDef</span><span class="p">,</span> <span class="n">memory_GB</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
                  <span class="n">zone</span><span class="p">:</span> <span class="n">Zone</span><span class="p">,</span> <span class="nb">type</span><span class="p">:</span> <span class="n">ComputeNodeType</span><span class="p">):</span>
@@ -541,12 +678,18 @@
 <div class="viewcode-block" id="ComputeNode.vcore_count">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.ComputeNode.vcore_count">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">vcore_count</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;        </span>
+<span class="sd">        :returns: The number of virtual cores assigned to a virtual machine. Will be zero if this ComputeNode is not a virtual host. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_v_cores</span></div>
 
     
 <div class="viewcode-block" id="ComputeNode.set_vcore_count">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.ComputeNode.set_vcore_count">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_vcore_count</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">count</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param count: Sets the number of virtual cores assigned to this virtual machine. Will be ignored if not a virtual host.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">ComputeNodeType</span><span class="o">.</span><span class="n">V_SERVER</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_v_cores</span> <span class="o">=</span> <span class="n">count</span>
         <span class="k">else</span><span class="p">:</span>
@@ -556,6 +699,14 @@
 <div class="viewcode-block" id="ComputeNode.adjusted_service_time">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.ComputeNode.adjusted_service_time">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">adjusted_service_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">st</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; The relative performance of this ComputeNode will affect the service times. All service times in</span>
+<span class="sd">        :class:`WorkflowDefStep` are based on the baseline per core performance defined in :class:`HardwareDef`.</span>
+<span class="sd">        The hardware definition of this node may be faster or slower than that baseline and will make the </span>
+<span class="sd">        calculated service times shorter or longer, respectively.</span>
+<span class="sd">        </span>
+<span class="sd">        :param st: The input baseline service time in milliseconds (ms).</span>
+<span class="sd">        :returns: The adjusted service time in milliseconds (ms).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">relative</span> <span class="o">=</span> <span class="n">HardwareDef</span><span class="o">.</span><span class="n">baseline_per_core</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">hw_def</span><span class="o">.</span><span class="n">specint_rate2017_per_core</span><span class="p">()</span>
         <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">st</span><span class="p">)</span> <span class="o">*</span> <span class="n">relative</span><span class="p">)</span></div>
 
@@ -563,6 +714,10 @@
 <div class="viewcode-block" id="ComputeNode.calculate_service_time">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.ComputeNode.calculate_service_time">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">calculate_service_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="s1">&#39;ClientRequest&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param request: The ClientRequest whose current step needs a service time calculation.</span>
+<span class="sd">        :returns: The service time in milliseconds (ms). Returns None if there is no current step.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">step</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ClientRequestSolutionStep</span><span class="p">]</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">solution</span><span class="o">.</span><span class="n">current_step</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">step</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="k">return</span> <span class="kc">None</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">adjusted_service_time</span><span class="p">(</span><span class="n">step</span><span class="o">.</span><span class="n">service_time</span><span class="p">)</span></div>
@@ -571,12 +726,24 @@
 <div class="viewcode-block" id="ComputeNode.calculate_latency">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.ComputeNode.calculate_latency">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">calculate_latency</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
-        <span class="k">return</span> <span class="kc">None</span> <span class="c1"># No latency on a compute calculation</span></div>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param request: The ClientRequest whose current step needs a latency time calculation.</span>
+<span class="sd">        :returns: None. Only Connections have latency.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
 
     
 <div class="viewcode-block" id="ComputeNode.provide_queue">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.ComputeNode.provide_queue">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">provide_queue</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;MultiQueue&#39;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Creates and returns a MultiQueue that represent&#39;s this ComputeNode&#39;s ability to do work.</span>
+<span class="sd">        This includes a number of &#39;channels&#39; (slots for processing requests in parallel) and a main</span>
+<span class="sd">        queue where requests will wait until there is an available channel.</span>
+<span class="sd">        </span>
+<span class="sd">        For a ComputeNode, the channel count will generally be the number of cores (virtual or physical).</span>
+<span class="sd">        Client nodes are the exception, because they represent the compute for a group of users. </span>
+<span class="sd">        The channel count for them is an arbitrarily large number. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">channel_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="k">match</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">:</span>
             <span class="k">case</span> <span class="n">ComputeNodeType</span><span class="o">.</span><span class="n">CLIENT</span><span class="p">:</span>
@@ -591,6 +758,13 @@
 <div class="viewcode-block" id="ComputeNode.add_virtual_host">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.ComputeNode.add_virtual_host">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">add_virtual_host</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">v_cores</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">memory_GB</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Creates and adds a virtual ComputeNode to a physical server.</span>
+
+<span class="sd">        :raises TypeError: if this is not a physical server.</span>
+<span class="sd">        :param name: A descriptive string. Should be unique in a Design.</span>
+<span class="sd">        :param v_cores: The number of virtual cores assigned to this virtual machine.</span>
+<span class="sd">        :param memory_GB: The amount of memory in gigabytes (GB) assigned to this virtual machine. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">!=</span> <span class="n">ComputeNodeType</span><span class="o">.</span><span class="n">P_SERVER</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Can only add virtual hosts to physical servers.&quot;</span><span class="p">)</span>
         
@@ -604,18 +778,30 @@
 <div class="viewcode-block" id="ComputeNode.remove_virtual_host">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.ComputeNode.remove_virtual_host">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">remove_virtual_host</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v_host</span><span class="p">:</span><span class="s1">&#39;ComputeNode&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Removes a virtual machine from the list on this physical server. </span>
+<span class="sd">        </span>
+<span class="sd">        :param v_host: The virtual machine to remove.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_v_hosts</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">v_host</span><span class="p">)</span></div>
 
     
 <div class="viewcode-block" id="ComputeNode.virtual_host_count">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.ComputeNode.virtual_host_count">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">virtual_host_count</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :returns: The count of virtual hosts on this ComputeNode.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_v_hosts</span><span class="p">)</span></div>
 
     
 <div class="viewcode-block" id="ComputeNode.virtual_host">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.ComputeNode.virtual_host">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">virtual_host</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="s1">&#39;ComputeNode&#39;</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param index: The ordered index of the virtual host to return.</span>
+<span class="sd">        :returns: The virtual host at the index. Returns None if the index is invalid.</span>
+<span class="sd">        :rtype: Optional[ComputeNode]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">index</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">index</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_v_hosts</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_v_hosts</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
         <span class="k">return</span> <span class="kc">None</span></div>
@@ -624,6 +810,9 @@
 <div class="viewcode-block" id="ComputeNode.total_vcpu_allocation">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.ComputeNode.total_vcpu_allocation">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">total_vcpu_allocation</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :returns: The sum of all virtual host virtual core allocations.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">total</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">for</span> <span class="n">v_host</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_v_hosts</span><span class="p">:</span>
             <span class="n">total</span> <span class="o">=</span> <span class="n">total</span> <span class="o">+</span> <span class="n">v_host</span><span class="o">.</span><span class="n">vcore_count</span><span class="p">()</span>
@@ -633,12 +822,18 @@
 <div class="viewcode-block" id="ComputeNode.total_cpu_allocation">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.ComputeNode.total_cpu_allocation">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">total_cpu_allocation</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :returns: The sum of all virtual host virtual core allocations accounting for hyperthreading.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">total_vcpu_allocation</span><span class="p">())</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">hw_def</span><span class="o">.</span><span class="n">threading</span><span class="o">.</span><span class="n">factor</span><span class="p">())</span></div>
 
     
 <div class="viewcode-block" id="ComputeNode.total_memory_allocation">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.ComputeNode.total_memory_allocation">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">total_memory_allocation</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :returns: The sum of all virtual host memory allocations.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">total</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">for</span> <span class="n">v_host</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_v_hosts</span><span class="p">:</span>
             <span class="n">total</span> <span class="o">=</span> <span class="n">total</span> <span class="o">+</span> <span class="n">v_host</span><span class="o">.</span><span class="n">memory_GB</span>
@@ -652,6 +847,13 @@
 <div class="viewcode-block" id="ServiceProvider">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.ServiceProvider">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ServiceProvider</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Represents one or more ComputeNodes that are assigned to handle a particular service type.</span>
+<span class="sd">    </span>
+<span class="sd">    :param name: A descriptive name. Should be unique in a Design.</span>
+<span class="sd">    :param desc: Additional descriptive text.</span>
+<span class="sd">    :param service: The definition of the service that this provides.</span>
+<span class="sd">    :param nodes: The list of ComputeNodes that will handle the service requests.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span> <span class="n">desc</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">service</span><span class="p">:</span> <span class="n">ServiceDef</span><span class="p">,</span> <span class="n">nodes</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ComputeNode</span><span class="p">]):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">desc</span>
@@ -670,6 +872,7 @@
 <div class="viewcode-block" id="ServiceProvider.primary">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.ServiceProvider.primary">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">primary</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; :returns: The index of the ComputeNode that will handle the next request. &quot;&quot;&quot;</span>
         <span class="k">match</span> <span class="bp">self</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">balancing_model</span><span class="p">:</span>
             <span class="k">case</span> <span class="n">BalancingModel</span><span class="o">.</span><span class="n">SINGLE</span><span class="p">:</span>
                 <span class="k">return</span> <span class="mi">0</span>
@@ -680,6 +883,10 @@
 <div class="viewcode-block" id="ServiceProvider.set_primary">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.ServiceProvider.set_primary">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_primary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Changes the index of the primary node in the ServiceProvider. </span>
+<span class="sd">        </span>
+<span class="sd">        :returns: The new primary index.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">value</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">value</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">):</span> <span class="k">return</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_primary</span> <span class="o">=</span> <span class="n">value</span></div>
 
@@ -687,6 +894,10 @@
 <div class="viewcode-block" id="ServiceProvider.rotate_primary">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.ServiceProvider.rotate_primary">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">rotate_primary</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Changes the index of the primary to the next node.</span>
+<span class="sd">        </span>
+<span class="sd">        :returns: The new primary index.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_primary</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_primary</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_primary</span></div>
 
@@ -694,6 +905,12 @@
 <div class="viewcode-block" id="ServiceProvider.handler_node">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.ServiceProvider.handler_node">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">handler_node</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ComputeNode</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; For a ServiceProvider with a service :class:`BalancingModel` of ROUND_ROBIN,</span>
+<span class="sd">        the primary will rotate every time this is called.</span>
+<span class="sd">        </span>
+<span class="sd">        :returns: The ComputeNode that is currently the primary. Returns None if there are no nodes assigned.</span>
+<span class="sd">        :rtype: Optional[ComputeNode]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="k">return</span> <span class="kc">None</span>
         <span class="n">result</span><span class="p">:</span> <span class="n">ComputeNode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_primary</span><span class="p">]</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">balancing_model</span> <span class="o">==</span> <span class="n">BalancingModel</span><span class="o">.</span><span class="n">ROUND_ROBIN</span><span class="p">:</span>
@@ -704,6 +921,14 @@
 <div class="viewcode-block" id="ServiceProvider.add_node">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.ServiceProvider.add_node">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">add_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">ComputeNode</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Adds a ComputeNode to the list that handle service requests.</span>
+<span class="sd">        Will be ignored if the :class:`BalancingModel` does not support additional nodes.</span>
+
+<span class="sd">        - Example: BalancingModel SINGLE and there already is a node.</span>
+<span class="sd">        - Example: BalancingModel FAILOVER and there already are two nodes.</span>
+<span class="sd">        </span>
+<span class="sd">        :param node: The ComputeNode to add.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">balancing_model</span> <span class="o">==</span> <span class="n">BalancingModel</span><span class="o">.</span><span class="n">SINGLE</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span> <span class="k">return</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">balancing_model</span> <span class="o">==</span> <span class="n">BalancingModel</span><span class="o">.</span><span class="n">FAILOVER</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span> <span class="k">return</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="p">)</span></div>
@@ -712,6 +937,10 @@
 <div class="viewcode-block" id="ServiceProvider.remove_node">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.ServiceProvider.remove_node">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">remove_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">ComputeNode</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Removes a node from the list. Has no effect if node does not exist in [nodes].</span>
+<span class="sd">        </span>
+<span class="sd">        :param node: The ComputeNode to remove.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_primary</span> <span class="o">=</span> <span class="mi">0</span></div>
 
@@ -719,12 +948,21 @@
 <div class="viewcode-block" id="ServiceProvider.is_valid">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.ServiceProvider.is_valid">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">is_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">        :returns: True if validate returns no messages.</span>
+<span class="sd">        :rtype: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">())</span> <span class="o">==</span> <span class="mi">0</span></div>
 
     
 <div class="viewcode-block" id="ServiceProvider.validate">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.ServiceProvider.validate">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">ValidationMessage</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Method that evaluates the validity of the configuration of this ServiceProvider.</span>
+<span class="sd">        </span>
+<span class="sd">        :returns: Messages indicating invalid configuration.</span>
+<span class="sd">        :rtype: list[ValidationMessage]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">messages</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ValidationMessage</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ValidationMessage</span><span class="p">(</span><span class="s1">&#39;Service Provider must have at least one node&#39;</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
@@ -747,6 +985,7 @@
 <div class="viewcode-block" id="WaitMode">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.WaitMode">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">WaitMode</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Enumeration of the potential states of a :class:`WaitingRequest`. &quot;&quot;&quot;</span>
     <span class="n">TRANSMITTING</span> <span class="o">=</span> <span class="s1">&#39;transmitting&#39;</span>
     <span class="n">PROCESSING</span> <span class="o">=</span> <span class="s1">&#39;processing&#39;</span>
     <span class="n">QUEUEING</span> <span class="o">=</span> <span class="s1">&#39;queueing&#39;</span></div>
@@ -757,6 +996,20 @@
 <div class="viewcode-block" id="WaitingRequest">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.WaitingRequest">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">WaitingRequest</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Wrapper class for handling a :class:`ClientRequest` in a :class:`MultiQueue`</span>
+<span class="sd">    in preparation for processing a step of the request.</span>
+
+<span class="sd">    The wait_mode is used for later summarization:</span>
+<span class="sd">    - TRANSMITTING: a Connection is processing this request.</span>
+<span class="sd">    - PROCESSSING: a ComputeNode is processing this request.</span>
+<span class="sd">    - QUEUEING: the request is in a queue, waiting for a channel.</span>
+<span class="sd">    </span>
+<span class="sd">    :param request: The request to be wrapped.</span>
+<span class="sd">    :param wait_start: The simulation clock when the request was wrapped.</span>
+<span class="sd">    :param service_time: The service time for this step of the request. None is to support cases where the current step might be None.</span>
+<span class="sd">    :param latency: The latency time for this step of the request. None is supported if latency time is None or there is no current step.</span>
+<span class="sd">    :param wait_mode: The state of this WaitingRequest.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="s1">&#39;ClientRequest&#39;</span><span class="p">,</span> <span class="n">wait_start</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> 
                  <span class="n">service_time</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">latency</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> 
                  <span class="n">wait_mode</span><span class="p">:</span> <span class="n">WaitMode</span><span class="p">,</span> <span class="n">queue_time</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
@@ -770,13 +1023,24 @@
 <div class="viewcode-block" id="WaitingRequest.queue_ended">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.WaitingRequest.queue_ended">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">queue_ended</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clock</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">wait_mode</span><span class="p">:</span> <span class="n">WaitMode</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; The request is moving out of the queue and into a channel.</span>
+<span class="sd">        The time spent in the queue is recorded, and the wait mode is updated to reflect</span>
+<span class="sd">        the type of processor, either a Connection or a ComputeNode.</span>
+<span class="sd">        </span>
+<span class="sd">        :param clock: The current simulation time.</span>
+<span class="sd">        :param wait_mode: The wait mode for this queue&#39;s :class:`ServiceTimeCalculator`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">wait_mode</span> <span class="o">=</span> <span class="n">wait_mode</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">queue_time</span> <span class="o">=</span> <span class="n">clock</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">wait_start</span></div>
 
 
+    <span class="c1"># TODO: Work out if there is potential for requests to get &quot;stuck&quot; in a MultiQueue.</span>
 <div class="viewcode-block" id="WaitingRequest.wait_end">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.WaitingRequest.wait_end">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">wait_end</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :returns: The simulation time when this request will be finished processing. None if queueing or service time is None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">wait_mode</span> <span class="o">==</span> <span class="n">WaitMode</span><span class="o">.</span><span class="n">QUEUEING</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">service_time</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
         <span class="n">lat</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">latency</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">latency</span>
@@ -789,6 +1053,20 @@
 <div class="viewcode-block" id="MultiQueue">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.MultiQueue">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">MultiQueue</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Represents a queue with one or more channels of parallel processing and a single</span>
+<span class="sd">    queue used when waiting for a turn in a channel.</span>
+<span class="sd">    </span>
+<span class="sd">    Analogy: Multiple bank tellers (channels) and a queue waiting to see a teller.</span>
+
+<span class="sd">    The number of channels will be determined by the service time calculator.</span>
+<span class="sd">    </span>
+<span class="sd">    - Connection: 2 channels</span>
+<span class="sd">    - ComputeNode: the number of cores (physical host or client) or virtual cores (virtual host)</span>
+<span class="sd">    </span>
+<span class="sd">    :param st_calculator: The :class:`Connection` or :class:`ComputeNode` that is designated to calculate all service times for this MultiQueue.</span>
+<span class="sd">    :param wait_mode: Will be TRANSMITTING for Connections and PROCESSING for ComputeNodes</span>
+<span class="sd">    :param channel_count: The number of channels that this MultiQueue will have.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">st_calculator</span><span class="p">:</span> <span class="n">ServiceTimeCalculator</span><span class="p">,</span> <span class="n">wait_mode</span><span class="p">:</span> <span class="n">WaitMode</span><span class="p">,</span> <span class="n">channel_count</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">service_time_calculator</span><span class="p">:</span> <span class="n">ServiceTimeCalculator</span> <span class="o">=</span> <span class="n">st_calculator</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">wait_mode</span><span class="p">:</span> <span class="n">WaitMode</span> <span class="o">=</span> <span class="n">wait_mode</span>
@@ -798,12 +1076,14 @@
 <div class="viewcode-block" id="MultiQueue.name">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.MultiQueue.name">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; :returns: The name of the service time calculator (i.e. the Connection or ComputeNode)&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">service_time_calculator</span><span class="o">.</span><span class="n">name</span> <span class="c1"># type: ignore</span></div>
 
     
 <div class="viewcode-block" id="MultiQueue.available_channel_count">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.MultiQueue.available_channel_count">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">available_channel_count</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; :returns: The number of channels without any active requests in them. &quot;&quot;&quot;</span>
         <span class="n">count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">for</span> <span class="n">channel</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">channels</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">channel</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -814,6 +1094,10 @@
 <div class="viewcode-block" id="MultiQueue.first_available_channel">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.MultiQueue.first_available_channel">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">first_available_channel</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :returns: The index of the first available channel. Returns None if all channels are occupied.</span>
+<span class="sd">        :rtype: Optional[int]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">channels</span><span class="p">)):</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">channels</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="k">return</span> <span class="n">i</span>
         <span class="k">return</span> <span class="kc">None</span></div>
@@ -822,6 +1106,7 @@
 <div class="viewcode-block" id="MultiQueue.channels_with_requests">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.MultiQueue.channels_with_requests">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">channels_with_requests</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; :returns: A list of channel indexes with active requests in them. &quot;&quot;&quot;</span>
         <span class="n">result</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">channels</span><span class="p">)):</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">channels</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
@@ -831,6 +1116,10 @@
 <div class="viewcode-block" id="MultiQueue.channels_with_finished_requests">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.MultiQueue.channels_with_finished_requests">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">channels_with_finished_requests</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clock</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param clock: The current simulation time.</span>
+<span class="sd">        :returns: A list of channel indexes with requests in them that have finished processing.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">result</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">channels_with_requests</span><span class="p">():</span>
             <span class="n">wr</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">WaitingRequest</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">channels</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
@@ -844,12 +1133,16 @@
 <div class="viewcode-block" id="MultiQueue.request_count">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.MultiQueue.request_count">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">request_count</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; :returns: The total count of requests in channels and in the main queue. &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_queue</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">channels</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">available_channel_count</span><span class="p">()</span></div>
 
     
 <div class="viewcode-block" id="MultiQueue.next_event_time">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.MultiQueue.next_event_time">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">next_event_time</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :returns: The simulation clock when the next request in a channel will be finished. Returns None if no requests being processed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">result</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">channels_with_requests</span><span class="p">():</span>
             <span class="n">wr</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">WaitingRequest</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">channels</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
@@ -864,6 +1157,16 @@
 <div class="viewcode-block" id="MultiQueue.remove_finished_requests">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.MultiQueue.remove_finished_requests">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">remove_finished_requests</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clock</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="s1">&#39;ClientRequest&#39;</span><span class="p">,</span> <span class="n">RequestMetric</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; The simulation clock has moved forward and any waiting requests whose wait_end has arrived need to move on.</span>
+<span class="sd">        </span>
+<span class="sd">        ClientRequests are unwrapped and returned, along with metrics about how long they waited.</span>
+
+<span class="sd">        Any open channels are filled with requests from the main queue, if any are waiting.</span>
+
+<span class="sd">        :param clock: The current simulation time.</span>
+<span class="sd">        :returns: A list of all requests that have finished this step and need to move on and their metrics.</span>
+<span class="sd">        :rtype: Tuple[ClientRequest, RequestMetric]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">finished_channels</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">channels_with_finished_requests</span><span class="p">(</span><span class="n">clock</span><span class="p">)</span>
         <span class="n">result</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="s1">&#39;ClientRequest&#39;</span><span class="p">,</span> <span class="n">RequestMetric</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
 
@@ -896,6 +1199,12 @@
 <div class="viewcode-block" id="MultiQueue.enqueue">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.MultiQueue.enqueue">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">enqueue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="s1">&#39;ClientRequest&#39;</span><span class="p">,</span> <span class="n">clock</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Wraps the request in a WaitingRequest. If there are available channels, the request will be put in it</span>
+<span class="sd">        and immediately start processing. If there are no channels available, the request is added to the end of the main queue.</span>
+<span class="sd">        </span>
+<span class="sd">        :param request: The request that needs to be processed by this queue&#39;s service time calculator.</span>
+<span class="sd">        :param clock: The current simulation time.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">current_step</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ClientRequestSolutionStep</span><span class="p">]</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">solution</span><span class="o">.</span><span class="n">current_step</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">current_step</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="k">return</span>
 
@@ -912,6 +1221,9 @@
 <div class="viewcode-block" id="MultiQueue.all_waiting_requests">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.MultiQueue.all_waiting_requests">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">all_waiting_requests</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">WaitingRequest</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :returns: A list of all waiting requests in channels and in the main queue.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">full_channels</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">WaitingRequest</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">channels</span> <span class="k">if</span> <span class="n">item</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">full_channels</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_queue</span></div>
 
@@ -919,6 +1231,7 @@
 <div class="viewcode-block" id="MultiQueue.get_performance_metric">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.MultiQueue.get_performance_metric">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_performance_metric</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clock</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QueueMetric</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; :returns: A performance metric for the queue indicating how busy it is. &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">service_time_calculator</span><span class="p">,</span> <span class="n">ComputeNode</span><span class="p">):</span>
             <span class="n">node</span><span class="p">:</span> <span class="n">ComputeNode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">service_time_calculator</span>
             <span class="k">match</span> <span class="n">node</span><span class="o">.</span><span class="n">type</span><span class="p">:</span>

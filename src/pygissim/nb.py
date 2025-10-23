@@ -151,7 +151,7 @@ def zones_to_graph_nodes(zones: list[Zone]) -> list:
     nodes = []
     for zone in zones:
         nodes.append({"id": zone.id, 
-                      "properties":{'label': zone.name, 'type': str(zone.type)}})
+                      "properties":{'label': zone.name, 'type': 'Network Zone'}})
     return nodes
 
 def connections_to_graph_edges(net: list[Connection], metrics: Optional[list[QueueMetric]] = None):

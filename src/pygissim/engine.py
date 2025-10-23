@@ -31,7 +31,7 @@ class ValidationMessage:
     
 @dataclass(frozen=True)
 class QueueMetric:
-    """ DataClass for tracking the utilization rate of all queues (compute and network)
+    """ Read-only data class for tracking the utilization rate of all queues (compute and network)
 
     :param source: The name of the MultiQueue that was measured.
     :type source: str
@@ -114,14 +114,21 @@ class ServiceTimeCalculator(ABC):
 # 88  V888 88.        88    `8b d8'8b d8' `8b  d8' 88 `88. 88 `88.
 # VP   V8P Y88888P    YP     `8b8' `8d8'   `Y88P'  88   YD YP   YD
 
-# ------------------------------------------------------------
-class ZoneType(Enum):
-    LOCAL = 'local'
-    EDGE = 'edge'
-    INTERNET = 'internet'
 
 # ------------------------------------------------------------
 class Connection(ServiceTimeCalculator):
+    """ Represents a one-way link between Zones. The source and destination :class:`Zone` may be the same. 
+    To connect Zones for two-way communication, there needs to be two Connections, upstream and downstream.
+
+    :param source: The upstream Zone. Information flows from the source.
+    :type source: Zone
+    :param dest: The downstream Zone. Information flows to the destination.
+    :type dest: Zone
+    :param bw: The stated bandwidth of the connection in megabits per second (Mbps).
+    :type bw: int
+    :param lat: The average latency of the connection in milliseconds (ms).
+    :type lat: int
+    """
     def __init__(self, source:'Zone', dest:'Zone', bw:int = 1000, lat:int = 0):
         self.source: Zone = source
         self.destination: Zone = dest
@@ -141,15 +148,36 @@ class Connection(ServiceTimeCalculator):
         return f'Connection {self.name}'
     
     def description(self) -> str:
-        return f'{self.source.description} to {self.destination.description}'
+        """ Describes the Connection using the namesx of the source and destination Zones.
+         
+        Example: 'Zone A to Zone B' """
+        return f'{self.source.name} to {self.destination.name}'
     
     def is_local(self) -> bool:
+        """ Indication that the Connection's source and destination are the same Zone. 
+        
+        :returns: True if the source and destination Zone are equal.
+        :rtype: bool
+        """
         return self.source == self.destination
     
     def inverted(self) -> 'Connection':
+        """ Inverts the Connection and returns it.  
+        
+        :returns: A copy of the Connection with the source and destination swapped.
+        :rtype: Connection
+        """
         return Connection(self.destination, self.source, self.bandwidth, self.latency_ms)
 
     def calculate_service_time(self, request: 'ClientRequest') -> Optional[int]:
+        """ Calculates the service time for the ClientRequest's current step in this Connection.
+        This takes the data size and determines how many milliseconds it would take to transmit. 
+        
+        :param request: The ClientRequest being transmitted over this Connection.
+        :type request: ClientRequest
+        :returns: The number of milliseconds to transmit the current step. Is None if the current step is None.
+        :rtype: Optional[int]
+        """
         step: Optional[ClientRequestSolutionStep] = request.solution.current_step()
         if step is None: return None
         data_kb: int = step.data_size * 8
@@ -158,67 +186,161 @@ class Connection(ServiceTimeCalculator):
         return int(data_kb / bw_kbpms)
 
     def calculate_latency(self, request) -> Optional[int]:
+        """ Calculates the latency time for the ClientRequest's current step in this Connection. 
+        This is the chatter of the current step times the latency of this Connection.
+        
+        :param request: The ClientRequest being transmitted over this Connection.
+        :type request: ClientRequest
+        :returns: The number of milliseconds of latency for the current step. Is None if the current step is None.
+        :rtype: Optional[int]
+        """
         step: Optional[ClientRequestSolutionStep] = request.solution.current_step()
         if step is None: return None
         return self.latency_ms * step.chatter
     
     def provide_queue(self) -> 'MultiQueue':
+        """ A ServiceTimeCalculator provides a MultiQueue to the :class:`pygissim.pygissim.Simulator`.
+        
+        :returns: A queue for handling ClientRequests.
+        :rtype: MultiQueue
+        """
         return MultiQueue(self, WaitMode.TRANSMITTING, channel_count=2)
 
 
 # ------------------------------------------------------------
 class Zone:
-    def __init__(self, name: str, desc: str, z_type: ZoneType):
+    """ Represents a network environment that can host ComputeNodes. A network is formed by 
+    Zones being connected by :class:`Connection` s. Many of the functions below accept an 'in_network'
+    parameter, which is the list of Connections, usually maintained by the :class:`pygissim.pygissim.Design`
+    in its 'network' property.
+    
+    :param name: A descriptive name. Should be unique in a :class:`pygissim.pygissim.Design`.
+    :param desc: Text that describes the Zone in more detail.
+    """
+    def __init__(self, name: str, desc: str):
         self.id = str(uuid.uuid1())
         self.name = name
         self.description = desc
-        self.type = z_type
     
     def __str__(self):
         return f'Zone {self.name}'
 
     def connect(self, other: 'Zone', bw: int, lat: int) -> Connection:
+        """ Creates a Connection to a Zone. 
+        
+        :param bw: The bandwidth of the Connection, in megabits per second (Mbps).
+        :param lat: the latency of the Connection, in millseconds (ms).
+        :returns: The new Connection between Zones.
+        :rtype: Connection
+        """
         return Connection(self, other, bw, lat)
 
     def connect_both_ways(self, other: 'Zone', bw: int, lat: int) -> Tuple[Connection, Connection]:
+        """ Creates a pair of Connections (forwards and backwards) between Zones.
+        The returned Connections are identical except for their direction.
+        
+        :param bw: The bandwidth of the Connection, in megabits per second (Mbps).
+        :param lat: the latency of the Connection, in millseconds (ms).
+        :returns: The new Connections between Zones.
+        :rtype: Tuple[Connection, Connection]
+        """
         c1: Connection = Connection(self, other, bw, lat)
         c2 = c1.inverted()
         return (c1,c2)
     
     def self_connect(self, bw: int, lat: int) -> Connection:
+        """ Convenience method to create a local connection for the Zone.
+        The source and destination will be this Zone.
+
+        :param bw: The bandwidth of the Connection, in megabits per second (Mbps).
+        :param lat: the latency of the Connection, in millseconds (ms).
+        :returns: A new local Connection for this Zone.
+        :rtype: Connection
+        """
         return Connection(self, self, bw, lat)
     
     def local_connection(self, in_network: list[Connection]) -> Optional[Connection]:
+        """ Finds a Connection in a list of Connections where the source and destination are this Zone.
+        
+        :param in_network: The list of Connections representing a network.
+        :returns: The first Connection with source and destination equal to this Zone. Returns None if not found.
+        :rtype: Optional[Connection]
+        """
         conns = list(filter(lambda conn: (self == conn.source and self == conn.destination), in_network))
         if len(conns) >= 0:
             return conns[0]
         return None
     
     def connections(self, in_network: list[Connection]) -> list[Connection]:
+        """ All Connections in the list where either the source or destination is this Zone.
+
+        :param in_network: The list of Connections representing a network.
+        :returns: All Connections with source or destination equal to this Zone. Returns an empty list if none found.
+        :rtype: list[Connection]
+        """
         return list(filter(lambda conn: (self == conn.source or self == conn.destination), in_network))
     
     def entry_connections(self, in_network: list[Connection]) -> list[Connection]:
+        """ All Connections in the list where the destination is this Zone and the source is a different Zone.
+
+        :param in_network: The list of Connections representing a network.
+        :returns: All Connections with destination equal and source not equal to this Zone. Returns an empty list if none found.
+        :rtype: list[Connection]
+        """
         return list(filter(lambda conn: (conn.is_local() == False and self == conn.destination), in_network))
     
     def exit_connections(self, in_network: list[Connection]) -> list[Connection]:
+        """ All Connections in the list where the source is this Zone and the destination is a different Zone.
+
+        :param in_network: The list of Connections representing a network.
+        :returns: All Connections with source equal and destination not equal to this Zone. Returns an empty list if none found.
+        :rtype: list[Connection]
+        """
         return list(filter(lambda conn: (conn.is_local() == False and self == conn.source), in_network))
     
     def other_connections(self, in_network: list[Connection]) -> list[Connection]:
+        """ All Connections in the list where neither the source nor the destination is this Zone.
+
+        :param in_network: The list of Connections representing a network.
+        :returns: All Connections with neither source nor destination equal to this Zone. Returns an empty list if none found.
+        :rtype: list[Connection]
+        """
         return list(filter(lambda conn: (conn.source != self and conn.destination != self), in_network))
 
     def is_a_source(self, in_network: list[Connection]) -> bool:
+        """
+        :param in_network: The list of Connections representing a network.
+        :returns: True if any Connections have this Zone as a source. 
+        :rtype: bool
+        """
         return len(list(filter(lambda conn: (self == conn.source), in_network))) > 0
     
     def is_a_destination(self, in_network: list[Connection]) -> bool:
+        """
+        :param in_network: The list of Connections representing a network.
+        :returns: True if any Connections have this Zone as a destination. 
+        :rtype: bool
+        """
         return len(list(filter(lambda conn: (self == conn.destination), in_network))) > 0
     
     def is_fully_connected(self, in_network: list[Connection]) -> bool:
+        """
+        :param in_network: The list of Connections representing a network.
+        :returns: True if this Zone has a local connection and at least one entry and exit connection. 
+        :rtype: bool
+        """
         return self.local_connection(in_network) is not None and \
             len(self.entry_connections(in_network)) > 0 and \
             len(self.exit_connections(in_network)) > 0
     
     @classmethod
     def all_zones(cls, in_network: list[Connection]) -> Set['Zone']:
+        """ The Set of Zones in a list of Connections. 
+        
+        :param in_network: The list of Connections representing a network.
+        :returns: All unique Zones that the Connections reference. 
+        :rtype: Set[Zone]
+        """
         result: Set[Zone] = set()
 
         for conn in in_network:
@@ -230,6 +352,8 @@ class Zone:
 # ------------------------------------------------------------
 @dataclass(frozen=True)
 class Route:
+    """ Immutable data class. A list of Connections that constitute a path through
+    a network. Usually created by :func:`find_route`."""
     connections: list[Connection]
 
     def __str__(self):
@@ -239,6 +363,10 @@ class Route:
         return result
 
     def count(self) -> int:
+        """ Convenience method to return the number of Connections in the Route. 
+
+        :returns: The length of the Route in steps.
+        """
         return len(self.connections)
 
         
@@ -252,10 +380,14 @@ class Route:
 
 # ------------------------------------------------------------
 class ThreadingModel(Enum):
+    """ Enumeration of threading models. Physical represents 1:1 threads to cores.
+    Hyperthreaded represents 2:1 threads to cores. Used for :class:`ComputeNode` service time calculation.
+    """
     PHYSICAL = 'physical'
     HYPERTHREADED = 'ht'
 
     def factor(self) -> float:
+        """ The factor applied to the per-core performace for ComputeNodes. """
         if self is ThreadingModel.PHYSICAL:
             return 1.0
         else:
@@ -263,6 +395,7 @@ class ThreadingModel(Enum):
         
 # ------------------------------------------------------------
 class BalancingModel(Enum):
+    """ Enumeration of ways requests can be balanced across multiple ComputeNodes in a :class:`ServiceProvider`. """
     SINGLE = '1'
     ROUND_ROBIN = 'roundrobin'
     FAILOVER = 'failover'
@@ -271,6 +404,12 @@ class BalancingModel(Enum):
 
     @classmethod
     def from_str(cls, value: str) -> 'BalancingModel':
+        """ Convenience method for constructing BalancingModels from a string representation. 
+        
+        :param value: The string representation.
+        :returns: The BalancingModel. Returns OTHER if the string is not a recognized type.
+        :rtype: BalancingModel
+        """
         match value.upper():
             case '1': return BalancingModel.SINGLE
             case 'ROUNDROBIN' | 'armv7': return BalancingModel.ROUND_ROBIN
@@ -278,23 +417,11 @@ class BalancingModel(Enum):
             case 'CONTAINER': return BalancingModel.CONTAINERIZED
             case _: return BalancingModel.OTHER
 
-# ------------------------------------------------------------
-class ComputeArchitecture(Enum):
-    INTEL = 'intel'
-    ARM64 = 'arm64'
-    RISCV = 'riscv'
-    OTHER = 'other'
-
-    @classmethod
-    def from_str(cls, value: str) -> 'ComputeArchitecture':
-        match value.lower():
-            case 'intel': return ComputeArchitecture.INTEL
-            case 'aarm64' | 'armv7': return ComputeArchitecture.ARM64
-            case 'riscv': return ComputeArchitecture.RISCV
-            case _: return ComputeArchitecture.OTHER
 
 # ------------------------------------------------------------
 class ComputeNodeType(Enum):
+    """ Enumeration of the functional classes of ComputeNode. Earlier iterations of this
+    framework used subclasses, but an enumeration works more clearly. """
     CLIENT = 'client'
     P_SERVER = 'physical'
     V_SERVER = 'virtual'
@@ -302,6 +429,8 @@ class ComputeNodeType(Enum):
 # ------------------------------------------------------------
 @dataclass(frozen=True)
 class ServiceDef:
+    """ Read-only data class. A tag for :class:`ServiceProvider` to identify the service it
+    provides and how requests are balanced. """
     name: str
     description: str
     service_type: str
@@ -310,21 +439,38 @@ class ServiceDef:
 # ------------------------------------------------------------
 @dataclass(frozen=True)
 class HardwareDef:
+    """ Read-only data class representing a hardware platform.
+    
+    :param processor: A name for the hardware. It must be a unique string in a :class:`pygissim.pygissim.Design`.
+    :param cores: The number of physical cores in the hardware platform.
+    :param specint_rate2017: The performance of the hardware from https://www.spec.org/cpu2017/results/rint2017/
+    :param threading: The threading model will be used when calculating service times.
+    """
     processor: str
     cores: int
     specint_rate2017: float
-    architecture: ComputeArchitecture
     threading: ThreadingModel
 
     def specint_rate2017_per_core(self) -> float:
+        """ Per-core performance of the hardware. Includes factor for :class:`ThreadingModel`. """
         return self.specint_rate2017 / float(self.cores) * self.threading.factor()
 
     def __str__(self) -> str:
-        return f'HW {self.processor} cores: {self.cores} spec: {self.specint_rate2017} ({self.architecture})'
+        return f'HW {self.processor} cores: {self.cores} spec: {self.specint_rate2017}'
+    
     baseline_per_core: float = 10.0
 
 # ------------------------------------------------------------
 class ComputeNode(ServiceTimeCalculator):
+    """ Represents a computing resource that has a :class:`HardwareDef` and exists in a network :class:`Zone`.
+    
+    :param name: A descriptive name. Should be unique in a :class:`pygissim.pygissim.Design`.
+    :param desc: Additional descriptive text.
+    :param hw_def: The hardware definition of the ComputeNode. Determines its performance.
+    :param memory_GB: Configured memory in gigabytes (GB). Is mostly used for determining overallocation of physical host memory on virtual hosts.
+    :param zone: The network Zone that the ComputeNode is connected to.
+    :param type: The type of ComputeNode.
+    """
     def __init__(self, name: str, desc: str, 
                  hw_def: HardwareDef, memory_GB: int,
                  zone: Zone, type: ComputeNodeType):
@@ -343,27 +489,57 @@ class ComputeNode(ServiceTimeCalculator):
         return f'CNode {self.name} {self.type} in {self.zone.name}'
     
     def vcore_count(self) -> int:
+        """        
+        :returns: The number of virtual cores assigned to a virtual machine. Will be zero if this ComputeNode is not a virtual host. 
+        """
         return self._v_cores
     
     def set_vcore_count(self, count: int):
+        """
+        :param count: Sets the number of virtual cores assigned to this virtual machine. Will be ignored if not a virtual host.
+        """
         if self.type == ComputeNodeType.V_SERVER:
             self._v_cores = count
         else:
             self._v_cores = 0
 
     def adjusted_service_time(self, st: int) -> int:
+        """ The relative performance of this ComputeNode will affect the service times. All service times in
+        :class:`WorkflowDefStep` are based on the baseline per core performance defined in :class:`HardwareDef`.
+        The hardware definition of this node may be faster or slower than that baseline and will make the 
+        calculated service times shorter or longer, respectively.
+        
+        :param st: The input baseline service time in milliseconds (ms).
+        :returns: The adjusted service time in milliseconds (ms).
+        """
         relative = HardwareDef.baseline_per_core / self.hw_def.specint_rate2017_per_core()
         return int(float(st) * relative)
 
     def calculate_service_time(self, request: 'ClientRequest') -> Optional[int]:
+        """
+        :param request: The ClientRequest whose current step needs a service time calculation.
+        :returns: The service time in milliseconds (ms). Returns None if there is no current step.
+        """
         step: Optional[ClientRequestSolutionStep] = request.solution.current_step()
         if step is None: return None
         return self.adjusted_service_time(step.service_time)
 
     def calculate_latency(self, request) -> Optional[int]:
-        return None # No latency on a compute calculation
+        """
+        :param request: The ClientRequest whose current step needs a latency time calculation.
+        :returns: None. Only Connections have latency.
+        """
+        return None
     
     def provide_queue(self) -> 'MultiQueue':
+        """ Creates and returns a MultiQueue that represent's this ComputeNode's ability to do work.
+        This includes a number of 'channels' (slots for processing requests in parallel) and a main
+        queue where requests will wait until there is an available channel.
+        
+        For a ComputeNode, the channel count will generally be the number of cores (virtual or physical).
+        Client nodes are the exception, because they represent the compute for a group of users. 
+        The channel count for them is an arbitrarily large number. 
+        """
         channel_count: int = 1
         match self.type:
             case ComputeNodeType.CLIENT:
@@ -375,6 +551,13 @@ class ComputeNode(ServiceTimeCalculator):
         return MultiQueue(self, WaitMode.PROCESSING, channel_count)
 
     def add_virtual_host(self, name: str, v_cores: int, memory_GB: int):
+        """ Creates and adds a virtual ComputeNode to a physical server.
+
+        :raises TypeError: if this is not a physical server.
+        :param name: A descriptive string. Should be unique in a Design.
+        :param v_cores: The number of virtual cores assigned to this virtual machine.
+        :param memory_GB: The amount of memory in gigabytes (GB) assigned to this virtual machine. 
+        """
         if self.type != ComputeNodeType.P_SERVER:
             raise TypeError("Can only add virtual hosts to physical servers.")
         
@@ -385,26 +568,47 @@ class ComputeNode(ServiceTimeCalculator):
         self._v_hosts.append(v_host)
 
     def remove_virtual_host(self, v_host:'ComputeNode'):
+        """ Removes a virtual machine from the list on this physical server. 
+        
+        :param v_host: The virtual machine to remove.
+        """
         self._v_hosts.remove(v_host)
     
     def virtual_host_count(self) -> int:
+        """
+        :returns: The count of virtual hosts on this ComputeNode.
+        """
         return len(self._v_hosts)
     
     def virtual_host(self, index: int) -> Optional['ComputeNode']:
+        """
+        :param index: The ordered index of the virtual host to return.
+        :returns: The virtual host at the index. Returns None if the index is invalid.
+        :rtype: Optional[ComputeNode]
+        """
         if index >= 0 and index < len(self._v_hosts):
             return self._v_hosts[index]
         return None
 
     def total_vcpu_allocation(self) -> int:
+        """
+        :returns: The sum of all virtual host virtual core allocations.
+        """
         total: int = 0
         for v_host in self._v_hosts:
             total = total + v_host.vcore_count()
         return total
     
     def total_cpu_allocation(self) -> int:
+        """
+        :returns: The sum of all virtual host virtual core allocations accounting for hyperthreading.
+        """
         return int(float(self.total_vcpu_allocation()) * self.hw_def.threading.factor())
     
     def total_memory_allocation(self) -> int:
+        """
+        :returns: The sum of all virtual host memory allocations.
+        """
         total: int = 0
         for v_host in self._v_hosts:
             total = total + v_host.memory_GB
@@ -414,6 +618,13 @@ class ComputeNode(ServiceTimeCalculator):
 
 # ------------------------------------------------------------
 class ServiceProvider:
+    """ Represents one or more ComputeNodes that are assigned to handle a particular service type.
+    
+    :param name: A descriptive name. Should be unique in a Design.
+    :param desc: Additional descriptive text.
+    :param service: The definition of the service that this provides.
+    :param nodes: The list of ComputeNodes that will handle the service requests.
+    """
     def __init__(self, name:str, desc: str, service: ServiceDef, nodes: list[ComputeNode]):
         self.name: str = name
         self.description: str = desc
@@ -430,6 +641,7 @@ class ServiceProvider:
         return hash((self.name, self.service))
 
     def primary(self) -> int:
+        """ :returns: The index of the ComputeNode that will handle the next request. """
         match self.service.balancing_model:
             case BalancingModel.SINGLE:
                 return 0
@@ -437,14 +649,28 @@ class ServiceProvider:
                 return self._primary
     
     def set_primary(self, value: int):
+        """ Changes the index of the primary node in the ServiceProvider. 
+        
+        :returns: The new primary index.
+        """
         if value < 0 or value >= len(self.nodes): return
         self._primary = value
 
     def rotate_primary(self) -> int:
+        """ Changes the index of the primary to the next node.
+        
+        :returns: The new primary index.
+        """
         self._primary = (self._primary + 1) % len(self.nodes)
         return self._primary
     
     def handler_node(self) -> Optional[ComputeNode]:
+        """ For a ServiceProvider with a service :class:`BalancingModel` of ROUND_ROBIN,
+        the primary will rotate every time this is called.
+        
+        :returns: The ComputeNode that is currently the primary. Returns None if there are no nodes assigned.
+        :rtype: Optional[ComputeNode]
+        """
         if len(self.nodes) == 0: return None
         result: ComputeNode = self.nodes[self._primary]
         if self.service.balancing_model == BalancingModel.ROUND_ROBIN:
@@ -452,18 +678,39 @@ class ServiceProvider:
         return result
     
     def add_node(self, node: ComputeNode):
+        """ Adds a ComputeNode to the list that handle service requests.
+        Will be ignored if the :class:`BalancingModel` does not support additional nodes.
+
+        - Example: BalancingModel SINGLE and there already is a node.
+        - Example: BalancingModel FAILOVER and there already are two nodes.
+        
+        :param node: The ComputeNode to add.
+        """
         if self.service.balancing_model == BalancingModel.SINGLE and len(self.nodes) > 0: return
         if self.service.balancing_model == BalancingModel.FAILOVER and len(self.nodes) > 1: return
         self.nodes.append(node)
 
     def remove_node(self, node: ComputeNode):
+        """ Removes a node from the list. Has no effect if node does not exist in [nodes].
+        
+        :param node: The ComputeNode to remove.
+        """
         self.nodes.remove(node)
         self._primary = 0
 
     def is_valid(self) -> bool:
+        """ 
+        :returns: True if validate returns no messages.
+        :rtype: bool
+        """
         return len(self.validate()) == 0
     
     def validate(self) -> list[ValidationMessage]:
+        """ Method that evaluates the validity of the configuration of this ServiceProvider.
+        
+        :returns: Messages indicating invalid configuration.
+        :rtype: list[ValidationMessage]
+        """
         messages: list[ValidationMessage] = []
         if len(self.nodes) == 0:
             messages.append(ValidationMessage('Service Provider must have at least one node', source=self.name))
@@ -482,6 +729,7 @@ class ServiceProvider:
 
 # ------------------------------------------------------------
 class WaitMode(Enum):
+    """ Enumeration of the potential states of a :class:`WaitingRequest`. """
     TRANSMITTING = 'transmitting'
     PROCESSING = 'processing'
     QUEUEING = 'queueing'
@@ -489,6 +737,20 @@ class WaitMode(Enum):
 
 # ------------------------------------------------------------
 class WaitingRequest:
+    """ Wrapper class for handling a :class:`ClientRequest` in a :class:`MultiQueue`
+    in preparation for processing a step of the request.
+
+    The wait_mode is used for later summarization:
+    - TRANSMITTING: a Connection is processing this request.
+    - PROCESSSING: a ComputeNode is processing this request.
+    - QUEUEING: the request is in a queue, waiting for a channel.
+    
+    :param request: The request to be wrapped.
+    :param wait_start: The simulation clock when the request was wrapped.
+    :param service_time: The service time for this step of the request. None is to support cases where the current step might be None.
+    :param latency: The latency time for this step of the request. None is supported if latency time is None or there is no current step.
+    :param wait_mode: The state of this WaitingRequest.
+    """
     def __init__(self, request: 'ClientRequest', wait_start: int, 
                  service_time: Optional[int], latency: Optional[int], 
                  wait_mode: WaitMode, queue_time: int = 0):
@@ -500,10 +762,21 @@ class WaitingRequest:
         self.queue_time: int = queue_time
 
     def queue_ended(self, clock: int, wait_mode: WaitMode):
+        """ The request is moving out of the queue and into a channel.
+        The time spent in the queue is recorded, and the wait mode is updated to reflect
+        the type of processor, either a Connection or a ComputeNode.
+        
+        :param clock: The current simulation time.
+        :param wait_mode: The wait mode for this queue's :class:`ServiceTimeCalculator`
+        """
         self.wait_mode = wait_mode
         self.queue_time = clock - self.wait_start
 
+    # TODO: Work out if there is potential for requests to get "stuck" in a MultiQueue.
     def wait_end(self) -> Optional[int]:
+        """
+        :returns: The simulation time when this request will be finished processing. None if queueing or service time is None.
+        """
         if self.wait_mode == WaitMode.QUEUEING or self.service_time is None:
             return None
         lat: int = 0 if self.latency is None else self.latency
@@ -512,6 +785,20 @@ class WaitingRequest:
 
 # ------------------------------------------------------------
 class MultiQueue:
+    """ Represents a queue with one or more channels of parallel processing and a single
+    queue used when waiting for a turn in a channel.
+    
+    Analogy: Multiple bank tellers (channels) and a queue waiting to see a teller.
+
+    The number of channels will be determined by the service time calculator.
+
+    - Connection: 2 channels
+    - ComputeNode: the number of cores (physical host or client) or virtual cores (virtual host)
+    
+    :param st_calculator: The :class:`Connection` or :class:`ComputeNode` that is designated to calculate all service times for this MultiQueue.
+    :param wait_mode: Will be TRANSMITTING for Connections and PROCESSING for ComputeNodes
+    :param channel_count: The number of channels that this MultiQueue will have.
+    """
     def __init__(self, st_calculator: ServiceTimeCalculator, wait_mode: WaitMode, channel_count: int):
         self.service_time_calculator: ServiceTimeCalculator = st_calculator
         self.wait_mode: WaitMode = wait_mode
@@ -519,9 +806,11 @@ class MultiQueue:
         self.main_queue: list[WaitingRequest] = [] # Serial, requests waiting for a channel
 
     def name(self) -> str:
+        """ :returns: The name of the service time calculator (i.e. the Connection or ComputeNode)"""
         return self.service_time_calculator.name # type: ignore
     
     def available_channel_count(self) -> int:
+        """ :returns: The number of channels without any active requests in them. """
         count: int = 0
         for channel in self.channels:
             if channel is None:
@@ -529,17 +818,26 @@ class MultiQueue:
         return count
 
     def first_available_channel(self) -> Optional[int]:
+        """
+        :returns: The index of the first available channel. Returns None if all channels are occupied.
+        :rtype: Optional[int]
+        """
         for i in range(0, len(self.channels)):
             if self.channels[i] is None: return i
         return None
     
     def channels_with_requests(self) -> list[int]:
+        """ :returns: A list of channel indexes with active requests in them. """
         result: list[int] = []
         for i in range(0, len(self.channels)):
             if self.channels[i] is not None: result.append(i)
         return result
        
     def channels_with_finished_requests(self, clock: int) -> list[int]:
+        """
+        :param clock: The current simulation time.
+        :returns: A list of channel indexes with requests in them that have finished processing.
+        """
         result: list[int] = []
         for i in self.channels_with_requests():
             wr: Optional[WaitingRequest] = self.channels[i]
@@ -550,9 +848,13 @@ class MultiQueue:
         return result
     
     def request_count(self) -> int:
+        """ :returns: The total count of requests in channels and in the main queue. """
         return len(self.main_queue) + len(self.channels) - self.available_channel_count()
     
     def next_event_time(self) -> Optional[int]:
+        """
+        :returns: The simulation clock when the next request in a channel will be finished. Returns None if no requests being processed.
+        """
         result: Optional[int] = None
         for i in self.channels_with_requests():
             wr: Optional[WaitingRequest] = self.channels[i]
@@ -564,6 +866,16 @@ class MultiQueue:
         return result
     
     def remove_finished_requests(self, clock: int) -> list[Tuple['ClientRequest', RequestMetric]]:
+        """ The simulation clock has moved forward and any waiting requests whose wait_end has arrived need to move on.
+        
+        ClientRequests are unwrapped and returned, along with metrics about how long they waited.
+
+        Any open channels are filled with requests from the main queue, if any are waiting.
+
+        :param clock: The current simulation time.
+        :returns: A list of all requests that have finished this step and need to move on and their metrics.
+        :rtype: Tuple[ClientRequest, RequestMetric]
+        """
         finished_channels: list[int] = self.channels_with_finished_requests(clock)
         result: list[Tuple['ClientRequest', RequestMetric]] = []
 
@@ -593,6 +905,12 @@ class MultiQueue:
         return result
     
     def enqueue(self, request: 'ClientRequest', clock: int):
+        """ Wraps the request in a WaitingRequest. If there are available channels, the request will be put in it
+        and immediately start processing. If there are no channels available, the request is added to the end of the main queue.
+        
+        :param request: The request that needs to be processed by this queue's service time calculator.
+        :param clock: The current simulation time.
+        """
         current_step: Optional[ClientRequestSolutionStep] = request.solution.current_step()
         if current_step is None: return
 
@@ -606,10 +924,14 @@ class MultiQueue:
             self.channels[index] = WaitingRequest(request, wait_start=clock, service_time=st, latency=lt, wait_mode=self.wait_mode)
 
     def all_waiting_requests(self) -> list[WaitingRequest]:
+        """
+        :returns: A list of all waiting requests in channels and in the main queue.
+        """
         full_channels: list[WaitingRequest] = [item for item in self.channels if item is not None]
         return full_channels + self.main_queue
     
     def get_performance_metric(self, clock: int) -> QueueMetric:
+        """ :returns: A performance metric for the queue indicating how busy it is. """
         if isinstance(self.service_time_calculator, ComputeNode):
             node: ComputeNode = self.service_time_calculator
             match node.type:

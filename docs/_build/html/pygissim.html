@@ -52,7 +52,6 @@
 <li class="toctree-l4"><a class="reference internal" href="#pygissim.engine.ClientRequestGroup"><code class="docutils literal notranslate"><span class="pre">ClientRequestGroup</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pygissim.engine.ClientRequestSolution"><code class="docutils literal notranslate"><span class="pre">ClientRequestSolution</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pygissim.engine.ClientRequestSolutionStep"><code class="docutils literal notranslate"><span class="pre">ClientRequestSolutionStep</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#pygissim.engine.ComputeArchitecture"><code class="docutils literal notranslate"><span class="pre">ComputeArchitecture</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pygissim.engine.ComputeNode"><code class="docutils literal notranslate"><span class="pre">ComputeNode</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pygissim.engine.ComputeNodeType"><code class="docutils literal notranslate"><span class="pre">ComputeNodeType</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pygissim.engine.Connection"><code class="docutils literal notranslate"><span class="pre">Connection</span></code></a></li>
@@ -75,7 +74,6 @@
 <li class="toctree-l4"><a class="reference internal" href="#pygissim.engine.WorkflowDefStep"><code class="docutils literal notranslate"><span class="pre">WorkflowDefStep</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pygissim.engine.WorkflowType"><code class="docutils literal notranslate"><span class="pre">WorkflowType</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pygissim.engine.Zone"><code class="docutils literal notranslate"><span class="pre">Zone</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#pygissim.engine.ZoneType"><code class="docutils literal notranslate"><span class="pre">ZoneType</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pygissim.engine.create_solution"><code class="docutils literal notranslate"><span class="pre">create_solution()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pygissim.engine.find_route"><code class="docutils literal notranslate"><span class="pre">find_route()</span></code></a></li>
 </ul>
@@ -136,6 +134,7 @@ They are grouped in this file by function: (general, network, compute, queue, wo
 <dt class="sig sig-object py" id="pygissim.engine.BalancingModel">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pygissim.engine.</span></span><span class="sig-name descname"><span class="pre">BalancingModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/engine.html#BalancingModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.BalancingModel" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>Enumeration of ways requests can be balanced across multiple ComputeNodes in a <a class="reference internal" href="#pygissim.engine.ServiceProvider" title="pygissim.engine.ServiceProvider"><code class="xref py py-class docutils literal notranslate"><span class="pre">ServiceProvider</span></code></a>.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pygissim.engine.BalancingModel.CONTAINERIZED">
 <span class="sig-name descname"><span class="pre">CONTAINERIZED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'containerized'</span></em><a class="headerlink" href="#pygissim.engine.BalancingModel.CONTAINERIZED" title="Link to this definition"></a></dt>
@@ -164,7 +163,19 @@ They are grouped in this file by function: (general, network, compute, queue, wo
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.BalancingModel.from_str">
 <em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pygissim.engine.BalancingModel" title="pygissim.engine.BalancingModel"><span class="pre">BalancingModel</span></a></span></span><a class="reference internal" href="_modules/pygissim/engine.html#BalancingModel.from_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.BalancingModel.from_str" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Convenience method for constructing BalancingModels from a string representation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>value</strong> – The string representation.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The BalancingModel. Returns OTHER if the string is not a recognized type.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pygissim.engine.BalancingModel" title="pygissim.engine.BalancingModel">BalancingModel</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -258,104 +269,180 @@ They are grouped in this file by function: (general, network, compute, queue, wo
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="pygissim.engine.ComputeArchitecture">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pygissim.engine.</span></span><span class="sig-name descname"><span class="pre">ComputeArchitecture</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/engine.html#ComputeArchitecture"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.ComputeArchitecture" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pygissim.engine.ComputeArchitecture.ARM64">
-<span class="sig-name descname"><span class="pre">ARM64</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'arm64'</span></em><a class="headerlink" href="#pygissim.engine.ComputeArchitecture.ARM64" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pygissim.engine.ComputeArchitecture.INTEL">
-<span class="sig-name descname"><span class="pre">INTEL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'intel'</span></em><a class="headerlink" href="#pygissim.engine.ComputeArchitecture.INTEL" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pygissim.engine.ComputeArchitecture.OTHER">
-<span class="sig-name descname"><span class="pre">OTHER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'other'</span></em><a class="headerlink" href="#pygissim.engine.ComputeArchitecture.OTHER" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pygissim.engine.ComputeArchitecture.RISCV">
-<span class="sig-name descname"><span class="pre">RISCV</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'riscv'</span></em><a class="headerlink" href="#pygissim.engine.ComputeArchitecture.RISCV" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pygissim.engine.ComputeArchitecture.from_str">
-<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pygissim.engine.ComputeArchitecture" title="pygissim.engine.ComputeArchitecture"><span class="pre">ComputeArchitecture</span></a></span></span><a class="reference internal" href="_modules/pygissim/engine.html#ComputeArchitecture.from_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.ComputeArchitecture.from_str" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
 <dt class="sig sig-object py" id="pygissim.engine.ComputeNode">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pygissim.engine.</span></span><span class="sig-name descname"><span class="pre">ComputeNode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">desc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hw_def</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.engine.HardwareDef" title="pygissim.engine.HardwareDef"><span class="pre">HardwareDef</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">memory_GB</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zone</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.engine.Zone" title="pygissim.engine.Zone"><span class="pre">Zone</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.engine.ComputeNodeType" title="pygissim.engine.ComputeNodeType"><span class="pre">ComputeNodeType</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/engine.html#ComputeNode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.ComputeNode" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#pygissim.engine.ServiceTimeCalculator" title="pygissim.engine.ServiceTimeCalculator"><code class="xref py py-class docutils literal notranslate"><span class="pre">ServiceTimeCalculator</span></code></a></p>
+<p>Represents a computing resource that has a <a class="reference internal" href="#pygissim.engine.HardwareDef" title="pygissim.engine.HardwareDef"><code class="xref py py-class docutils literal notranslate"><span class="pre">HardwareDef</span></code></a> and exists in a network <a class="reference internal" href="#pygissim.engine.Zone" title="pygissim.engine.Zone"><code class="xref py py-class docutils literal notranslate"><span class="pre">Zone</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – A descriptive name. Should be unique in a <a class="reference internal" href="#pygissim.pygissim.Design" title="pygissim.pygissim.Design"><code class="xref py py-class docutils literal notranslate"><span class="pre">pygissim.pygissim.Design</span></code></a>.</p></li>
+<li><p><strong>desc</strong> – Additional descriptive text.</p></li>
+<li><p><strong>hw_def</strong> – The hardware definition of the ComputeNode. Determines its performance.</p></li>
+<li><p><strong>memory_GB</strong> – Configured memory in gigabytes (GB). Is mostly used for determining overallocation of physical host memory on virtual hosts.</p></li>
+<li><p><strong>zone</strong> – The network Zone that the ComputeNode is connected to.</p></li>
+<li><p><strong>type</strong> – The type of ComputeNode.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.ComputeNode.add_virtual_host">
 <span class="sig-name descname"><span class="pre">add_virtual_host</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_cores</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">memory_GB</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/engine.html#ComputeNode.add_virtual_host"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.ComputeNode.add_virtual_host" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Creates and adds a virtual ComputeNode to a physical server.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>TypeError</strong> – if this is not a physical server.</p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>name</strong> – A descriptive string. Should be unique in a Design.</p></li>
+<li><p><strong>v_cores</strong> – The number of virtual cores assigned to this virtual machine.</p></li>
+<li><p><strong>memory_GB</strong> – The amount of memory in gigabytes (GB) assigned to this virtual machine.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.ComputeNode.adjusted_service_time">
 <span class="sig-name descname"><span class="pre">adjusted_service_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">st</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#ComputeNode.adjusted_service_time"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.ComputeNode.adjusted_service_time" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>The relative performance of this ComputeNode will affect the service times. All service times in
+<a class="reference internal" href="#pygissim.engine.WorkflowDefStep" title="pygissim.engine.WorkflowDefStep"><code class="xref py py-class docutils literal notranslate"><span class="pre">WorkflowDefStep</span></code></a> are based on the baseline per core performance defined in <a class="reference internal" href="#pygissim.engine.HardwareDef" title="pygissim.engine.HardwareDef"><code class="xref py py-class docutils literal notranslate"><span class="pre">HardwareDef</span></code></a>.
+The hardware definition of this node may be faster or slower than that baseline and will make the 
+calculated service times shorter or longer, respectively.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>st</strong> – The input baseline service time in milliseconds (ms).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The adjusted service time in milliseconds (ms).</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.ComputeNode.calculate_latency">
 <span class="sig-name descname"><span class="pre">calculate_latency</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#ComputeNode.calculate_latency"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.ComputeNode.calculate_latency" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>request</strong> – The ClientRequest whose current step needs a latency time calculation.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None. Only Connections have latency.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.ComputeNode.calculate_service_time">
 <span class="sig-name descname"><span class="pre">calculate_service_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.engine.ClientRequest" title="pygissim.engine.ClientRequest"><span class="pre">ClientRequest</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#ComputeNode.calculate_service_time"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.ComputeNode.calculate_service_time" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>request</strong> – The ClientRequest whose current step needs a service time calculation.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The service time in milliseconds (ms). Returns None if there is no current step.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.ComputeNode.provide_queue">
 <span class="sig-name descname"><span class="pre">provide_queue</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pygissim.engine.MultiQueue" title="pygissim.engine.MultiQueue"><span class="pre">MultiQueue</span></a></span></span><a class="reference internal" href="_modules/pygissim/engine.html#ComputeNode.provide_queue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.ComputeNode.provide_queue" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Creates and returns a MultiQueue that represent’s this ComputeNode’s ability to do work.
+This includes a number of ‘channels’ (slots for processing requests in parallel) and a main
+queue where requests will wait until there is an available channel.</p>
+<p>For a ComputeNode, the channel count will generally be the number of cores (virtual or physical).
+Client nodes are the exception, because they represent the compute for a group of users. 
+The channel count for them is an arbitrarily large number.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.ComputeNode.remove_virtual_host">
 <span class="sig-name descname"><span class="pre">remove_virtual_host</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v_host</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.engine.ComputeNode" title="pygissim.engine.ComputeNode"><span class="pre">ComputeNode</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/engine.html#ComputeNode.remove_virtual_host"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.ComputeNode.remove_virtual_host" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Removes a virtual machine from the list on this physical server.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>v_host</strong> – The virtual machine to remove.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.ComputeNode.set_vcore_count">
 <span class="sig-name descname"><span class="pre">set_vcore_count</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">count</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/engine.html#ComputeNode.set_vcore_count"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.ComputeNode.set_vcore_count" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>count</strong> – Sets the number of virtual cores assigned to this virtual machine. Will be ignored if not a virtual host.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.ComputeNode.total_cpu_allocation">
 <span class="sig-name descname"><span class="pre">total_cpu_allocation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#ComputeNode.total_cpu_allocation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.ComputeNode.total_cpu_allocation" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The sum of all virtual host virtual core allocations accounting for hyperthreading.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.ComputeNode.total_memory_allocation">
 <span class="sig-name descname"><span class="pre">total_memory_allocation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#ComputeNode.total_memory_allocation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.ComputeNode.total_memory_allocation" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The sum of all virtual host memory allocations.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.ComputeNode.total_vcpu_allocation">
 <span class="sig-name descname"><span class="pre">total_vcpu_allocation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#ComputeNode.total_vcpu_allocation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.ComputeNode.total_vcpu_allocation" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The sum of all virtual host virtual core allocations.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.ComputeNode.vcore_count">
 <span class="sig-name descname"><span class="pre">vcore_count</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#ComputeNode.vcore_count"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.ComputeNode.vcore_count" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The number of virtual cores assigned to a virtual machine. Will be zero if this ComputeNode is not a virtual host.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.ComputeNode.virtual_host">
 <span class="sig-name descname"><span class="pre">virtual_host</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pygissim.engine.ComputeNode" title="pygissim.engine.ComputeNode"><span class="pre">ComputeNode</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#ComputeNode.virtual_host"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.ComputeNode.virtual_host" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>index</strong> – The ordered index of the virtual host to return.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The virtual host at the index. Returns None if the index is invalid.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[<a class="reference internal" href="#pygissim.engine.ComputeNode" title="pygissim.engine.ComputeNode">ComputeNode</a>]</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.ComputeNode.virtual_host_count">
 <span class="sig-name descname"><span class="pre">virtual_host_count</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#ComputeNode.virtual_host_count"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.ComputeNode.virtual_host_count" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The count of virtual hosts on this ComputeNode.</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -363,6 +450,8 @@ They are grouped in this file by function: (general, network, compute, queue, wo
 <dt class="sig sig-object py" id="pygissim.engine.ComputeNodeType">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pygissim.engine.</span></span><span class="sig-name descname"><span class="pre">ComputeNodeType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/engine.html#ComputeNodeType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.ComputeNodeType" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>Enumeration of the functional classes of ComputeNode. Earlier iterations of this
+framework used subclasses, but an enumeration works more clearly.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pygissim.engine.ComputeNodeType.CLIENT">
 <span class="sig-name descname"><span class="pre">CLIENT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'client'</span></em><a class="headerlink" href="#pygissim.engine.ComputeNodeType.CLIENT" title="Link to this definition"></a></dt>
@@ -384,35 +473,102 @@ They are grouped in this file by function: (general, network, compute, queue, wo
 <dt class="sig sig-object py" id="pygissim.engine.Connection">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pygissim.engine.</span></span><span class="sig-name descname"><span class="pre">Connection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.engine.Zone" title="pygissim.engine.Zone"><span class="pre">Zone</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.engine.Zone" title="pygissim.engine.Zone"><span class="pre">Zone</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">bw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/engine.html#Connection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.Connection" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#pygissim.engine.ServiceTimeCalculator" title="pygissim.engine.ServiceTimeCalculator"><code class="xref py py-class docutils literal notranslate"><span class="pre">ServiceTimeCalculator</span></code></a></p>
+<p>Represents a one-way link between Zones. The source and destination <a class="reference internal" href="#pygissim.engine.Zone" title="pygissim.engine.Zone"><code class="xref py py-class docutils literal notranslate"><span class="pre">Zone</span></code></a> may be the same. 
+To connect Zones for two-way communication, there needs to be two Connections, upstream and downstream.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source</strong> (<a class="reference internal" href="#pygissim.engine.Zone" title="pygissim.engine.Zone"><em>Zone</em></a>) – The upstream Zone. Information flows from the source.</p></li>
+<li><p><strong>dest</strong> (<a class="reference internal" href="#pygissim.engine.Zone" title="pygissim.engine.Zone"><em>Zone</em></a>) – The downstream Zone. Information flows to the destination.</p></li>
+<li><p><strong>bw</strong> (<em>int</em>) – The stated bandwidth of the connection in megabits per second (Mbps).</p></li>
+<li><p><strong>lat</strong> (<em>int</em>) – The average latency of the connection in milliseconds (ms).</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.Connection.calculate_latency">
 <span class="sig-name descname"><span class="pre">calculate_latency</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#Connection.calculate_latency"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.Connection.calculate_latency" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Calculates the latency time for the ClientRequest’s current step in this Connection. 
+This is the chatter of the current step times the latency of this Connection.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>request</strong> (<a class="reference internal" href="#pygissim.engine.ClientRequest" title="pygissim.engine.ClientRequest"><em>ClientRequest</em></a>) – The ClientRequest being transmitted over this Connection.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The number of milliseconds of latency for the current step. Is None if the current step is None.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[int]</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.Connection.calculate_service_time">
 <span class="sig-name descname"><span class="pre">calculate_service_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.engine.ClientRequest" title="pygissim.engine.ClientRequest"><span class="pre">ClientRequest</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#Connection.calculate_service_time"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.Connection.calculate_service_time" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Calculates the service time for the ClientRequest’s current step in this Connection.
+This takes the data size and determines how many milliseconds it would take to transmit.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>request</strong> (<a class="reference internal" href="#pygissim.engine.ClientRequest" title="pygissim.engine.ClientRequest"><em>ClientRequest</em></a>) – The ClientRequest being transmitted over this Connection.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The number of milliseconds to transmit the current step. Is None if the current step is None.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[int]</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.Connection.description">
 <span class="sig-name descname"><span class="pre">description</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#Connection.description"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.Connection.description" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Describes the Connection using the namesx of the source and destination Zones.</p>
+<p>Example: ‘Zone A to Zone B’</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.Connection.inverted">
 <span class="sig-name descname"><span class="pre">inverted</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pygissim.engine.Connection" title="pygissim.engine.Connection"><span class="pre">Connection</span></a></span></span><a class="reference internal" href="_modules/pygissim/engine.html#Connection.inverted"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.Connection.inverted" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Inverts the Connection and returns it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A copy of the Connection with the source and destination swapped.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#pygissim.engine.Connection" title="pygissim.engine.Connection">Connection</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.Connection.is_local">
 <span class="sig-name descname"><span class="pre">is_local</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#Connection.is_local"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.Connection.is_local" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Indication that the Connection’s source and destination are the same Zone.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the source and destination Zone are equal.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.Connection.provide_queue">
 <span class="sig-name descname"><span class="pre">provide_queue</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pygissim.engine.MultiQueue" title="pygissim.engine.MultiQueue"><span class="pre">MultiQueue</span></a></span></span><a class="reference internal" href="_modules/pygissim/engine.html#Connection.provide_queue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.Connection.provide_queue" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>A ServiceTimeCalculator provides a MultiQueue to the <a class="reference internal" href="#pygissim.pygissim.Simulator" title="pygissim.pygissim.Simulator"><code class="xref py py-class docutils literal notranslate"><span class="pre">pygissim.pygissim.Simulator</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A queue for handling ClientRequests.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#pygissim.engine.MultiQueue" title="pygissim.engine.MultiQueue">MultiQueue</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -464,13 +620,19 @@ They are grouped in this file by function: (general, network, compute, queue, wo
 
 <dl class="py class">
 <dt class="sig sig-object py" id="pygissim.engine.HardwareDef">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pygissim.engine.</span></span><span class="sig-name descname"><span class="pre">HardwareDef</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">processor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cores</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">specint_rate2017</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">architecture</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.engine.ComputeArchitecture" title="pygissim.engine.ComputeArchitecture"><span class="pre">pygissim.engine.ComputeArchitecture</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">threading</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.engine.ThreadingModel" title="pygissim.engine.ThreadingModel"><span class="pre">pygissim.engine.ThreadingModel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">baseline_per_core</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/engine.html#HardwareDef"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.HardwareDef" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pygissim.engine.</span></span><span class="sig-name descname"><span class="pre">HardwareDef</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">processor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cores</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">specint_rate2017</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threading</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.engine.ThreadingModel" title="pygissim.engine.ThreadingModel"><span class="pre">ThreadingModel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">baseline_per_core</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/engine.html#HardwareDef"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.HardwareDef" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pygissim.engine.HardwareDef.architecture">
-<span class="sig-name descname"><span class="pre">architecture</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#pygissim.engine.ComputeArchitecture" title="pygissim.engine.ComputeArchitecture"><span class="pre">ComputeArchitecture</span></a></em><a class="headerlink" href="#pygissim.engine.HardwareDef.architecture" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
+<p>Read-only data class representing a hardware platform.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>processor</strong> – A name for the hardware. It must be a unique string in a <a class="reference internal" href="#pygissim.pygissim.Design" title="pygissim.pygissim.Design"><code class="xref py py-class docutils literal notranslate"><span class="pre">pygissim.pygissim.Design</span></code></a>.</p></li>
+<li><p><strong>cores</strong> – The number of physical cores in the hardware platform.</p></li>
+<li><p><strong>specint_rate2017</strong> – The performance of the hardware from <a class="reference external" href="https://www.spec.org/cpu2017/results/rint2017/">https://www.spec.org/cpu2017/results/rint2017/</a></p></li>
+<li><p><strong>threading</strong> – The threading model will be used when calculating service times.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pygissim.engine.HardwareDef.baseline_per_core">
 <span class="sig-name descname"><span class="pre">baseline_per_core</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">10.0</span></em><a class="headerlink" href="#pygissim.engine.HardwareDef.baseline_per_core" title="Link to this definition"></a></dt>
@@ -494,7 +656,8 @@ They are grouped in this file by function: (general, network, compute, queue, wo
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.HardwareDef.specint_rate2017_per_core">
 <span class="sig-name descname"><span class="pre">specint_rate2017_per_core</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#HardwareDef.specint_rate2017_per_core"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.HardwareDef.specint_rate2017_per_core" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Per-core performance of the hardware. Includes factor for <a class="reference internal" href="#pygissim.engine.ThreadingModel" title="pygissim.engine.ThreadingModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">ThreadingModel</span></code></a>.</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pygissim.engine.HardwareDef.threading">
@@ -507,60 +670,152 @@ They are grouped in this file by function: (general, network, compute, queue, wo
 <dt class="sig sig-object py" id="pygissim.engine.MultiQueue">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pygissim.engine.</span></span><span class="sig-name descname"><span class="pre">MultiQueue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">st_calculator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.engine.ServiceTimeCalculator" title="pygissim.engine.ServiceTimeCalculator"><span class="pre">ServiceTimeCalculator</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">wait_mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.engine.WaitMode" title="pygissim.engine.WaitMode"><span class="pre">WaitMode</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_count</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/engine.html#MultiQueue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.MultiQueue" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Represents a queue with one or more channels of parallel processing and a single
+queue used when waiting for a turn in a channel.</p>
+<p>Analogy: Multiple bank tellers (channels) and a queue waiting to see a teller.</p>
+<p>The number of channels will be determined by the service time calculator.</p>
+<ul class="simple">
+<li><p>Connection: 2 channels</p></li>
+<li><p>ComputeNode: the number of cores (physical host or client) or virtual cores (virtual host)</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>st_calculator</strong> – The <a class="reference internal" href="#pygissim.engine.Connection" title="pygissim.engine.Connection"><code class="xref py py-class docutils literal notranslate"><span class="pre">Connection</span></code></a> or <a class="reference internal" href="#pygissim.engine.ComputeNode" title="pygissim.engine.ComputeNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">ComputeNode</span></code></a> that is designated to calculate all service times for this MultiQueue.</p></li>
+<li><p><strong>wait_mode</strong> – Will be TRANSMITTING for Connections and PROCESSING for ComputeNodes</p></li>
+<li><p><strong>channel_count</strong> – The number of channels that this MultiQueue will have.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.MultiQueue.all_waiting_requests">
 <span class="sig-name descname"><span class="pre">all_waiting_requests</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pygissim.engine.WaitingRequest" title="pygissim.engine.WaitingRequest"><span class="pre">WaitingRequest</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#MultiQueue.all_waiting_requests"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.MultiQueue.all_waiting_requests" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of all waiting requests in channels and in the main queue.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.MultiQueue.available_channel_count">
 <span class="sig-name descname"><span class="pre">available_channel_count</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#MultiQueue.available_channel_count"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.MultiQueue.available_channel_count" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The number of channels without any active requests in them.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.MultiQueue.channels_with_finished_requests">
 <span class="sig-name descname"><span class="pre">channels_with_finished_requests</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">clock</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#MultiQueue.channels_with_finished_requests"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.MultiQueue.channels_with_finished_requests" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>clock</strong> – The current simulation time.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of channel indexes with requests in them that have finished processing.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.MultiQueue.channels_with_requests">
 <span class="sig-name descname"><span class="pre">channels_with_requests</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#MultiQueue.channels_with_requests"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.MultiQueue.channels_with_requests" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of channel indexes with active requests in them.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.MultiQueue.enqueue">
 <span class="sig-name descname"><span class="pre">enqueue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.engine.ClientRequest" title="pygissim.engine.ClientRequest"><span class="pre">ClientRequest</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">clock</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/engine.html#MultiQueue.enqueue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.MultiQueue.enqueue" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Wraps the request in a WaitingRequest. If there are available channels, the request will be put in it
+and immediately start processing. If there are no channels available, the request is added to the end of the main queue.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> – The request that needs to be processed by this queue’s service time calculator.</p></li>
+<li><p><strong>clock</strong> – The current simulation time.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.MultiQueue.first_available_channel">
 <span class="sig-name descname"><span class="pre">first_available_channel</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#MultiQueue.first_available_channel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.MultiQueue.first_available_channel" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The index of the first available channel. Returns None if all channels are occupied.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Optional[int]</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.MultiQueue.get_performance_metric">
 <span class="sig-name descname"><span class="pre">get_performance_metric</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">clock</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pygissim.engine.QueueMetric" title="pygissim.engine.QueueMetric"><span class="pre">QueueMetric</span></a></span></span><a class="reference internal" href="_modules/pygissim/engine.html#MultiQueue.get_performance_metric"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.MultiQueue.get_performance_metric" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A performance metric for the queue indicating how busy it is.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.MultiQueue.name">
 <span class="sig-name descname"><span class="pre">name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#MultiQueue.name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.MultiQueue.name" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The name of the service time calculator (i.e. the Connection or ComputeNode)</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.MultiQueue.next_event_time">
 <span class="sig-name descname"><span class="pre">next_event_time</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#MultiQueue.next_event_time"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.MultiQueue.next_event_time" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The simulation clock when the next request in a channel will be finished. Returns None if no requests being processed.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.MultiQueue.remove_finished_requests">
 <span class="sig-name descname"><span class="pre">remove_finished_requests</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">clock</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pygissim.engine.ClientRequest" title="pygissim.engine.ClientRequest"><span class="pre">ClientRequest</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#pygissim.engine.RequestMetric" title="pygissim.engine.RequestMetric"><span class="pre">RequestMetric</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#MultiQueue.remove_finished_requests"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.MultiQueue.remove_finished_requests" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>The simulation clock has moved forward and any waiting requests whose wait_end has arrived need to move on.</p>
+<p>ClientRequests are unwrapped and returned, along with metrics about how long they waited.</p>
+<p>Any open channels are filled with requests from the main queue, if any are waiting.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>clock</strong> – The current simulation time.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of all requests that have finished this step and need to move on and their metrics.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tuple[<a class="reference internal" href="#pygissim.engine.ClientRequest" title="pygissim.engine.ClientRequest">ClientRequest</a>, <a class="reference internal" href="#pygissim.engine.RequestMetric" title="pygissim.engine.RequestMetric">RequestMetric</a>]</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.MultiQueue.request_count">
 <span class="sig-name descname"><span class="pre">request_count</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#MultiQueue.request_count"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.MultiQueue.request_count" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The total count of requests in channels and in the main queue.</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -677,8 +932,10 @@ between being enqueued and completed.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="pygissim.engine.Route">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pygissim.engine.</span></span><span class="sig-name descname"><span class="pre">Route</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connections</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pygissim.engine.Connection" title="pygissim.engine.Connection"><span class="pre">pygissim.engine.Connection</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/engine.html#Route"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.Route" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pygissim.engine.</span></span><span class="sig-name descname"><span class="pre">Route</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connections</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pygissim.engine.Connection" title="pygissim.engine.Connection"><span class="pre">Connection</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/engine.html#Route"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.Route" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Immutable data class. A list of Connections that constitute a path through
+a network. Usually created by <a class="reference internal" href="#pygissim.engine.find_route" title="pygissim.engine.find_route"><code class="xref py py-func docutils literal notranslate"><span class="pre">find_route()</span></code></a>.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pygissim.engine.Route.connections">
 <span class="sig-name descname"><span class="pre">connections</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pygissim.engine.Connection" title="pygissim.engine.Connection"><span class="pre">Connection</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#pygissim.engine.Route.connections" title="Link to this definition"></a></dt>
@@ -687,14 +944,22 @@ between being enqueued and completed.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.Route.count">
 <span class="sig-name descname"><span class="pre">count</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#Route.count"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.Route.count" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Convenience method to return the number of Connections in the Route.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The length of the Route in steps.</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="pygissim.engine.ServiceDef">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pygissim.engine.</span></span><span class="sig-name descname"><span class="pre">ServiceDef</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">balancing_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.engine.BalancingModel" title="pygissim.engine.BalancingModel"><span class="pre">pygissim.engine.BalancingModel</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/engine.html#ServiceDef"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.ServiceDef" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pygissim.engine.</span></span><span class="sig-name descname"><span class="pre">ServiceDef</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">balancing_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.engine.BalancingModel" title="pygissim.engine.BalancingModel"><span class="pre">BalancingModel</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/engine.html#ServiceDef"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.ServiceDef" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Read-only data class. A tag for <a class="reference internal" href="#pygissim.engine.ServiceProvider" title="pygissim.engine.ServiceProvider"><code class="xref py py-class docutils literal notranslate"><span class="pre">ServiceProvider</span></code></a> to identify the service it
+provides and how requests are balanced.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pygissim.engine.ServiceDef.balancing_model">
 <span class="sig-name descname"><span class="pre">balancing_model</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#pygissim.engine.BalancingModel" title="pygissim.engine.BalancingModel"><span class="pre">BalancingModel</span></a></em><a class="headerlink" href="#pygissim.engine.ServiceDef.balancing_model" title="Link to this definition"></a></dt>
@@ -721,45 +986,117 @@ between being enqueued and completed.</p>
 <dt class="sig sig-object py" id="pygissim.engine.ServiceProvider">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pygissim.engine.</span></span><span class="sig-name descname"><span class="pre">ServiceProvider</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">desc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.engine.ServiceDef" title="pygissim.engine.ServiceDef"><span class="pre">ServiceDef</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pygissim.engine.ComputeNode" title="pygissim.engine.ComputeNode"><span class="pre">ComputeNode</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/engine.html#ServiceProvider"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.ServiceProvider" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Represents one or more ComputeNodes that are assigned to handle a particular service type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – A descriptive name. Should be unique in a Design.</p></li>
+<li><p><strong>desc</strong> – Additional descriptive text.</p></li>
+<li><p><strong>service</strong> – The definition of the service that this provides.</p></li>
+<li><p><strong>nodes</strong> – The list of ComputeNodes that will handle the service requests.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.ServiceProvider.add_node">
 <span class="sig-name descname"><span class="pre">add_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.engine.ComputeNode" title="pygissim.engine.ComputeNode"><span class="pre">ComputeNode</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/engine.html#ServiceProvider.add_node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.ServiceProvider.add_node" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Adds a ComputeNode to the list that handle service requests.
+Will be ignored if the <a class="reference internal" href="#pygissim.engine.BalancingModel" title="pygissim.engine.BalancingModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">BalancingModel</span></code></a> does not support additional nodes.</p>
+<ul class="simple">
+<li><p>Example: BalancingModel SINGLE and there already is a node.</p></li>
+<li><p>Example: BalancingModel FAILOVER and there already are two nodes.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>node</strong> – The ComputeNode to add.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.ServiceProvider.handler_node">
 <span class="sig-name descname"><span class="pre">handler_node</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pygissim.engine.ComputeNode" title="pygissim.engine.ComputeNode"><span class="pre">ComputeNode</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#ServiceProvider.handler_node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.ServiceProvider.handler_node" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>For a ServiceProvider with a service <a class="reference internal" href="#pygissim.engine.BalancingModel" title="pygissim.engine.BalancingModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">BalancingModel</span></code></a> of ROUND_ROBIN,
+the primary will rotate every time this is called.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The ComputeNode that is currently the primary. Returns None if there are no nodes assigned.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Optional[<a class="reference internal" href="#pygissim.engine.ComputeNode" title="pygissim.engine.ComputeNode">ComputeNode</a>]</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.ServiceProvider.is_valid">
 <span class="sig-name descname"><span class="pre">is_valid</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#ServiceProvider.is_valid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.ServiceProvider.is_valid" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if validate returns no messages.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.ServiceProvider.primary">
 <span class="sig-name descname"><span class="pre">primary</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#ServiceProvider.primary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.ServiceProvider.primary" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The index of the ComputeNode that will handle the next request.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.ServiceProvider.remove_node">
 <span class="sig-name descname"><span class="pre">remove_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.engine.ComputeNode" title="pygissim.engine.ComputeNode"><span class="pre">ComputeNode</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/engine.html#ServiceProvider.remove_node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.ServiceProvider.remove_node" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Removes a node from the list. Has no effect if node does not exist in [nodes].</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>node</strong> – The ComputeNode to remove.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.ServiceProvider.rotate_primary">
 <span class="sig-name descname"><span class="pre">rotate_primary</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#ServiceProvider.rotate_primary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.ServiceProvider.rotate_primary" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Changes the index of the primary to the next node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The new primary index.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.ServiceProvider.set_primary">
 <span class="sig-name descname"><span class="pre">set_primary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/engine.html#ServiceProvider.set_primary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.ServiceProvider.set_primary" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Changes the index of the primary node in the ServiceProvider.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The new primary index.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.ServiceProvider.validate">
 <span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pygissim.engine.ValidationMessage" title="pygissim.engine.ValidationMessage"><span class="pre">ValidationMessage</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#ServiceProvider.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.ServiceProvider.validate" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Method that evaluates the validity of the configuration of this ServiceProvider.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Messages indicating invalid configuration.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list[<a class="reference internal" href="#pygissim.engine.ValidationMessage" title="pygissim.engine.ValidationMessage">ValidationMessage</a>]</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -790,6 +1127,8 @@ The two subclasses are <a class="reference internal" href="#pygissim.engine.Conn
 <dt class="sig sig-object py" id="pygissim.engine.ThreadingModel">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pygissim.engine.</span></span><span class="sig-name descname"><span class="pre">ThreadingModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/engine.html#ThreadingModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.ThreadingModel" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>Enumeration of threading models. Physical represents 1:1 threads to cores.
+Hyperthreaded represents 2:1 threads to cores. Used for <a class="reference internal" href="#pygissim.engine.ComputeNode" title="pygissim.engine.ComputeNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">ComputeNode</span></code></a> service time calculation.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pygissim.engine.ThreadingModel.HYPERTHREADED">
 <span class="sig-name descname"><span class="pre">HYPERTHREADED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'ht'</span></em><a class="headerlink" href="#pygissim.engine.ThreadingModel.HYPERTHREADED" title="Link to this definition"></a></dt>
@@ -803,7 +1142,8 @@ The two subclasses are <a class="reference internal" href="#pygissim.engine.Conn
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.ThreadingModel.factor">
 <span class="sig-name descname"><span class="pre">factor</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#ThreadingModel.factor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.ThreadingModel.factor" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>The factor applied to the per-core performace for ComputeNodes.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -828,6 +1168,7 @@ The two subclasses are <a class="reference internal" href="#pygissim.engine.Conn
 <dt class="sig sig-object py" id="pygissim.engine.WaitMode">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pygissim.engine.</span></span><span class="sig-name descname"><span class="pre">WaitMode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/engine.html#WaitMode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.WaitMode" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>Enumeration of the potential states of a <a class="reference internal" href="#pygissim.engine.WaitingRequest" title="pygissim.engine.WaitingRequest"><code class="xref py py-class docutils literal notranslate"><span class="pre">WaitingRequest</span></code></a>.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pygissim.engine.WaitMode.PROCESSING">
 <span class="sig-name descname"><span class="pre">PROCESSING</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'processing'</span></em><a class="headerlink" href="#pygissim.engine.WaitMode.PROCESSING" title="Link to this definition"></a></dt>
@@ -849,15 +1190,48 @@ The two subclasses are <a class="reference internal" href="#pygissim.engine.Conn
 <dt class="sig sig-object py" id="pygissim.engine.WaitingRequest">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pygissim.engine.</span></span><span class="sig-name descname"><span class="pre">WaitingRequest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.engine.ClientRequest" title="pygissim.engine.ClientRequest"><span class="pre">ClientRequest</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">wait_start</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latency</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wait_mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.engine.WaitMode" title="pygissim.engine.WaitMode"><span class="pre">WaitMode</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">queue_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/engine.html#WaitingRequest"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.WaitingRequest" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Wrapper class for handling a <a class="reference internal" href="#pygissim.engine.ClientRequest" title="pygissim.engine.ClientRequest"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClientRequest</span></code></a> in a <a class="reference internal" href="#pygissim.engine.MultiQueue" title="pygissim.engine.MultiQueue"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultiQueue</span></code></a>
+in preparation for processing a step of the request.</p>
+<p>The wait_mode is used for later summarization:
+- TRANSMITTING: a Connection is processing this request.
+- PROCESSSING: a ComputeNode is processing this request.
+- QUEUEING: the request is in a queue, waiting for a channel.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> – The request to be wrapped.</p></li>
+<li><p><strong>wait_start</strong> – The simulation clock when the request was wrapped.</p></li>
+<li><p><strong>service_time</strong> – The service time for this step of the request. None is to support cases where the current step might be None.</p></li>
+<li><p><strong>latency</strong> – The latency time for this step of the request. None is supported if latency time is None or there is no current step.</p></li>
+<li><p><strong>wait_mode</strong> – The state of this WaitingRequest.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.WaitingRequest.queue_ended">
 <span class="sig-name descname"><span class="pre">queue_ended</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">clock</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wait_mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.engine.WaitMode" title="pygissim.engine.WaitMode"><span class="pre">WaitMode</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/engine.html#WaitingRequest.queue_ended"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.WaitingRequest.queue_ended" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>The request is moving out of the queue and into a channel.
+The time spent in the queue is recorded, and the wait mode is updated to reflect
+the type of processor, either a Connection or a ComputeNode.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>clock</strong> – The current simulation time.</p></li>
+<li><p><strong>wait_mode</strong> – The wait mode for this queue’s <a class="reference internal" href="#pygissim.engine.ServiceTimeCalculator" title="pygissim.engine.ServiceTimeCalculator"><code class="xref py py-class docutils literal notranslate"><span class="pre">ServiceTimeCalculator</span></code></a></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.WaitingRequest.wait_end">
 <span class="sig-name descname"><span class="pre">wait_end</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#WaitingRequest.wait_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.WaitingRequest.wait_end" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The simulation time when this request will be finished processing. None if queueing or service time is None.</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -1033,88 +1407,231 @@ The two subclasses are <a class="reference internal" href="#pygissim.engine.Conn
 
 <dl class="py class">
 <dt class="sig sig-object py" id="pygissim.engine.Zone">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pygissim.engine.</span></span><span class="sig-name descname"><span class="pre">Zone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">desc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.engine.ZoneType" title="pygissim.engine.ZoneType"><span class="pre">ZoneType</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/engine.html#Zone"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.Zone" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pygissim.engine.</span></span><span class="sig-name descname"><span class="pre">Zone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">desc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/engine.html#Zone"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.Zone" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Represents a network environment that can host ComputeNodes. A network is formed by 
+Zones being connected by <a class="reference internal" href="#pygissim.engine.Connection" title="pygissim.engine.Connection"><code class="xref py py-class docutils literal notranslate"><span class="pre">Connection</span></code></a> s. Many of the functions below accept an ‘in_network’
+parameter, which is the list of Connections, usually maintained by the <a class="reference internal" href="#pygissim.pygissim.Design" title="pygissim.pygissim.Design"><code class="xref py py-class docutils literal notranslate"><span class="pre">pygissim.pygissim.Design</span></code></a>
+in its ‘network’ property.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – A descriptive name. Should be unique in a <a class="reference internal" href="#pygissim.pygissim.Design" title="pygissim.pygissim.Design"><code class="xref py py-class docutils literal notranslate"><span class="pre">pygissim.pygissim.Design</span></code></a>.</p></li>
+<li><p><strong>desc</strong> – Text that describes the Zone in more detail.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.Zone.all_zones">
 <em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">all_zones</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_network</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pygissim.engine.Connection" title="pygissim.engine.Connection"><span class="pre">Connection</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Set</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pygissim.engine.Zone" title="pygissim.engine.Zone"><span class="pre">Zone</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#Zone.all_zones"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.Zone.all_zones" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>The Set of Zones in a list of Connections.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>in_network</strong> – The list of Connections representing a network.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>All unique Zones that the Connections reference.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Set[<a class="reference internal" href="#pygissim.engine.Zone" title="pygissim.engine.Zone">Zone</a>]</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.Zone.connect">
 <span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.engine.Zone" title="pygissim.engine.Zone"><span class="pre">Zone</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">bw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pygissim.engine.Connection" title="pygissim.engine.Connection"><span class="pre">Connection</span></a></span></span><a class="reference internal" href="_modules/pygissim/engine.html#Zone.connect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.Zone.connect" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Creates a Connection to a Zone.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bw</strong> – The bandwidth of the Connection, in megabits per second (Mbps).</p></li>
+<li><p><strong>lat</strong> – the latency of the Connection, in millseconds (ms).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The new Connection between Zones.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pygissim.engine.Connection" title="pygissim.engine.Connection">Connection</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.Zone.connect_both_ways">
 <span class="sig-name descname"><span class="pre">connect_both_ways</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.engine.Zone" title="pygissim.engine.Zone"><span class="pre">Zone</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">bw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pygissim.engine.Connection" title="pygissim.engine.Connection"><span class="pre">Connection</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#pygissim.engine.Connection" title="pygissim.engine.Connection"><span class="pre">Connection</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#Zone.connect_both_ways"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.Zone.connect_both_ways" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Creates a pair of Connections (forwards and backwards) between Zones.
+The returned Connections are identical except for their direction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bw</strong> – The bandwidth of the Connection, in megabits per second (Mbps).</p></li>
+<li><p><strong>lat</strong> – the latency of the Connection, in millseconds (ms).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The new Connections between Zones.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tuple[<a class="reference internal" href="#pygissim.engine.Connection" title="pygissim.engine.Connection">Connection</a>, <a class="reference internal" href="#pygissim.engine.Connection" title="pygissim.engine.Connection">Connection</a>]</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.Zone.connections">
 <span class="sig-name descname"><span class="pre">connections</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_network</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pygissim.engine.Connection" title="pygissim.engine.Connection"><span class="pre">Connection</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pygissim.engine.Connection" title="pygissim.engine.Connection"><span class="pre">Connection</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#Zone.connections"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.Zone.connections" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>All Connections in the list where either the source or destination is this Zone.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>in_network</strong> – The list of Connections representing a network.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>All Connections with source or destination equal to this Zone. Returns an empty list if none found.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[<a class="reference internal" href="#pygissim.engine.Connection" title="pygissim.engine.Connection">Connection</a>]</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.Zone.entry_connections">
 <span class="sig-name descname"><span class="pre">entry_connections</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_network</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pygissim.engine.Connection" title="pygissim.engine.Connection"><span class="pre">Connection</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pygissim.engine.Connection" title="pygissim.engine.Connection"><span class="pre">Connection</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#Zone.entry_connections"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.Zone.entry_connections" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>All Connections in the list where the destination is this Zone and the source is a different Zone.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>in_network</strong> – The list of Connections representing a network.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>All Connections with destination equal and source not equal to this Zone. Returns an empty list if none found.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[<a class="reference internal" href="#pygissim.engine.Connection" title="pygissim.engine.Connection">Connection</a>]</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.Zone.exit_connections">
 <span class="sig-name descname"><span class="pre">exit_connections</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_network</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pygissim.engine.Connection" title="pygissim.engine.Connection"><span class="pre">Connection</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pygissim.engine.Connection" title="pygissim.engine.Connection"><span class="pre">Connection</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#Zone.exit_connections"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.Zone.exit_connections" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>All Connections in the list where the source is this Zone and the destination is a different Zone.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>in_network</strong> – The list of Connections representing a network.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>All Connections with source equal and destination not equal to this Zone. Returns an empty list if none found.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[<a class="reference internal" href="#pygissim.engine.Connection" title="pygissim.engine.Connection">Connection</a>]</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.Zone.is_a_destination">
 <span class="sig-name descname"><span class="pre">is_a_destination</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_network</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pygissim.engine.Connection" title="pygissim.engine.Connection"><span class="pre">Connection</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#Zone.is_a_destination"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.Zone.is_a_destination" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>in_network</strong> – The list of Connections representing a network.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if any Connections have this Zone as a destination.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.Zone.is_a_source">
 <span class="sig-name descname"><span class="pre">is_a_source</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_network</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pygissim.engine.Connection" title="pygissim.engine.Connection"><span class="pre">Connection</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#Zone.is_a_source"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.Zone.is_a_source" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>in_network</strong> – The list of Connections representing a network.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if any Connections have this Zone as a source.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.Zone.is_fully_connected">
 <span class="sig-name descname"><span class="pre">is_fully_connected</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_network</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pygissim.engine.Connection" title="pygissim.engine.Connection"><span class="pre">Connection</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#Zone.is_fully_connected"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.Zone.is_fully_connected" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>in_network</strong> – The list of Connections representing a network.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if this Zone has a local connection and at least one entry and exit connection.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.Zone.local_connection">
 <span class="sig-name descname"><span class="pre">local_connection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_network</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pygissim.engine.Connection" title="pygissim.engine.Connection"><span class="pre">Connection</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pygissim.engine.Connection" title="pygissim.engine.Connection"><span class="pre">Connection</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#Zone.local_connection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.Zone.local_connection" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Finds a Connection in a list of Connections where the source and destination are this Zone.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>in_network</strong> – The list of Connections representing a network.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The first Connection with source and destination equal to this Zone. Returns None if not found.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[<a class="reference internal" href="#pygissim.engine.Connection" title="pygissim.engine.Connection">Connection</a>]</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.Zone.other_connections">
 <span class="sig-name descname"><span class="pre">other_connections</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_network</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pygissim.engine.Connection" title="pygissim.engine.Connection"><span class="pre">Connection</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pygissim.engine.Connection" title="pygissim.engine.Connection"><span class="pre">Connection</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#Zone.other_connections"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.Zone.other_connections" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>All Connections in the list where neither the source nor the destination is this Zone.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>in_network</strong> – The list of Connections representing a network.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>All Connections with neither source nor destination equal to this Zone. Returns an empty list if none found.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[<a class="reference internal" href="#pygissim.engine.Connection" title="pygissim.engine.Connection">Connection</a>]</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.Zone.self_connect">
 <span class="sig-name descname"><span class="pre">self_connect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pygissim.engine.Connection" title="pygissim.engine.Connection"><span class="pre">Connection</span></a></span></span><a class="reference internal" href="_modules/pygissim/engine.html#Zone.self_connect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.Zone.self_connect" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
+<dd><p>Convenience method to create a local connection for the Zone.
+The source and destination will be this Zone.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bw</strong> – The bandwidth of the Connection, in megabits per second (Mbps).</p></li>
+<li><p><strong>lat</strong> – the latency of the Connection, in millseconds (ms).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A new local Connection for this Zone.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pygissim.engine.Connection" title="pygissim.engine.Connection">Connection</a></p>
+</dd>
+</dl>
 </dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="pygissim.engine.ZoneType">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pygissim.engine.</span></span><span class="sig-name descname"><span class="pre">ZoneType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/engine.html#ZoneType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.ZoneType" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pygissim.engine.ZoneType.EDGE">
-<span class="sig-name descname"><span class="pre">EDGE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'edge'</span></em><a class="headerlink" href="#pygissim.engine.ZoneType.EDGE" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pygissim.engine.ZoneType.INTERNET">
-<span class="sig-name descname"><span class="pre">INTERNET</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'internet'</span></em><a class="headerlink" href="#pygissim.engine.ZoneType.INTERNET" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pygissim.engine.ZoneType.LOCAL">
-<span class="sig-name descname"><span class="pre">LOCAL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'local'</span></em><a class="headerlink" href="#pygissim.engine.ZoneType.LOCAL" title="Link to this definition"></a></dt>
-<dd></dd></dl>
 
 </dd></dl>
 
