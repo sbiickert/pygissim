@@ -96,6 +96,9 @@ class RequestMetric:
         return f'RM@{self.clock} ({self.request_name} ({self.workflow_name}) in {self.source} st:{self.service_time} qt:{self.queue_time} lt:{self.latency_time})'
 
 class ServiceTimeCalculator(ABC):
+    """ Abstract base class for classes that will be delegates for a MultiQueue to calculate service time and latency time. 
+    The two subclasses are :class:`Connection` and :class:`ComputeNode`.
+    """
     @abstractmethod
     def calculate_service_time(self, request: 'ClientRequest') -> int: pass
     @abstractmethod

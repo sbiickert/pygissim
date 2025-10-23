@@ -224,6 +224,32 @@ def sp_to_graph(sps: list[ServiceProvider]) -> Tuple[list, list]:
 
     return (nodes, edges)
 
+def workflows_to_graph(workflows:list[Workflow]) -> Tuple[list, list]:
+    nodes = []
+    edges = []
+
+    for w in workflows:
+        nodes.append({"id": w.name, "properties":{'label': w.name, 'type': 'Workflow'}})
+        wdef = w.definition
+        nodes.append({"id": wdef.name, "properties":{'label': wdef.name, 'type': 'Definition'}})
+        edges.append({"id": f'{w.name}-{wdef.name}', "start": w.name, "end": wdef.name, 'properties': {'wf': w.name}})
+        for chain in wdef.chains:
+            nodes.append({"id": chain.name, "properties":{'label': chain.name, 'type': 'Chain'}})
+            edges.append({"id": f'{wdef.name}-{chain.name}', "start": wdef.name, "end": chain.name, 'properties': {'wf': w.name}})
+            if len(chain.steps) == 0: continue
+            nodes.append({"id": f'{chain.name}-{chain.steps[0].name}', "properties":{'label': chain.steps[0].name, 'type': 'Step'}})
+            edges.append({"id": f'{chain.name}-{nodes[-1]['id']}', "start": chain.name, "end": nodes[-1]['id'], 'properties': {'wf': w.name}})
+            for i in range(1, len(chain.steps)):
+                nodes.append({"id": f'{chain.name}-{chain.steps[i].name}', "properties":{'label': chain.steps[i].name, 'type': 'Step'}})
+                edges.append({"id": f'{nodes[-2]['id']}-{nodes[-1]['id']}', "start": nodes[-2]['id'], "end": nodes[-1]['id'], 'properties': {'wf': w.name}})
+
+    # Eliminate duplicate nodes
+    n_dict = dict()
+    for node in nodes: n_dict[node['id']] = node
+    nodes = list(n_dict.values())
+
+    return (nodes, edges)
+
 def zone_compute_sp_node_color_mapping(node: Dict) -> str:
     if 'ZoneType' in node['properties']['type']:
         return '#FF9911'
@@ -232,21 +258,57 @@ def zone_compute_sp_node_color_mapping(node: Dict) -> str:
     elif node['properties']['type'] == str(ComputeNodeType.P_SERVER):
         return '#000099'
     elif node['properties']['type'] == str(ComputeNodeType.V_SERVER):
-        return '#3333CC'
+        return '#666699'
     else:
         return '#333333'
     
+def wf_node_color_mapping(node: Dict) -> str:
+    match node['properties']['type']:
+        case 'Workflow': return '#9999FF'
+        case 'Definition': return '#FF9911'
+        case 'Chain': return '#DDDDDD'
+        case 'Step': return '#999999'
+        case _: return '#FFFFFF'
 
-def draw_zone_compute_sp(d: Design) -> GraphWidget:
+def wf_edge_color_mapping(edge: Dict) -> str:
+    match edge['properties']['wf']:
+        case 'Web': return '#0000FF'
+        case 'Mobile': return '#00FF00'
+        case _: return '#333333'
+
+def draw_zone_compute(d: Design) -> GraphWidget:
     w = GraphWidget()
 
     zone_nodes = zones_to_graph_nodes(d.zones)
     compute_nodes, compute_edges = compute_to_graph(d.compute_nodes())
+    w.nodes = zone_nodes + compute_nodes
+    w.edges = compute_edges
+    w.set_node_color_mapping(zone_compute_sp_node_color_mapping)
+    w.graph_layout = 'organic'
+    return w
+
+
+def draw_compute_sp(d: Design) -> GraphWidget:
+    w = GraphWidget()
+
+    compute_nodes, compute_edges = compute_to_graph(d.compute_nodes())
     sp_nodes, sp_edges = sp_to_graph(d.service_providers)
-    w.nodes = zone_nodes + compute_nodes + sp_nodes
+    w.nodes = compute_nodes + sp_nodes
     w.edges = compute_edges + sp_edges
     w.set_node_color_mapping(zone_compute_sp_node_color_mapping)
+    w.graph_layout = 'radial'
+    return w
+
+def draw_workflows(workflows: list[Workflow]) -> GraphWidget:
+    w = GraphWidget()
+
+    w_nodes, w_edges = workflows_to_graph(workflows)
+    w.nodes = w_nodes
+    w.edges = w_edges
+    w.set_node_color_mapping(wf_node_color_mapping)
+    w.set_edge_color_mapping(wf_edge_color_mapping)
     w.graph_layout = 'hierarchic'
+
     return w
 
 def create_service_provider(d: Design, name: str, service: str, node_names: list[str]):
@@ -256,6 +318,7 @@ def create_service_provider(d: Design, name: str, service: str, node_names: list
         if node is not None:
             nodes.append(node)
     d.add_service_provider(ServiceProvider(name, "", service=d.services[service], nodes=nodes))
+
 
 def create_agol_service_providers(d: Design, zone_name: str):
     sp_agol: list[ServiceProvider] = list()

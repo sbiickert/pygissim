@@ -111,6 +111,8 @@
 
 <span class="sd">    :param source: The name of the MultiQueue that was measured.</span>
 <span class="sd">    :type source: str</span>
+<span class="sd">    :param stc_type: The type of the MultiQueue&#39;s :class:`ServiceTimeCalculator`&#39;.</span>
+<span class="sd">    :type stc_type: str</span>
 <span class="sd">    :param clock: The simulation time (in ms) when the measurement was taken.</span>
 <span class="sd">    :type clock: int</span>
 <span class="sd">    :param channel_count: The number of parallel channels in the MultiQueue.</span>
@@ -118,6 +120,7 @@
 <span class="sd">    :param request_count: The number of requests being processed and queued.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">source</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">stc_type</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">clock</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">channel_count</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">request_count</span><span class="p">:</span> <span class="nb">int</span>
@@ -154,6 +157,8 @@
 <span class="sd">    :type clock: int</span>
 <span class="sd">    :param request_name: The name of the :class:`ClientRequest`.</span>
 <span class="sd">    :type request_name: str</span>
+<span class="sd">    :param workflow_name: The name of the :class:`Workflow`.</span>
+<span class="sd">    :type workflow_name: str</span>
 <span class="sd">    :param service_time: The time spent processing the :class:`ClientRequest` (in ms).</span>
 <span class="sd">    :type service_time: int</span>
 <span class="sd">    :param queue_time: The time spent in queue (in ms).</span>
@@ -164,17 +169,21 @@
     <span class="n">source</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">clock</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">request_name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">workflow_name</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">service_time</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">queue_time</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">latency_time</span><span class="p">:</span> <span class="nb">int</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;RM@</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">clock</span><span class="si">}</span><span class="s1"> (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">request_name</span><span class="si">}</span><span class="s1"> in </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="si">}</span><span class="s1"> st:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">service_time</span><span class="si">}</span><span class="s1"> qt:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">queue_time</span><span class="si">}</span><span class="s1"> lt:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">latency_time</span><span class="si">}</span><span class="s1">)&#39;</span></div>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;RM@</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">clock</span><span class="si">}</span><span class="s1"> (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">request_name</span><span class="si">}</span><span class="s1"> (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">workflow_name</span><span class="si">}</span><span class="s1">) in </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="si">}</span><span class="s1"> st:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">service_time</span><span class="si">}</span><span class="s1"> qt:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">queue_time</span><span class="si">}</span><span class="s1"> lt:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">latency_time</span><span class="si">}</span><span class="s1">)&#39;</span></div>
 
 
 <div class="viewcode-block" id="ServiceTimeCalculator">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.ServiceTimeCalculator">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ServiceTimeCalculator</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Abstract base class for classes that will be delegates for a MultiQueue to calculate service time and latency time. </span>
+<span class="sd">    The two subclasses are :class:`Connection` and :class:`ComputeNode`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="ServiceTimeCalculator.calculate_service_time">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.ServiceTimeCalculator.calculate_service_time">[docs]</a>
     <span class="nd">@abstractmethod</span>
@@ -293,6 +302,14 @@
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.Zone.connect">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s1">&#39;Zone&#39;</span><span class="p">,</span> <span class="n">bw</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">lat</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Connection</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">Connection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="n">bw</span><span class="p">,</span> <span class="n">lat</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Zone.connect_both_ways">
+<a class="viewcode-back" href="../../pygissim.html#pygissim.engine.Zone.connect_both_ways">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">connect_both_ways</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s1">&#39;Zone&#39;</span><span class="p">,</span> <span class="n">bw</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">lat</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Connection</span><span class="p">,</span> <span class="n">Connection</span><span class="p">]:</span>
+        <span class="n">c1</span><span class="p">:</span> <span class="n">Connection</span> <span class="o">=</span> <span class="n">Connection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="n">bw</span><span class="p">,</span> <span class="n">lat</span><span class="p">)</span>
+        <span class="n">c2</span> <span class="o">=</span> <span class="n">c1</span><span class="o">.</span><span class="n">inverted</span><span class="p">()</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">c1</span><span class="p">,</span><span class="n">c2</span><span class="p">)</span></div>
 
     
 <div class="viewcode-block" id="Zone.self_connect">
@@ -518,6 +535,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_v_cores</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>                   <span class="c1"># if ComputeNodeType.V_SERVER</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_v_hosts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="s1">&#39;ComputeNode&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>    <span class="c1"># if ComputeNodeType.P_SERVER</span>
 
+    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;CNode </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="si">}</span><span class="s1"> in </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">zone</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span>
+    
 <div class="viewcode-block" id="ComputeNode.vcore_count">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.ComputeNode.vcore_count">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">vcore_count</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
@@ -852,13 +872,16 @@
             <span class="k">if</span> <span class="n">wr</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="k">continue</span>
             <span class="n">st</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">wr</span><span class="o">.</span><span class="n">service_time</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">wr</span><span class="o">.</span><span class="n">service_time</span>
             <span class="n">lt</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">wr</span><span class="o">.</span><span class="n">latency</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">wr</span><span class="o">.</span><span class="n">latency</span>
-            <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">wr</span><span class="o">.</span><span class="n">request</span><span class="p">,</span> 
-                          <span class="n">RequestMetric</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">(),</span> 
-                                        <span class="n">clock</span><span class="o">=</span><span class="n">clock</span><span class="p">,</span> 
-                                        <span class="n">request_name</span><span class="o">=</span><span class="n">wr</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> 
-                                        <span class="n">service_time</span><span class="o">=</span><span class="n">st</span><span class="p">,</span> 
-                                        <span class="n">queue_time</span><span class="o">=</span><span class="n">wr</span><span class="o">.</span><span class="n">queue_time</span><span class="p">,</span> 
-                                        <span class="n">latency_time</span><span class="o">=</span><span class="n">lt</span><span class="p">)))</span>
+            <span class="n">metric</span> <span class="o">=</span> <span class="n">RequestMetric</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">(),</span> 
+                                    <span class="n">clock</span><span class="o">=</span><span class="n">clock</span><span class="p">,</span> 
+                                    <span class="n">request_name</span><span class="o">=</span><span class="n">wr</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> 
+                                    <span class="n">workflow_name</span><span class="o">=</span><span class="n">wr</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">workflow_name</span><span class="p">,</span>
+                                    <span class="n">service_time</span><span class="o">=</span><span class="n">st</span><span class="p">,</span> 
+                                    <span class="n">queue_time</span><span class="o">=</span><span class="n">wr</span><span class="o">.</span><span class="n">queue_time</span><span class="p">,</span> 
+                                    <span class="n">latency_time</span><span class="o">=</span><span class="n">lt</span><span class="p">)</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">wr</span><span class="o">.</span><span class="n">request</span><span class="p">,</span> <span class="n">metric</span><span class="p">))</span>
+            <span class="n">wr</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">accumulating_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">metric</span><span class="p">)</span>
+            
             <span class="c1"># Move a waiting request into a channel</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_queue</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="n">queued_req</span><span class="p">:</span> <span class="n">WaitingRequest</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_queue</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
@@ -896,7 +919,17 @@
 <div class="viewcode-block" id="MultiQueue.get_performance_metric">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.MultiQueue.get_performance_metric">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_performance_metric</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clock</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QueueMetric</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">QueueMetric</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">(),</span> <span class="n">clock</span><span class="o">=</span><span class="n">clock</span><span class="p">,</span> <span class="n">channel_count</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">channels</span><span class="p">),</span> <span class="n">request_count</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">all_waiting_requests</span><span class="p">()))</span></div>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">service_time_calculator</span><span class="p">,</span> <span class="n">ComputeNode</span><span class="p">):</span>
+            <span class="n">node</span><span class="p">:</span> <span class="n">ComputeNode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">service_time_calculator</span>
+            <span class="k">match</span> <span class="n">node</span><span class="o">.</span><span class="n">type</span><span class="p">:</span>
+                <span class="k">case</span> <span class="n">ComputeNodeType</span><span class="o">.</span><span class="n">CLIENT</span><span class="p">:</span> <span class="n">stc</span> <span class="o">=</span> <span class="s2">&quot;CLIENT&quot;</span>
+                <span class="k">case</span> <span class="n">ComputeNodeType</span><span class="o">.</span><span class="n">P_SERVER</span><span class="p">:</span> <span class="n">stc</span> <span class="o">=</span> <span class="s2">&quot;P_SERVER&quot;</span>
+                <span class="k">case</span> <span class="n">ComputeNodeType</span><span class="o">.</span><span class="n">V_SERVER</span><span class="p">:</span> <span class="n">stc</span> <span class="o">=</span> <span class="s2">&quot;V_SERVER&quot;</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">service_time_calculator</span><span class="p">,</span> <span class="n">Connection</span><span class="p">):</span>
+            <span class="n">stc</span> <span class="o">=</span> <span class="s2">&quot;CONNECTION&quot;</span>
+        <span class="k">else</span><span class="p">:</span> <span class="n">stc</span> <span class="o">=</span> <span class="s2">&quot;UNKNOWN&quot;</span>
+        <span class="k">return</span> <span class="n">QueueMetric</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">(),</span> <span class="n">stc_type</span><span class="o">=</span><span class="n">stc</span><span class="p">,</span>
+                           <span class="n">clock</span><span class="o">=</span><span class="n">clock</span><span class="p">,</span> <span class="n">channel_count</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">channels</span><span class="p">),</span> <span class="n">request_count</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">all_waiting_requests</span><span class="p">()))</span></div>
 </div>
 
     
@@ -1170,12 +1203,15 @@
         <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;CR-</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">next_id</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span></div>
 
     
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">desc</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">request_clock</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">solution</span><span class="p">:</span> <span class="n">ClientRequestSolution</span><span class="p">,</span> <span class="n">group_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">desc</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">wf_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                 <span class="n">request_clock</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">solution</span><span class="p">:</span> <span class="n">ClientRequestSolution</span><span class="p">,</span> <span class="n">group_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">desc</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">workflow_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">wf_name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">request_clock</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">request_clock</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">solution</span><span class="p">:</span> <span class="n">ClientRequestSolution</span> <span class="o">=</span> <span class="n">solution</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">group_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">group_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">accumulating_metrics</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">RequestMetric</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">name</span>
@@ -1184,6 +1220,23 @@
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.ClientRequest.is_finished">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">is_finished</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">solution</span><span class="o">.</span><span class="n">is_finished</span><span class="p">()</span></div>
+
+    
+<div class="viewcode-block" id="ClientRequest.summary_metric">
+<a class="viewcode-back" href="../../pygissim.html#pygissim.engine.ClientRequest.summary_metric">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">summary_metric</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RequestMetric</span><span class="p">:</span>
+        <span class="n">clock</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">st</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">qt</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">lt</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">accumulating_metrics</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">clock</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">accumulating_metrics</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">clock</span>
+            <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">accumulating_metrics</span><span class="p">:</span>
+                <span class="n">st</span> <span class="o">=</span> <span class="n">st</span> <span class="o">+</span> <span class="n">m</span><span class="o">.</span><span class="n">service_time</span>
+                <span class="n">qt</span> <span class="o">=</span> <span class="n">qt</span> <span class="o">+</span> <span class="n">m</span><span class="o">.</span><span class="n">queue_time</span>
+                <span class="n">lt</span> <span class="o">=</span> <span class="n">lt</span> <span class="o">+</span> <span class="n">m</span><span class="o">.</span><span class="n">latency_time</span>
+        <span class="k">return</span> <span class="n">RequestMetric</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="s1">&#39;Summary&#39;</span><span class="p">,</span> <span class="n">clock</span><span class="o">=</span><span class="n">clock</span><span class="p">,</span> <span class="n">request_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">workflow_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">workflow_name</span><span class="p">,</span> 
+                             <span class="n">service_time</span><span class="o">=</span><span class="n">st</span><span class="p">,</span> <span class="n">queue_time</span><span class="o">=</span><span class="n">qt</span><span class="p">,</span> <span class="n">latency_time</span><span class="o">=</span><span class="n">lt</span><span class="p">)</span></div>
 </div>
 
     
@@ -1228,7 +1281,8 @@
             <span class="c1"># for step in solution.steps:</span>
             <span class="c1">#     print(step.st_calculator.name) # type: ignore</span>
 
-            <span class="n">request</span><span class="p">:</span> <span class="n">ClientRequest</span> <span class="o">=</span> <span class="n">ClientRequest</span><span class="p">(</span><span class="n">ClientRequest</span><span class="o">.</span><span class="n">next_name</span><span class="p">(),</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">request_clock</span><span class="o">=</span><span class="n">clock</span><span class="p">,</span> <span class="n">solution</span><span class="o">=</span><span class="n">solution</span><span class="p">,</span> <span class="n">group_id</span><span class="o">=</span><span class="n">group</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+            <span class="n">request</span><span class="p">:</span> <span class="n">ClientRequest</span> <span class="o">=</span> <span class="n">ClientRequest</span><span class="p">(</span><span class="n">ClientRequest</span><span class="o">.</span><span class="n">next_name</span><span class="p">(),</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">wf_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                                                   <span class="n">request_clock</span><span class="o">=</span><span class="n">clock</span><span class="p">,</span> <span class="n">solution</span><span class="o">=</span><span class="n">solution</span><span class="p">,</span> <span class="n">group_id</span><span class="o">=</span><span class="n">group</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
             <span class="n">requests</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">group</span><span class="p">,</span><span class="n">requests</span><span class="p">)</span></div>
 
@@ -1309,17 +1363,19 @@
         <span class="k">if</span> <span class="n">dest_node</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> 
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;handler node for ServiceProvider </span><span class="si">{</span><span class="n">dest_sp</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1"> was None&#39;</span><span class="p">)</span>
         
-        <span class="n">route</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Route</span><span class="p">]</span> <span class="o">=</span> <span class="n">find_route</span><span class="p">(</span><span class="n">source_node</span><span class="o">.</span><span class="n">zone</span><span class="p">,</span> <span class="n">dest_node</span><span class="o">.</span><span class="n">zone</span><span class="p">,</span> <span class="n">in_network</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">route</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Could not find route from zone </span><span class="si">{</span><span class="n">source_node</span><span class="o">.</span><span class="n">zone</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1"> to zone </span><span class="si">{</span><span class="n">dest_node</span><span class="o">.</span><span class="n">zone</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-        
-        <span class="c1"># Add the network steps</span>
-        <span class="k">for</span> <span class="n">conn</span> <span class="ow">in</span> <span class="n">route</span><span class="o">.</span><span class="n">connections</span><span class="p">:</span>
-            <span class="n">steps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ClientRequestSolutionStep</span><span class="p">(</span><span class="n">st_calculator</span><span class="o">=</span><span class="n">conn</span><span class="p">,</span> 
-                                                   <span class="n">is_response</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> 
-                                                   <span class="n">data_size</span><span class="o">=</span><span class="n">step</span><span class="o">.</span><span class="n">request_size_kb</span><span class="p">,</span> 
-                                                   <span class="n">chatter</span><span class="o">=</span><span class="n">step</span><span class="o">.</span><span class="n">chatter</span><span class="p">,</span> 
-                                                   <span class="n">service_time</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span> <span class="c1"># Service time is based on data size</span>
+        <span class="k">if</span> <span class="n">source_node</span> <span class="o">!=</span> <span class="n">dest_node</span><span class="p">:</span>
+            <span class="c1"># print(f&#39;Routing from {source_node.name} to {dest_node.name}&#39;)</span>
+            <span class="n">route</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Route</span><span class="p">]</span> <span class="o">=</span> <span class="n">find_route</span><span class="p">(</span><span class="n">source_node</span><span class="o">.</span><span class="n">zone</span><span class="p">,</span> <span class="n">dest_node</span><span class="o">.</span><span class="n">zone</span><span class="p">,</span> <span class="n">in_network</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">route</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Could not find route from zone </span><span class="si">{</span><span class="n">source_node</span><span class="o">.</span><span class="n">zone</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1"> to zone </span><span class="si">{</span><span class="n">dest_node</span><span class="o">.</span><span class="n">zone</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            
+            <span class="c1"># Add the network steps</span>
+            <span class="k">for</span> <span class="n">conn</span> <span class="ow">in</span> <span class="n">route</span><span class="o">.</span><span class="n">connections</span><span class="p">:</span>
+                <span class="n">steps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ClientRequestSolutionStep</span><span class="p">(</span><span class="n">st_calculator</span><span class="o">=</span><span class="n">conn</span><span class="p">,</span> 
+                                                    <span class="n">is_response</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> 
+                                                    <span class="n">data_size</span><span class="o">=</span><span class="n">step</span><span class="o">.</span><span class="n">request_size_kb</span><span class="p">,</span> 
+                                                    <span class="n">chatter</span><span class="o">=</span><span class="n">step</span><span class="o">.</span><span class="n">chatter</span><span class="p">,</span> 
+                                                    <span class="n">service_time</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span> <span class="c1"># Service time is based on data size</span>
         
         <span class="c1"># Add the next compute step</span>
         <span class="n">steps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ClientRequestSolutionStep</span><span class="p">(</span><span class="n">st_calculator</span><span class="o">=</span><span class="n">dest_node</span><span class="p">,</span> 
@@ -1331,7 +1387,7 @@
         <span class="n">source_node</span> <span class="o">=</span> <span class="n">dest_node</span>
     
     <span class="c1"># Now retrace back to client</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">chain</span><span class="o">.</span><span class="n">steps</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">chain</span><span class="o">.</span><span class="n">steps</span><span class="p">)</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
         <span class="n">step</span> <span class="o">=</span> <span class="n">chain</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
         <span class="n">dest_sp</span> <span class="o">=</span> <span class="n">chain</span><span class="o">.</span><span class="n">service_provider_for_step_at_index</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">dest_sp</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -1340,18 +1396,19 @@
         <span class="k">if</span> <span class="n">dest_node</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> 
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;handler node for ServiceProvider </span><span class="si">{</span><span class="n">dest_sp</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1"> was None&#39;</span><span class="p">)</span>
         
-        <span class="n">route</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Route</span><span class="p">]</span> <span class="o">=</span> <span class="n">find_route</span><span class="p">(</span><span class="n">source_node</span><span class="o">.</span><span class="n">zone</span><span class="p">,</span> <span class="n">dest_node</span><span class="o">.</span><span class="n">zone</span><span class="p">,</span> <span class="n">in_network</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">route</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Could not find route from zone </span><span class="si">{</span><span class="n">source_node</span><span class="o">.</span><span class="n">zone</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1"> to zone </span><span class="si">{</span><span class="n">dest_node</span><span class="o">.</span><span class="n">zone</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-       
+        <span class="k">if</span> <span class="n">source_node</span> <span class="o">!=</span> <span class="n">dest_node</span><span class="p">:</span>
+            <span class="n">route</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Route</span><span class="p">]</span> <span class="o">=</span> <span class="n">find_route</span><span class="p">(</span><span class="n">source_node</span><span class="o">.</span><span class="n">zone</span><span class="p">,</span> <span class="n">dest_node</span><span class="o">.</span><span class="n">zone</span><span class="p">,</span> <span class="n">in_network</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">route</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Could not find route from zone </span><span class="si">{</span><span class="n">source_node</span><span class="o">.</span><span class="n">zone</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1"> to zone </span><span class="si">{</span><span class="n">dest_node</span><span class="o">.</span><span class="n">zone</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
         
-        <span class="c1"># Add the network steps</span>
-        <span class="k">for</span> <span class="n">conn</span> <span class="ow">in</span> <span class="n">route</span><span class="o">.</span><span class="n">connections</span><span class="p">:</span>
-            <span class="n">steps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ClientRequestSolutionStep</span><span class="p">(</span><span class="n">st_calculator</span><span class="o">=</span><span class="n">conn</span><span class="p">,</span> 
-                                                   <span class="n">is_response</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
-                                                   <span class="n">data_size</span><span class="o">=</span><span class="n">step</span><span class="o">.</span><span class="n">response_size_kb</span><span class="p">,</span> 
-                                                   <span class="n">chatter</span><span class="o">=</span><span class="n">step</span><span class="o">.</span><span class="n">chatter</span><span class="p">,</span> 
-                                                   <span class="n">service_time</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span> <span class="c1"># Service time is based on data size</span>
+            
+            <span class="c1"># Add the network steps</span>
+            <span class="k">for</span> <span class="n">conn</span> <span class="ow">in</span> <span class="n">route</span><span class="o">.</span><span class="n">connections</span><span class="p">:</span>
+                <span class="n">steps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ClientRequestSolutionStep</span><span class="p">(</span><span class="n">st_calculator</span><span class="o">=</span><span class="n">conn</span><span class="p">,</span> 
+                                                    <span class="n">is_response</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
+                                                    <span class="n">data_size</span><span class="o">=</span><span class="n">step</span><span class="o">.</span><span class="n">response_size_kb</span><span class="p">,</span> 
+                                                    <span class="n">chatter</span><span class="o">=</span><span class="n">step</span><span class="o">.</span><span class="n">chatter</span><span class="p">,</span> 
+                                                    <span class="n">service_time</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span> <span class="c1"># Service time is based on data size</span>
         
         <span class="c1"># Add the next compute step</span>
         <span class="n">steps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ClientRequestSolutionStep</span><span class="p">(</span><span class="n">st_calculator</span><span class="o">=</span><span class="n">dest_node</span><span class="p">,</span> 

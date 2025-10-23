@@ -1,2 +1,4 @@
 /src/.ipynb_checkpoints
 *.pyc
+*.pyc
+*.pickle
