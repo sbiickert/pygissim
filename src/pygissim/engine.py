@@ -444,16 +444,14 @@ class HardwareDef:
     :param processor: A name for the hardware. It must be a unique string in a :class:`pygissim.pygissim.Design`.
     :param cores: The number of physical cores in the hardware platform.
     :param specint_rate2017: The performance of the hardware from https://www.spec.org/cpu2017/results/rint2017/
-    :param threading: The threading model will be used when calculating service times.
     """
     processor: str
     cores: int
     specint_rate2017: float
-    threading: ThreadingModel
 
     def specint_rate2017_per_core(self) -> float:
-        """ Per-core performance of the hardware. Includes factor for :class:`ThreadingModel`. """
-        return self.specint_rate2017 / float(self.cores) * self.threading.factor()
+        """ Per-core performance of the hardware. """
+        return self.specint_rate2017 / float(self.cores)
 
     def __str__(self) -> str:
         return f'HW {self.processor} cores: {self.cores} spec: {self.specint_rate2017}'
@@ -481,6 +479,7 @@ class ComputeNode(ServiceTimeCalculator):
         self.memory_GB: int = memory_GB
         self.zone: Zone = zone
         self.type: ComputeNodeType = type
+        self.threading: ThreadingModel = ThreadingModel.PHYSICAL if type == ComputeNodeType.CLIENT else ThreadingModel.HYPERTHREADED
 
         self._v_cores: int = 0                   # if ComputeNodeType.V_SERVER
         self._v_hosts: list['ComputeNode'] = []    # if ComputeNodeType.P_SERVER
@@ -503,6 +502,10 @@ class ComputeNode(ServiceTimeCalculator):
         else:
             self._v_cores = 0
 
+    def specint_rate2017_per_core(self) -> float:
+        """ Per-core performance of the hardware. Including threading factor. """
+        return self.hw_def.specint_rate2017_per_core() * self.threading.factor()
+
     def adjusted_service_time(self, st: int) -> int:
         """ The relative performance of this ComputeNode will affect the service times. All service times in
         :class:`WorkflowDefStep` are based on the baseline per core performance defined in :class:`HardwareDef`.
@@ -512,7 +515,7 @@ class ComputeNode(ServiceTimeCalculator):
         :param st: The input baseline service time in milliseconds (ms).
         :returns: The adjusted service time in milliseconds (ms).
         """
-        relative = HardwareDef.baseline_per_core / self.hw_def.specint_rate2017_per_core()
+        relative = HardwareDef.baseline_per_core / self.specint_rate2017_per_core()
         return int(float(st) * relative)
 
     def calculate_service_time(self, request: 'ClientRequest') -> Optional[int]:
@@ -603,7 +606,7 @@ class ComputeNode(ServiceTimeCalculator):
         """
         :returns: The sum of all virtual host virtual core allocations accounting for hyperthreading.
         """
-        return int(float(self.total_vcpu_allocation()) * self.hw_def.threading.factor())
+        return int(float(self.total_vcpu_allocation()) * self.threading.factor())
     
     def total_memory_allocation(self) -> int:
         """

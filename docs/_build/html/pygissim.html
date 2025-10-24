@@ -80,6 +80,7 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#module-pygissim.util">pygissim.util module</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#pygissim.util.LibManager"><code class="docutils literal notranslate"><span class="pre">LibManager</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pygissim.util.NetworkNames"><code class="docutils literal notranslate"><span class="pre">NetworkNames</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pygissim.util.load_network"><code class="docutils literal notranslate"><span class="pre">load_network()</span></code></a></li>
 </ul>
 </li>
@@ -823,7 +824,7 @@ and immediately start processing. If there are no channels available, the reques
 <dt class="sig sig-object py" id="pygissim.engine.QueueMetric">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pygissim.engine.</span></span><span class="sig-name descname"><span class="pre">QueueMetric</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stc_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clock</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_count</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">request_count</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/engine.html#QueueMetric"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.QueueMetric" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>DataClass for tracking the utilization rate of all queues (compute and network)</p>
+<p>Read-only data class for tracking the utilization rate of all queues (compute and network)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1668,48 +1669,59 @@ Bootstraps useful things like hardware definitions.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pygissim.util.LibManager.load_hardware_local">
-<span class="sig-name descname"><span class="pre">load_hardware_local</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/util.html#LibManager.load_hardware_local"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.util.LibManager.load_hardware_local" title="Link to this definition"></a></dt>
-<dd><p>Loads the preconfigured hardware types and SPECint_rate2017 scores.</p>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="pygissim.util.LibManager.load_local">
 <span class="sig-name descname"><span class="pre">load_local</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/util.html#LibManager.load_local"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.util.LibManager.load_local" title="Link to this definition"></a></dt>
 <dd><p>Loads all of the dictionaries from CSV.
 The order is important, as the workflow definitions reference the workflow chains, etc.</p>
 </dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="pygissim.util.LibManager.load_services_local">
-<span class="sig-name descname"><span class="pre">load_services_local</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/util.html#LibManager.load_services_local"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.util.LibManager.load_services_local" title="Link to this definition"></a></dt>
-<dd><p>Loads the service definitions.</p>
 </dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="pygissim.util.LibManager.load_wf_chains_local">
-<span class="sig-name descname"><span class="pre">load_wf_chains_local</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/util.html#LibManager.load_wf_chains_local"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.util.LibManager.load_wf_chains_local" title="Link to this definition"></a></dt>
-<dd><p>Loads the chains of steps that make up a request and response.</p>
-</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="pygissim.util.NetworkNames">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pygissim.util.</span></span><span class="sig-name descname"><span class="pre">NetworkNames</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/util.html#NetworkNames"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.util.NetworkNames" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pygissim.util.NetworkNames.BACKHAUL_CLOUDY">
+<span class="sig-name descname"><span class="pre">BACKHAUL_CLOUDY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Backhaul</span> <span class="pre">Cloudy'</span></em><a class="headerlink" href="#pygissim.util.NetworkNames.BACKHAUL_CLOUDY" title="Link to this definition"></a></dt>
+<dd></dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="pygissim.util.LibManager.load_wf_defs_local">
-<span class="sig-name descname"><span class="pre">load_wf_defs_local</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/util.html#LibManager.load_wf_defs_local"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.util.LibManager.load_wf_defs_local" title="Link to this definition"></a></dt>
-<dd><p>Loads the groups of chains that make a composite workflow definition.</p>
-</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pygissim.util.NetworkNames.BRANCH_OFFICES">
+<span class="sig-name descname"><span class="pre">BRANCH_OFFICES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Branch</span> <span class="pre">Offices'</span></em><a class="headerlink" href="#pygissim.util.NetworkNames.BRANCH_OFFICES" title="Link to this definition"></a></dt>
+<dd></dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="pygissim.util.LibManager.load_wf_steps_local">
-<span class="sig-name descname"><span class="pre">load_wf_steps_local</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/util.html#LibManager.load_wf_steps_local"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.util.LibManager.load_wf_steps_local" title="Link to this definition"></a></dt>
-<dd><p>Loads the performance metrics for individual workflow steps.</p>
-</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pygissim.util.NetworkNames.CLOUDY">
+<span class="sig-name descname"><span class="pre">CLOUDY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Cloudy'</span></em><a class="headerlink" href="#pygissim.util.NetworkNames.CLOUDY" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pygissim.util.NetworkNames.LOCAL_AND_AGOL">
+<span class="sig-name descname"><span class="pre">LOCAL_AND_AGOL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Local</span> <span class="pre">and</span> <span class="pre">ArcGIS</span> <span class="pre">Online'</span></em><a class="headerlink" href="#pygissim.util.NetworkNames.LOCAL_AND_AGOL" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pygissim.util.NetworkNames.LOCAL_ONLY">
+<span class="sig-name descname"><span class="pre">LOCAL_ONLY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Local</span> <span class="pre">Only'</span></em><a class="headerlink" href="#pygissim.util.NetworkNames.LOCAL_ONLY" title="Link to this definition"></a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pygissim.util.load_network">
-<span class="sig-prename descclassname"><span class="pre">pygissim.util.</span></span><span class="sig-name descname"><span class="pre">load_network</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pygissim.engine.Zone" title="pygissim.engine.Zone"><span class="pre">Zone</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pygissim.engine.Connection" title="pygissim.engine.Connection"><span class="pre">Connection</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/pygissim/util.html#load_network"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.util.load_network" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">pygissim.util.</span></span><span class="sig-name descname"><span class="pre">load_network</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.util.NetworkNames" title="pygissim.util.NetworkNames"><span class="pre">NetworkNames</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pygissim.engine.Zone" title="pygissim.engine.Zone"><span class="pre">Zone</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pygissim.engine.Connection" title="pygissim.engine.Connection"><span class="pre">Connection</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/pygissim/util.html#load_network"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.util.load_network" title="Link to this definition"></a></dt>
+<dd><p>Creates a set of network Zones and Connections. These would cover most basic examples,
+and could be expanded on when needed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> – One of the values in <a class="reference internal" href="#pygissim.util.NetworkNames" title="pygissim.util.NetworkNames"><code class="xref py py-class docutils literal notranslate"><span class="pre">NetworkNames</span></code></a> to specify which pre-fab network.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tuple of a list of Zones and a list of Connections representing the network.</p>
+</dd>
+</dl>
+</dd></dl>
 
 </section>
 <section id="module-pygissim.pygissim">

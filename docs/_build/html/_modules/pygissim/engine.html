@@ -107,7 +107,7 @@
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.QueueMetric">[docs]</a>
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">QueueMetric</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; DataClass for tracking the utilization rate of all queues (compute and network)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Read-only data class for tracking the utilization rate of all queues (compute and network)</span>
 
 <span class="sd">    :param source: The name of the MultiQueue that was measured.</span>
 <span class="sd">    :type source: str</span>
@@ -1059,7 +1059,7 @@
 <span class="sd">    Analogy: Multiple bank tellers (channels) and a queue waiting to see a teller.</span>
 
 <span class="sd">    The number of channels will be determined by the service time calculator.</span>
-<span class="sd">    </span>
+
 <span class="sd">    - Connection: 2 channels</span>
 <span class="sd">    - ComputeNode: the number of cores (physical host or client) or virtual cores (virtual host)</span>
 <span class="sd">    </span>

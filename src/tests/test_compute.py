@@ -14,20 +14,17 @@ class TestHWDef(unittest.TestCase):
     @classmethod
     def sample_moble_hw_def(cls) -> HardwareDef:
         return HardwareDef(processor='Apple Silicon M1', 
-                           cores=8, specint_rate2017=500, 
-                           threading=ThreadingModel.PHYSICAL)
+                           cores=8, specint_rate2017=500)
     
     @classmethod
     def sample_client_hw_def(cls) -> HardwareDef:
         return HardwareDef(processor='Intel Core i7-4770K', 
-                           cores=4, specint_rate2017=20, 
-                           threading=ThreadingModel.PHYSICAL)
+                           cores=4, specint_rate2017=20)
     
     @classmethod
     def sample_server_hw_def(cls) -> HardwareDef:
         return HardwareDef(processor='Intel Xeon E5-2643v3', 
-                           cores=12, specint_rate2017=67, 
-                           threading=ThreadingModel.HYPERTHREADED)
+                           cores=12, specint_rate2017=67)
 
 class TestServiceDef(unittest.TestCase):
 

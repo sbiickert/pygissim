@@ -78,6 +78,7 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">csv</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
@@ -118,16 +119,14 @@
 <span class="sd">        Loads all of the dictionaries from CSV.</span>
 <span class="sd">        The order is important, as the workflow definitions reference the workflow chains, etc.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">load_hardware_local</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">load_services_local</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">load_wf_steps_local</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">load_wf_chains_local</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">load_wf_defs_local</span><span class="p">()</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_load_hardware_local</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_load_services_local</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_load_wf_steps_local</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_load_wf_chains_local</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_load_wf_defs_local</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="LibManager.load_hardware_local">
-<a class="viewcode-back" href="../../pygissim.html#pygissim.util.LibManager.load_hardware_local">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">load_hardware_local</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_load_hardware_local</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Loads the preconfigured hardware types and SPECint_rate2017 scores. &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">hardware</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
         <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">LibManager</span><span class="o">.</span><span class="n">get_full_path_to_data_file</span><span class="p">(</span><span class="s1">&#39;hardware.csv&#39;</span><span class="p">)</span>
@@ -137,14 +136,10 @@
                 <span class="n">hw</span><span class="p">:</span> <span class="n">HardwareDef</span> <span class="o">=</span> <span class="n">HardwareDef</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;processor&#39;</span><span class="p">],</span> 
                                               <span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;cores&#39;</span><span class="p">]),</span> 
                                               <span class="nb">float</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;spec&#39;</span><span class="p">]),</span> 
-                                              <span class="n">architecture</span><span class="o">=</span><span class="n">ComputeArchitecture</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;architecture&#39;</span><span class="p">]),</span>
                                               <span class="n">threading</span><span class="o">=</span><span class="n">ThreadingModel</span><span class="o">.</span><span class="n">HYPERTHREADED</span> <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;architecture&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;INTEL&#39;</span> <span class="k">else</span> <span class="n">ThreadingModel</span><span class="o">.</span><span class="n">PHYSICAL</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">hardware</span><span class="p">[</span><span class="n">hw</span><span class="o">.</span><span class="n">processor</span><span class="p">]</span> <span class="o">=</span> <span class="n">hw</span></div>
+                <span class="bp">self</span><span class="o">.</span><span class="n">hardware</span><span class="p">[</span><span class="n">hw</span><span class="o">.</span><span class="n">processor</span><span class="p">]</span> <span class="o">=</span> <span class="n">hw</span>
 
-
-<div class="viewcode-block" id="LibManager.load_services_local">
-<a class="viewcode-back" href="../../pygissim.html#pygissim.util.LibManager.load_services_local">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">load_services_local</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_load_services_local</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Loads the service definitions. &quot;&quot;&quot;</span>
         <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">LibManager</span><span class="o">.</span><span class="n">get_full_path_to_data_file</span><span class="p">(</span><span class="s1">&#39;services.csv&#39;</span><span class="p">)</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
@@ -152,12 +147,9 @@
             <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">csv_reader</span><span class="p">:</span>
                 <span class="n">sd</span><span class="p">:</span> <span class="n">ServiceDef</span> <span class="o">=</span> <span class="n">ServiceDef</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;service_type&#39;</span><span class="p">],</span> 
                                             <span class="n">balancing_model</span><span class="o">=</span><span class="n">BalancingModel</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;balancing_model&#39;</span><span class="p">]))</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">service_definitions</span><span class="p">[</span><span class="n">sd</span><span class="o">.</span><span class="n">service_type</span><span class="p">]</span> <span class="o">=</span> <span class="n">sd</span></div>
+                <span class="bp">self</span><span class="o">.</span><span class="n">service_definitions</span><span class="p">[</span><span class="n">sd</span><span class="o">.</span><span class="n">service_type</span><span class="p">]</span> <span class="o">=</span> <span class="n">sd</span>
 
-
-<div class="viewcode-block" id="LibManager.load_wf_steps_local">
-<a class="viewcode-back" href="../../pygissim.html#pygissim.util.LibManager.load_wf_steps_local">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">load_wf_steps_local</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_load_wf_steps_local</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Loads the performance metrics for individual workflow steps. &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">workflow_steps</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
         <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">LibManager</span><span class="o">.</span><span class="n">get_full_path_to_data_file</span><span class="p">(</span><span class="s1">&#39;workflow_steps.csv&#39;</span><span class="p">)</span>
@@ -172,12 +164,9 @@
                                                         <span class="n">response_size_kb</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;resp_kbytes&#39;</span><span class="p">]),</span>
                                                         <span class="n">data_source_type</span><span class="o">=</span><span class="n">DataSourceType</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;data_store&#39;</span><span class="p">]),</span>
                                                         <span class="n">cache_pct</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;cache_pct&#39;</span><span class="p">]))</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">workflow_steps</span><span class="p">[</span><span class="n">step</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">step</span></div>
+                <span class="bp">self</span><span class="o">.</span><span class="n">workflow_steps</span><span class="p">[</span><span class="n">step</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">step</span>
 
-
-<div class="viewcode-block" id="LibManager.load_wf_chains_local">
-<a class="viewcode-back" href="../../pygissim.html#pygissim.util.LibManager.load_wf_chains_local">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">load_wf_chains_local</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_load_wf_chains_local</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Loads the chains of steps that make up a request and response. &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">workflow_chains</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
         <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">LibManager</span><span class="o">.</span><span class="n">get_full_path_to_data_file</span><span class="p">(</span><span class="s1">&#39;workflow_chains.csv&#39;</span><span class="p">)</span>
@@ -187,12 +176,9 @@
                 <span class="n">names</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;;\s*&#39;</span><span class="p">,</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;steps&#39;</span><span class="p">])</span>
                 <span class="n">steps</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">WorkflowDefStep</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">name</span><span class="p">:</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">workflow_steps</span><span class="p">[</span><span class="n">name</span><span class="p">]),</span> <span class="n">names</span><span class="p">))</span>
                 <span class="n">chain</span><span class="p">:</span> <span class="n">WorkflowChain</span> <span class="o">=</span> <span class="n">WorkflowChain</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">],</span> <span class="n">steps</span><span class="p">,</span> <span class="n">service_providers</span><span class="o">=</span><span class="nb">dict</span><span class="p">())</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">workflow_chains</span><span class="p">[</span><span class="n">chain</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">chain</span></div>
+                <span class="bp">self</span><span class="o">.</span><span class="n">workflow_chains</span><span class="p">[</span><span class="n">chain</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">chain</span>
 
-
-<div class="viewcode-block" id="LibManager.load_wf_defs_local">
-<a class="viewcode-back" href="../../pygissim.html#pygissim.util.LibManager.load_wf_defs_local">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">load_wf_defs_local</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_load_wf_defs_local</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Loads the groups of chains that make a composite workflow definition. &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">workflow_definitions</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
         <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">LibManager</span><span class="o">.</span><span class="n">get_full_path_to_data_file</span><span class="p">(</span><span class="s1">&#39;workflows.csv&#39;</span><span class="p">)</span>
@@ -203,14 +189,29 @@
                 <span class="n">chains</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">WorkflowChain</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">name</span><span class="p">:</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">workflow_chains</span><span class="p">[</span><span class="n">name</span><span class="p">]),</span> <span class="n">names</span><span class="p">))</span>
                 <span class="n">wdef</span><span class="p">:</span> <span class="n">WorkflowDef</span> <span class="o">=</span> <span class="n">WorkflowDef</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">],</span> <span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;think&#39;</span><span class="p">]),</span> <span class="n">chains</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">workflow_definitions</span><span class="p">[</span><span class="n">wdef</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">wdef</span></div>
-</div>
 
 
 <span class="n">network_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Local Only&quot;</span><span class="p">,</span> <span class="s2">&quot;Local and ArcGIS Online&quot;</span><span class="p">,</span> <span class="s2">&quot;Branch Offices&quot;</span><span class="p">,</span> <span class="s2">&quot;Cloudy&quot;</span><span class="p">,</span> <span class="s2">&quot;Backhaul Cloudy&quot;</span><span class="p">]</span>
 
+<div class="viewcode-block" id="NetworkNames">
+<a class="viewcode-back" href="../../pygissim.html#pygissim.util.NetworkNames">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">NetworkNames</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">LOCAL_ONLY</span> <span class="o">=</span> <span class="s2">&quot;Local Only&quot;</span>
+    <span class="n">LOCAL_AND_AGOL</span> <span class="o">=</span> <span class="s2">&quot;Local and ArcGIS Online&quot;</span>
+    <span class="n">BRANCH_OFFICES</span> <span class="o">=</span> <span class="s2">&quot;Branch Offices&quot;</span>
+    <span class="n">CLOUDY</span> <span class="o">=</span> <span class="s2">&quot;Cloudy&quot;</span>
+    <span class="n">BACKHAUL_CLOUDY</span> <span class="o">=</span> <span class="s2">&quot;Backhaul Cloudy&quot;</span></div>
+
+
 <div class="viewcode-block" id="load_network">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.util.load_network">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">load_network</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Zone</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="n">Connection</span><span class="p">]]:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">load_network</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="n">NetworkNames</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Zone</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="n">Connection</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Creates a set of network Zones and Connections. These would cover most basic examples,</span>
+<span class="sd">    and could be expanded on when needed.</span>
+<span class="sd">      </span>
+<span class="sd">    :param name: One of the values in :class:`NetworkNames` to specify which pre-fab network.</span>
+<span class="sd">    :returns: Tuple of a list of Zones and a list of Connections representing the network.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">zones</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Zone</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">conns</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Connection</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 
@@ -238,29 +239,29 @@
     <span class="n">wan2</span><span class="p">:</span> <span class="n">Zone</span> <span class="o">=</span> <span class="n">Zone</span><span class="p">(</span><span class="s2">&quot;WAN 2&quot;</span><span class="p">,</span> <span class="s2">&quot;Branch office 2&quot;</span><span class="p">)</span>
     <span class="n">wan2_local</span><span class="p">:</span> <span class="n">Connection</span> <span class="o">=</span> <span class="n">wan2</span><span class="o">.</span><span class="n">self_connect</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 
-    <span class="k">match</span> <span class="n">name</span><span class="o">.</span><span class="n">upper</span><span class="p">():</span>
-        <span class="k">case</span> <span class="s2">&quot;LOCAL ONLY&quot;</span><span class="p">:</span>
+    <span class="k">match</span> <span class="n">name</span><span class="p">:</span>
+        <span class="k">case</span> <span class="n">NetworkNames</span><span class="o">.</span><span class="n">LOCAL_ONLY</span><span class="p">:</span>
             <span class="n">zones</span> <span class="o">=</span> <span class="p">[</span><span class="n">lan</span><span class="p">]</span>
             <span class="n">conns</span> <span class="o">=</span> <span class="p">[</span><span class="n">lan_local</span><span class="p">]</span>
-        <span class="k">case</span><span class="s2">&quot;LOCAL AND ARCGIS ONLINE&quot;</span><span class="p">:</span>
+        <span class="k">case</span> <span class="n">NetworkNames</span><span class="o">.</span><span class="n">LOCAL_AND_AGOL</span><span class="p">:</span>
             <span class="n">zones</span> <span class="o">=</span> <span class="p">[</span><span class="n">lan</span><span class="p">,</span> <span class="n">dmz</span><span class="p">,</span> <span class="n">internet</span><span class="p">,</span> <span class="n">agol</span><span class="p">]</span>
             <span class="n">conns</span> <span class="o">=</span> <span class="p">[</span><span class="n">lan_local</span><span class="p">,</span> <span class="n">dmz_local</span><span class="p">,</span> <span class="n">internet_local</span><span class="p">,</span> <span class="n">agol_local</span><span class="p">]</span>
             <span class="n">conns</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">lan</span><span class="o">.</span><span class="n">connect_both_ways</span><span class="p">(</span><span class="n">dmz</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
             <span class="n">conns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dmz</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">internet</span><span class="p">,</span> <span class="mi">250</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
             <span class="n">conns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">internet</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">dmz</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
             <span class="n">conns</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">internet</span><span class="o">.</span><span class="n">connect_both_ways</span><span class="p">(</span><span class="n">agol</span><span class="p">,</span> <span class="mi">10000</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
-        <span class="k">case</span><span class="s2">&quot;BRANCH OFFICES&quot;</span><span class="p">:</span>
+        <span class="k">case</span> <span class="n">NetworkNames</span><span class="o">.</span><span class="n">BRANCH_OFFICES</span><span class="p">:</span>
             <span class="n">zones</span> <span class="o">=</span> <span class="p">[</span><span class="n">lan</span><span class="p">,</span> <span class="n">wan1</span><span class="p">,</span> <span class="n">wan2</span><span class="p">]</span>
             <span class="n">conns</span> <span class="o">=</span> <span class="p">[</span><span class="n">lan_local</span><span class="p">,</span> <span class="n">wan1_local</span><span class="p">,</span> <span class="n">wan2_local</span><span class="p">]</span>
             <span class="n">conns</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">lan</span><span class="o">.</span><span class="n">connect_both_ways</span><span class="p">(</span><span class="n">wan1</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
             <span class="n">conns</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">lan</span><span class="o">.</span><span class="n">connect_both_ways</span><span class="p">(</span><span class="n">wan2</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
-        <span class="k">case</span><span class="s2">&quot;CLOUDY&quot;</span><span class="p">:</span>
+        <span class="k">case</span> <span class="n">NetworkNames</span><span class="o">.</span><span class="n">CLOUDY</span><span class="p">:</span>
             <span class="n">zones</span> <span class="o">=</span> <span class="p">[</span><span class="n">cloud</span><span class="p">,</span> <span class="n">cloud_edge</span><span class="p">,</span> <span class="n">internet</span><span class="p">,</span> <span class="n">agol</span><span class="p">]</span>
             <span class="n">conns</span> <span class="o">=</span> <span class="p">[</span><span class="n">cloud_local</span><span class="p">,</span> <span class="n">cloud_edge_local</span><span class="p">,</span> <span class="n">internet_local</span><span class="p">,</span> <span class="n">agol_local</span><span class="p">]</span>
             <span class="n">conns</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">cloud</span><span class="o">.</span><span class="n">connect_both_ways</span><span class="p">(</span><span class="n">cloud_edge</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
             <span class="n">conns</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">cloud_edge</span><span class="o">.</span><span class="n">connect_both_ways</span><span class="p">(</span><span class="n">internet</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
             <span class="n">conns</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">internet</span><span class="o">.</span><span class="n">connect_both_ways</span><span class="p">(</span><span class="n">agol</span><span class="p">,</span> <span class="mi">10000</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
-        <span class="k">case</span><span class="s2">&quot;BACKHAUL CLOUDY&quot;</span><span class="p">:</span>
+        <span class="k">case</span> <span class="n">NetworkNames</span><span class="o">.</span><span class="n">BACKHAUL_CLOUDY</span><span class="p">:</span>
             <span class="n">zones</span> <span class="o">=</span> <span class="p">[</span><span class="n">lan</span><span class="p">,</span> <span class="n">dmz</span><span class="p">,</span> <span class="n">internet</span><span class="p">,</span> <span class="n">agol</span><span class="p">,</span> <span class="n">cloud</span><span class="p">,</span> <span class="n">cloud_edge</span><span class="p">]</span>
             <span class="n">conns</span> <span class="o">=</span> <span class="p">[</span><span class="n">lan_local</span><span class="p">,</span> <span class="n">dmz_local</span><span class="p">,</span> <span class="n">internet_local</span><span class="p">,</span> <span class="n">agol_local</span><span class="p">,</span> <span class="n">cloud_local</span><span class="p">,</span> <span class="n">cloud_edge_local</span><span class="p">]</span>
             <span class="n">conns</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">lan</span><span class="o">.</span><span class="n">connect_both_ways</span><span class="p">(</span><span class="n">dmz</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>

@@ -7,6 +7,7 @@ Bootstraps useful things like hardware definitions.
 """
 
 from typing import Optional, Dict
+from enum import Enum
 import csv
 import re
 from pathlib import Path
@@ -40,13 +41,13 @@ class LibManager:
         Loads all of the dictionaries from CSV.
         The order is important, as the workflow definitions reference the workflow chains, etc.
         """
-        self.load_hardware_local()
-        self.load_services_local()
-        self.load_wf_steps_local()
-        self.load_wf_chains_local()
-        self.load_wf_defs_local()
+        self._load_hardware_local()
+        self._load_services_local()
+        self._load_wf_steps_local()
+        self._load_wf_chains_local()
+        self._load_wf_defs_local()
 
-    def load_hardware_local(self):
+    def _load_hardware_local(self):
         """ Loads the preconfigured hardware types and SPECint_rate2017 scores. """
         self.hardware.clear()
         file_path: str = LibManager.get_full_path_to_data_file('hardware.csv')
@@ -55,11 +56,10 @@ class LibManager:
             for row in csv_reader:
                 hw: HardwareDef = HardwareDef(row['processor'], 
                                               int(row['cores']), 
-                                              float(row['spec']), 
-                                              threading=ThreadingModel.HYPERTHREADED if row['architecture'] == 'INTEL' else ThreadingModel.PHYSICAL)
+                                              float(row['spec']))
                 self.hardware[hw.processor] = hw
 
-    def load_services_local(self):
+    def _load_services_local(self):
         """ Loads the service definitions. """
         file_path: str = LibManager.get_full_path_to_data_file('services.csv')
         with open(file_path, mode='r') as file:
@@ -69,7 +69,7 @@ class LibManager:
                                             balancing_model=BalancingModel.from_str(row['balancing_model']))
                 self.service_definitions[sd.service_type] = sd
 
-    def load_wf_steps_local(self):
+    def _load_wf_steps_local(self):
         """ Loads the performance metrics for individual workflow steps. """
         self.workflow_steps.clear()
         file_path: str = LibManager.get_full_path_to_data_file('workflow_steps.csv')
@@ -86,7 +86,7 @@ class LibManager:
                                                         cache_pct=int(row['cache_pct']))
                 self.workflow_steps[step.name] = step
 
-    def load_wf_chains_local(self):
+    def _load_wf_chains_local(self):
         """ Loads the chains of steps that make up a request and response. """
         self.workflow_chains.clear()
         file_path: str = LibManager.get_full_path_to_data_file('workflow_chains.csv')
@@ -98,7 +98,7 @@ class LibManager:
                 chain: WorkflowChain = WorkflowChain(row['name'], row['description'], steps, service_providers=dict())
                 self.workflow_chains[chain.name] = chain
 
-    def load_wf_defs_local(self):
+    def _load_wf_defs_local(self):
         """ Loads the groups of chains that make a composite workflow definition. """
         self.workflow_definitions.clear()
         file_path: str = LibManager.get_full_path_to_data_file('workflows.csv')
@@ -112,7 +112,20 @@ class LibManager:
 
 network_list: list[str] = ["Local Only", "Local and ArcGIS Online", "Branch Offices", "Cloudy", "Backhaul Cloudy"]
 
-def load_network(name: str) -> Tuple[list[Zone], list[Connection]]:
+class NetworkNames(Enum):
+    LOCAL_ONLY = "Local Only"
+    LOCAL_AND_AGOL = "Local and ArcGIS Online"
+    BRANCH_OFFICES = "Branch Offices"
+    CLOUDY = "Cloudy"
+    BACKHAUL_CLOUDY = "Backhaul Cloudy"
+
+def load_network(name: NetworkNames) -> Tuple[list[Zone], list[Connection]]:
+    """ Creates a set of network Zones and Connections. These would cover most basic examples,
+    and could be expanded on when needed.
+      
+    :param name: One of the values in :class:`NetworkNames` to specify which pre-fab network.
+    :returns: Tuple of a list of Zones and a list of Connections representing the network.
+    """
     zones: list[Zone] = []
     conns: list[Connection] = []
 
@@ -140,29 +153,29 @@ def load_network(name: str) -> Tuple[list[Zone], list[Connection]]:
     wan2: Zone = Zone("WAN 2", "Branch office 2")
     wan2_local: Connection = wan2.self_connect(100, 0)
 
-    match name.upper():
-        case "LOCAL ONLY":
+    match name:
+        case NetworkNames.LOCAL_ONLY:
             zones = [lan]
             conns = [lan_local]
-        case"LOCAL AND ARCGIS ONLINE":
+        case NetworkNames.LOCAL_AND_AGOL:
             zones = [lan, dmz, internet, agol]
             conns = [lan_local, dmz_local, internet_local, agol_local]
             conns.extend(lan.connect_both_ways(dmz, 500, 1))
             conns.append(dmz.connect(internet, 250, 10))
             conns.append(internet.connect(dmz, 500, 10))
             conns.extend(internet.connect_both_ways(agol, 10000, 1))
-        case"BRANCH OFFICES":
+        case NetworkNames.BRANCH_OFFICES:
             zones = [lan, wan1, wan2]
             conns = [lan_local, wan1_local, wan2_local]
             conns.extend(lan.connect_both_ways(wan1, 300, 1))
             conns.extend(lan.connect_both_ways(wan2, 100, 10))
-        case"CLOUDY":
+        case NetworkNames.CLOUDY:
             zones = [cloud, cloud_edge, internet, agol]
             conns = [cloud_local, cloud_edge_local, internet_local, agol_local]
             conns.extend(cloud.connect_both_ways(cloud_edge, 1000, 0))
             conns.extend(cloud_edge.connect_both_ways(internet, 1000, 10))
             conns.extend(internet.connect_both_ways(agol, 10000, 1))
-        case"BACKHAUL CLOUDY":
+        case NetworkNames.BACKHAUL_CLOUDY:
             zones = [lan, dmz, internet, agol, cloud, cloud_edge]
             conns = [lan_local, dmz_local, internet_local, agol_local, cloud_local, cloud_edge_local]
             conns.extend(lan.connect_both_ways(dmz, 500, 1))
