@@ -625,18 +625,16 @@
 <span class="sd">    :param processor: A name for the hardware. It must be a unique string in a :class:`pygissim.pygissim.Design`.</span>
 <span class="sd">    :param cores: The number of physical cores in the hardware platform.</span>
 <span class="sd">    :param specint_rate2017: The performance of the hardware from https://www.spec.org/cpu2017/results/rint2017/</span>
-<span class="sd">    :param threading: The threading model will be used when calculating service times.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">processor</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">cores</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">specint_rate2017</span><span class="p">:</span> <span class="nb">float</span>
-    <span class="n">threading</span><span class="p">:</span> <span class="n">ThreadingModel</span>
 
 <div class="viewcode-block" id="HardwareDef.specint_rate2017_per_core">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.HardwareDef.specint_rate2017_per_core">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">specint_rate2017_per_core</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Per-core performance of the hardware. Includes factor for :class:`ThreadingModel`. &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">specint_rate2017</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cores</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">threading</span><span class="o">.</span><span class="n">factor</span><span class="p">()</span></div>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Per-core performance of the hardware. &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">specint_rate2017</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cores</span><span class="p">)</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -668,6 +666,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">memory_GB</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">memory_GB</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">zone</span><span class="p">:</span> <span class="n">Zone</span> <span class="o">=</span> <span class="n">zone</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">:</span> <span class="n">ComputeNodeType</span> <span class="o">=</span> <span class="nb">type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">threading</span><span class="p">:</span> <span class="n">ThreadingModel</span> <span class="o">=</span> <span class="n">ThreadingModel</span><span class="o">.</span><span class="n">PHYSICAL</span> <span class="k">if</span> <span class="nb">type</span> <span class="o">==</span> <span class="n">ComputeNodeType</span><span class="o">.</span><span class="n">CLIENT</span> <span class="k">else</span> <span class="n">ThreadingModel</span><span class="o">.</span><span class="n">HYPERTHREADED</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_v_cores</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>                   <span class="c1"># if ComputeNodeType.V_SERVER</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_v_hosts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="s1">&#39;ComputeNode&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>    <span class="c1"># if ComputeNodeType.P_SERVER</span>
@@ -696,6 +695,13 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_v_cores</span> <span class="o">=</span> <span class="mi">0</span></div>
 
 
+<div class="viewcode-block" id="ComputeNode.specint_rate2017_per_core">
+<a class="viewcode-back" href="../../pygissim.html#pygissim.engine.ComputeNode.specint_rate2017_per_core">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">specint_rate2017_per_core</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Per-core performance of the hardware. Including threading factor. &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">hw_def</span><span class="o">.</span><span class="n">specint_rate2017_per_core</span><span class="p">()</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">threading</span><span class="o">.</span><span class="n">factor</span><span class="p">()</span></div>
+
+
 <div class="viewcode-block" id="ComputeNode.adjusted_service_time">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.ComputeNode.adjusted_service_time">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">adjusted_service_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">st</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
@@ -707,7 +713,7 @@
 <span class="sd">        :param st: The input baseline service time in milliseconds (ms).</span>
 <span class="sd">        :returns: The adjusted service time in milliseconds (ms).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">relative</span> <span class="o">=</span> <span class="n">HardwareDef</span><span class="o">.</span><span class="n">baseline_per_core</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">hw_def</span><span class="o">.</span><span class="n">specint_rate2017_per_core</span><span class="p">()</span>
+        <span class="n">relative</span> <span class="o">=</span> <span class="n">HardwareDef</span><span class="o">.</span><span class="n">baseline_per_core</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">specint_rate2017_per_core</span><span class="p">()</span>
         <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">st</span><span class="p">)</span> <span class="o">*</span> <span class="n">relative</span><span class="p">)</span></div>
 
 
@@ -825,7 +831,7 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :returns: The sum of all virtual host virtual core allocations accounting for hyperthreading.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">total_vcpu_allocation</span><span class="p">())</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">hw_def</span><span class="o">.</span><span class="n">threading</span><span class="o">.</span><span class="n">factor</span><span class="p">())</span></div>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">total_vcpu_allocation</span><span class="p">())</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">threading</span><span class="o">.</span><span class="n">factor</span><span class="p">())</span></div>
 
     
 <div class="viewcode-block" id="ComputeNode.total_memory_allocation">
@@ -1254,14 +1260,12 @@
 <span class="c1"># `8b d8&#39;8b d8&#39; `8b  d8&#39; 88 `88. 88 `88.</span>
 <span class="c1">#  `8b8&#39; `8d8&#39;   `Y88P&#39;  88   YD YP   YD</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Tuple</span>
 
 <span class="c1"># ------------------------------------------------------------</span>
 <div class="viewcode-block" id="DataSourceType">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.DataSourceType">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">DataSourceType</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Enumeration of different data source types. Not fully integrated (yet). &quot;&quot;&quot;</span>
     <span class="n">RELATIONAL</span> <span class="o">=</span> <span class="s1">&#39;relational&#39;</span>
     <span class="n">OBJECT</span> <span class="o">=</span> <span class="s1">&#39;object&#39;</span>
     <span class="n">FILE</span> <span class="o">=</span> <span class="s1">&#39;file&#39;</span>
@@ -1274,6 +1278,7 @@
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.DataSourceType.from_str">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">from_str</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;DataSourceType&#39;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Convenience method for creating from string representation. &quot;&quot;&quot;</span>
         <span class="k">match</span> <span class="n">value</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
             <span class="k">case</span> <span class="s1">&#39;relational&#39;</span><span class="p">:</span> <span class="k">return</span> <span class="n">DataSourceType</span><span class="o">.</span><span class="n">RELATIONAL</span>
             <span class="k">case</span> <span class="s1">&#39;object&#39;</span><span class="p">:</span> <span class="k">return</span> <span class="n">DataSourceType</span><span class="o">.</span><span class="n">OBJECT</span>
@@ -1289,6 +1294,11 @@
 <div class="viewcode-block" id="WorkflowType">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.WorkflowType">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">WorkflowType</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Enumeration of workflow types.</span>
+<span class="sd">    </span>
+<span class="sd">    - USER indicates that transaction rates will be calculated from user counts and productivity.</span>
+<span class="sd">    - TRANSACTIONAL indicates that transaction rates will be entered directly as transactions per hour.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">USER</span> <span class="o">=</span> <span class="s1">&#39;user&#39;</span>
     <span class="n">TRANSACTIONAL</span> <span class="o">=</span> <span class="s1">&#39;transactional&#39;</span></div>
 
@@ -1298,6 +1308,10 @@
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.WorkflowDefStep">[docs]</a>
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">WorkflowDefStep</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Read-only class capturing a step in a workflow.</span>
+<span class="sd">    </span>
+<span class="sd">    Service time is relative to the baseline_per_core in :class:`HardwareDef`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">name</span><span class="p">:</span><span class="nb">str</span>
     <span class="n">description</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">service_type</span><span class="p">:</span> <span class="nb">str</span>
@@ -1314,6 +1328,7 @@
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.ClientRequestSolutionStep">[docs]</a>
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">ClientRequestSolutionStep</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Read-only data class capturing a step needed to finish a ClientRequest. &quot;&quot;&quot;</span>
     <span class="n">st_calculator</span><span class="p">:</span> <span class="s1">&#39;ServiceTimeCalculator&#39;</span>
     <span class="n">is_response</span><span class="p">:</span> <span class="nb">bool</span>
     <span class="n">data_size</span><span class="p">:</span> <span class="nb">int</span>
@@ -1325,6 +1340,13 @@
 <div class="viewcode-block" id="WorkflowChain">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.WorkflowChain">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">WorkflowChain</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Represents a series of steps that define the parts of a Workflow.</span>
+<span class="sd">    Most Workflows will have more than one chain of steps that are independent from each other.</span>
+<span class="sd">    </span>
+<span class="sd">    Example: a mobile WorkflowDef might specify (1) fetching features from a hosted service and (2) fetching basemap tiles.</span>
+
+<span class="sd">    Example WorkflowChain: ArcGIS Field Maps &gt; Web Adaptor &gt; Portal &gt; AGS &gt; Relational DataStore</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">desc</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> 
                  <span class="n">steps</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">WorkflowDefStep</span><span class="p">],</span> 
                  <span class="n">service_providers</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span><span class="n">ServiceProvider</span><span class="p">],</span>
@@ -1339,12 +1361,21 @@
 <div class="viewcode-block" id="WorkflowChain.is_valid">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.WorkflowChain.is_valid">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">is_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">        :returns: True if validate returns no messages.</span>
+<span class="sd">        :rtype: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">())</span> <span class="o">==</span> <span class="mi">0</span></div>
 
     
 <div class="viewcode-block" id="WorkflowChain.validate">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.WorkflowChain.validate">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">ValidationMessage</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Method that evaluates the validity of the configuration of this WorkflowChain.</span>
+<span class="sd">        </span>
+<span class="sd">        :returns: Messages indicating invalid configuration.</span>
+<span class="sd">        :rtype: list[ValidationMessage]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">result</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ValidationMessage</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
        
         <span class="n">msp</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">missing_service_providers</span><span class="p">()</span>
@@ -1358,6 +1389,11 @@
 <div class="viewcode-block" id="WorkflowChain.update_client_step">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.WorkflowChain.update_client_step">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update_client_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client_step</span><span class="p">:</span> <span class="n">WorkflowDefStep</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Convenience method to replace the first step in the chain.</span>
+<span class="sd">        Useful when multiple WorkflowChains differ only in their client.</span>
+<span class="sd">        </span>
+<span class="sd">        :param client_step: The step that will replace the first step in this chain.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">client_step</span><span class="p">)</span></div>
 
@@ -1365,6 +1401,7 @@
 <div class="viewcode-block" id="WorkflowChain.all_required_service_types">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.WorkflowChain.all_required_service_types">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">all_required_service_types</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; All of the service types specified by steps. &quot;&quot;&quot;</span>
         <span class="n">types</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">step</span><span class="p">:</span> <span class="p">(</span><span class="n">step</span><span class="o">.</span><span class="n">service_type</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">))</span>
         <span class="k">return</span> <span class="nb">set</span><span class="p">(</span><span class="n">types</span><span class="p">)</span></div>
 
@@ -1372,12 +1409,14 @@
 <div class="viewcode-block" id="WorkflowChain.configured_service_types">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.WorkflowChain.configured_service_types">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">configured_service_types</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; All of the service types specified by the configured dict of :class:`ServiceProvider`.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">service_providers</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span></div>
 
     
 <div class="viewcode-block" id="WorkflowChain.missing_service_providers">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.WorkflowChain.missing_service_providers">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">missing_service_providers</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; The service types needed by the chain, but not available in the ServiceProviders. &quot;&quot;&quot;</span>
         <span class="n">all_req</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_required_service_types</span><span class="p">()</span>
         <span class="n">configured</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">configured_service_types</span><span class="p">()</span>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">all_req</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">configured</span><span class="p">))</span></div>
@@ -1386,6 +1425,9 @@
 <div class="viewcode-block" id="WorkflowChain.service_provider_for_step">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.WorkflowChain.service_provider_for_step">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">service_provider_for_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">:</span> <span class="n">WorkflowDefStep</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ServiceProvider</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">        :returns: The configured ServiceProvider that matches the service type of a step. Returns None if no ServiceProvider matches the service type of the step. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">step</span><span class="o">.</span><span class="n">service_type</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">service_providers</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">service_providers</span><span class="p">[</span><span class="n">step</span><span class="o">.</span><span class="n">service_type</span><span class="p">]</span>
         <span class="k">return</span> <span class="kc">None</span></div>
@@ -1394,6 +1436,9 @@
 <div class="viewcode-block" id="WorkflowChain.service_provider_for_step_at_index">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.WorkflowChain.service_provider_for_step_at_index">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">service_provider_for_step_at_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ServiceProvider</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :returns: The configured ServiceProvider that matches the service type of the step at an index. Returns None for an invalid index or no configured ServiceProvider for the step.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">index</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">index</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">):</span> <span class="k">return</span> <span class="kc">None</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">service_provider_for_step</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="n">index</span><span class="p">])</span></div>
 </div>
@@ -1404,6 +1449,13 @@
 <div class="viewcode-block" id="WorkflowDef">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.WorkflowDef">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">WorkflowDef</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Represents a collection of parallel WorkflowChains and the expected think time. </span>
+<span class="sd">    </span>
+<span class="sd">    :param name: A descriptive name</span>
+<span class="sd">    :param desc: Additional descriptive text</span>
+<span class="sd">    :param think_time_s: The expected amount of time in seconds that a user will be able to think before issuing the next request</span>
+<span class="sd">    :param chains: A list of WorkflowChains</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">desc</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">think_time_s</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">chains</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">WorkflowChain</span><span class="p">]):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">desc</span>
@@ -1413,6 +1465,9 @@
 <div class="viewcode-block" id="WorkflowDef.all_required_service_types">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.WorkflowDef.all_required_service_types">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">all_required_service_types</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :returns: A list of all service types needed by all WorkflowChain steps</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">result</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">chain</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">chains</span><span class="p">:</span>
             <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">chain</span><span class="o">.</span><span class="n">all_required_service_types</span><span class="p">())</span>
@@ -1422,6 +1477,7 @@
 <div class="viewcode-block" id="WorkflowDef.assign_service_provider">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.WorkflowDef.assign_service_provider">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">assign_service_provider</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">service_provider</span><span class="p">:</span> <span class="n">ServiceProvider</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Assigns a ServiceProvider to all of the chains. &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">chain</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">chains</span><span class="p">:</span>
             <span class="n">chain</span><span class="o">.</span><span class="n">service_providers</span><span class="p">[</span><span class="n">service_provider</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">service_type</span><span class="p">]</span> <span class="o">=</span> <span class="n">service_provider</span></div>
 
@@ -1429,6 +1485,9 @@
 <div class="viewcode-block" id="WorkflowDef.missing_service_providers">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.WorkflowDef.missing_service_providers">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">missing_service_providers</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :returns: A list of the service types needed by one or more chains that are not satisfied by any assigned ServiceProvider.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">result</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">chain</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">chains</span><span class="p">:</span>
             <span class="c1"># m = chain.missing_service_providers()</span>
@@ -1440,27 +1499,36 @@
 <div class="viewcode-block" id="WorkflowDef.clear_service_providers">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.WorkflowDef.clear_service_providers">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">clear_service_providers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Removes all ServiceProviders for all workflow chains. &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">chain</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">chains</span><span class="p">:</span>
             <span class="n">chain</span><span class="o">.</span><span class="n">service_providers</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span></div>
 </div>
 
 
 <span class="c1"># ------------------------------------------------------------</span>
-<div class="viewcode-block" id="ClientRequestGroup">
-<a class="viewcode-back" href="../../pygissim.html#pygissim.engine.ClientRequestGroup">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">ClientRequestGroup</span><span class="p">:</span>
+<div class="viewcode-block" id="Transaction">
+<a class="viewcode-back" href="../../pygissim.html#pygissim.engine.Transaction">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Transaction</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; A way to identify which group of :class:`ClientRequest` are all satisfying one triggering of a :class:`Workflow`. &quot;&quot;&quot;</span>
     <span class="n">_next_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
 
-<div class="viewcode-block" id="ClientRequestGroup.next_id">
-<a class="viewcode-back" href="../../pygissim.html#pygissim.engine.ClientRequestGroup.next_id">[docs]</a>
+<div class="viewcode-block" id="Transaction.next_id">
+<a class="viewcode-back" href="../../pygissim.html#pygissim.engine.Transaction.next_id">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">next_id</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :returns: Next integer id in sequence.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">cls</span><span class="o">.</span><span class="n">_next_id</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_next_id</span> <span class="o">+</span> <span class="mi">1</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_next_id</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clock</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">workflow</span><span class="p">:</span> <span class="s1">&#39;Workflow&#39;</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">ClientRequestGroup</span><span class="o">.</span><span class="n">next_id</span><span class="p">()</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param clock: The current simulation time.</span>
+<span class="sd">        :param workflow: The workflow that the Transaction is being generated from.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Transaction</span><span class="o">.</span><span class="n">next_id</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">request_clock</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">clock</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">workflow</span><span class="p">:</span> <span class="n">Workflow</span> <span class="o">=</span> <span class="n">workflow</span></div>
 
@@ -1470,18 +1538,28 @@
 <div class="viewcode-block" id="ClientRequestSolution">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.ClientRequestSolution">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ClientRequestSolution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">steps</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ClientRequestSolutionStep</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ClientRequestSolutionStep</span><span class="p">]</span> <span class="o">=</span> <span class="n">steps</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; When a Workflow is executed, a ClientRequestSolution is created for each WorkflowChain.</span>
+<span class="sd">    The solution is then assigned to the :class:`ClientRequest`.</span>
+
+<span class="sd">    A ClientRequestSolution is processed one step at a time. As steps are finished, they are popped</span>
+<span class="sd">    off the front of the list. The solution is finished when there are no more steps to complete.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">steps</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">ClientRequestSolutionStep</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ClientRequestSolutionStep</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>            
+        <span class="k">if</span> <span class="n">steps</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">steps</span> <span class="o">=</span> <span class="n">steps</span>
 
 <div class="viewcode-block" id="ClientRequestSolution.is_finished">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.ClientRequestSolution.is_finished">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">is_finished</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; :returns: True if list of steps is empty. &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span></div>
 
     
 <div class="viewcode-block" id="ClientRequestSolution.current_step">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.ClientRequestSolution.current_step">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">current_step</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ClientRequestSolutionStep</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; :returns: The first step in the remainder. Returns None if no steps remain. &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="k">return</span> <span class="kc">None</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
 
@@ -1489,6 +1567,7 @@
 <div class="viewcode-block" id="ClientRequestSolution.goto_next_step">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.ClientRequestSolution.goto_next_step">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">goto_next_step</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Pops the first step off the remaining steps. &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="c1"># Drop first item. </span></div>
 </div>
@@ -1499,12 +1578,23 @@
 <div class="viewcode-block" id="ClientRequest">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.ClientRequest">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ClientRequest</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Represents a single request originating from a configured Workflow.</span>
+<span class="sd">    ClientRequests are created by the simulator, so not usually created by other means.</span>
+<span class="sd">    </span>
+<span class="sd">    :param name: Usually auto-generated by next_name</span>
+<span class="sd">    :param desc: Additional descriptive text. Usually empty.</span>
+<span class="sd">    :param wf_name: The name of the workflow that caused this request.</span>
+<span class="sd">    :param request_clock: The simulation time when the request was created.</span>
+<span class="sd">    :param solution: The ClientRequestSolution that defines the work to be done.</span>
+<span class="sd">    :param tx_id: A Workflow execution can create a set of ClientRequests. This is the Transaction id.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">_next_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
 
 <div class="viewcode-block" id="ClientRequest.next_id">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.ClientRequest.next_id">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">next_id</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Increments and returns the next in a sequence of numbers. &quot;&quot;&quot;</span>
         <span class="bp">cls</span><span class="o">.</span><span class="n">_next_id</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_next_id</span> <span class="o">+</span> <span class="mi">1</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_next_id</span></div>
 
@@ -1513,17 +1603,18 @@
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.ClientRequest.next_name">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">next_name</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Creates a new unique name based on next_id &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;CR-</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">next_id</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span></div>
 
     
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">desc</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">wf_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-                 <span class="n">request_clock</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">solution</span><span class="p">:</span> <span class="n">ClientRequestSolution</span><span class="p">,</span> <span class="n">group_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+                 <span class="n">request_clock</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">solution</span><span class="p">:</span> <span class="n">ClientRequestSolution</span><span class="p">,</span> <span class="n">tx_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">desc</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">workflow_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">wf_name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">request_clock</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">request_clock</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">solution</span><span class="p">:</span> <span class="n">ClientRequestSolution</span> <span class="o">=</span> <span class="n">solution</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">group_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">group_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tx_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">tx_id</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">accumulating_metrics</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">RequestMetric</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
@@ -1532,12 +1623,20 @@
 <div class="viewcode-block" id="ClientRequest.is_finished">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.ClientRequest.is_finished">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">is_finished</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Convenience function.</span>
+<span class="sd">        </span>
+<span class="sd">        :returns: True if the :class:`ClientRequestSolution` solution is finished.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">solution</span><span class="o">.</span><span class="n">is_finished</span><span class="p">()</span></div>
 
     
 <div class="viewcode-block" id="ClientRequest.summary_metric">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.ClientRequest.summary_metric">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">summary_metric</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RequestMetric</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; A ClientRequest accumulates a metric after every step. </span>
+<span class="sd">        </span>
+<span class="sd">        :returns: A single RequestMetric that sums all of the accumulated metrics to date.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">clock</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">st</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">qt</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
@@ -1558,6 +1657,17 @@
 <div class="viewcode-block" id="Workflow">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.Workflow">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Workflow</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Represents a configuration of a :class:`WorkflowDef`, with productivity stats.</span>
+<span class="sd">    The configuration of the productivity will determine how frequently this Workflow is triggered.</span>
+<span class="sd">    </span>
+<span class="sd">    :param name: A descriptive name.</span>
+<span class="sd">    :param desc: Additional descriptive text</span>
+<span class="sd">    :param definition: The workflow definition (chains, steps)</span>
+<span class="sd">    :param type: Whether this workflow&#39;s transaction rate is calculated from numbers of users or tph.</span>
+<span class="sd">    :param user_count: The number of users. Only applies to WorkflowType.USER.</span>
+<span class="sd">    :param productivity: The number of transactions per minute per user. Only applies to WorkflowType.USER.</span>
+<span class="sd">    :param tph: The transactions per hour. Only applies to WorkflowType.TRANSACTIONAL.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">desc</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> 
                  <span class="nb">type</span><span class="p">:</span> <span class="n">WorkflowType</span><span class="p">,</span> <span class="n">definition</span><span class="p">:</span> <span class="n">WorkflowDef</span><span class="p">,</span> 
                  <span class="n">user_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">productivity</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">tph</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
@@ -1575,6 +1685,9 @@
 <div class="viewcode-block" id="Workflow.transaction_rate">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.Workflow.transaction_rate">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">transaction_rate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :returns: The number of transactions per hour. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">WorkflowType</span><span class="o">.</span><span class="n">USER</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_count</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">productivity</span> <span class="o">*</span> <span class="mi">60</span>
         <span class="k">else</span><span class="p">:</span>
@@ -1583,8 +1696,13 @@
     
 <div class="viewcode-block" id="Workflow.create_client_requests">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.Workflow.create_client_requests">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">create_client_requests</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">network</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Connection</span><span class="p">],</span> <span class="n">clock</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">ClientRequestGroup</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">ClientRequest</span><span class="p">]]:</span>
-        <span class="n">group</span><span class="p">:</span> <span class="n">ClientRequestGroup</span> <span class="o">=</span> <span class="n">ClientRequestGroup</span><span class="p">(</span><span class="n">clock</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_client_requests</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">network</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Connection</span><span class="p">],</span> <span class="n">clock</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Transaction</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">ClientRequest</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; When a transaction starts, each chain needs to be solved for. This will result in one or more ClientRequests.</span>
+<span class="sd">        </span>
+<span class="sd">        :param network: The set of Connections that represent the network.</span>
+<span class="sd">        :param clock: The current simulation time.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">tx</span><span class="p">:</span> <span class="n">Transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span><span class="n">clock</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
         <span class="n">requests</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ClientRequest</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">chain</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">definition</span><span class="o">.</span><span class="n">chains</span><span class="p">:</span>
             <span class="c1"># for step in chain.steps:</span>
@@ -1595,16 +1713,21 @@
             <span class="c1">#     print(step.st_calculator.name) # type: ignore</span>
 
             <span class="n">request</span><span class="p">:</span> <span class="n">ClientRequest</span> <span class="o">=</span> <span class="n">ClientRequest</span><span class="p">(</span><span class="n">ClientRequest</span><span class="o">.</span><span class="n">next_name</span><span class="p">(),</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">wf_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-                                                   <span class="n">request_clock</span><span class="o">=</span><span class="n">clock</span><span class="p">,</span> <span class="n">solution</span><span class="o">=</span><span class="n">solution</span><span class="p">,</span> <span class="n">group_id</span><span class="o">=</span><span class="n">group</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+                                                   <span class="n">request_clock</span><span class="o">=</span><span class="n">clock</span><span class="p">,</span> <span class="n">solution</span><span class="o">=</span><span class="n">solution</span><span class="p">,</span> <span class="n">tx_id</span><span class="o">=</span><span class="n">tx</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
             <span class="n">requests</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
-        <span class="k">return</span> <span class="p">(</span><span class="n">group</span><span class="p">,</span><span class="n">requests</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="p">(</span><span class="n">tx</span><span class="p">,</span><span class="n">requests</span><span class="p">)</span></div>
 
     
 <div class="viewcode-block" id="Workflow.calculate_next_event_time">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.Workflow.calculate_next_event_time">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">calculate_next_event_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clock</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="c1"># transaction_rate is in transactions per hour</span>
-        <span class="c1"># time between events is in ms</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; transaction_rate is in transactions per hour, while the time between events is in ms.</span>
+<span class="sd">        This function calculates the time between transactions and then applies a normalized random factor</span>
+<span class="sd">        which allows a more &quot;natural&quot; arrival of requests.</span>
+
+<span class="sd">        :param clock: The current simulation time.</span>
+<span class="sd">        :returns: The next time this Workflow will execute.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">ms_per_event</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">3600000.0</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transaction_rate</span><span class="p">())</span>
         <span class="n">r_val</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">ms_per_event</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">ms_per_event</span><span class="o">*</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">clock</span> <span class="o">+</span> <span class="n">r_val</span></div>
@@ -1613,12 +1736,17 @@
 <div class="viewcode-block" id="Workflow.is_valid">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.Workflow.is_valid">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">is_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; :returns: True if validate returns no messages. &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">())</span> <span class="o">==</span> <span class="mi">0</span></div>
 
 
 <div class="viewcode-block" id="Workflow.validate">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.Workflow.validate">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">ValidationMessage</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Tests the transaction rate and the validity of the definition. </span>
+<span class="sd">        </span>
+<span class="sd">        :returns: A list of ValidationMessages. An empty list indicates the Workflow is valid.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">result</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ValidationMessage</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">definition</span><span class="o">.</span><span class="n">chains</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -1647,6 +1775,19 @@
 <div class="viewcode-block" id="create_solution">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.create_solution">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">create_solution</span><span class="p">(</span><span class="n">chain</span><span class="p">:</span> <span class="n">WorkflowChain</span><span class="p">,</span> <span class="n">in_network</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Connection</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">ClientRequestSolution</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Creates a ClientRequestSolution for one WorkflowChain. </span>
+
+<span class="sd">    This is a key part of pygissim! The request is solved by hopping from ServiceProvider to ServiceProvider.</span>
+
+<span class="sd">    1. The request passes through the WorkflowChain in order</span>
+<span class="sd">    2. The request passes back through the WorkflowChain in reverse order, back to the caller.</span>
+
+<span class="sd">    For every step, the request is processed by the ServiceProvider,</span>
+<span class="sd">    and then may take zero or more network hops to get to the next ServiceProvider.</span>
+<span class="sd">    </span>
+<span class="sd">    :param chain: The WorkflowChain that is being solved for.</span>
+<span class="sd">    :param in_network: The list of Connections that represent the network.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">chain</span><span class="o">.</span><span class="n">is_valid</span><span class="p">()</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Workflow Chain </span><span class="si">{</span><span class="n">chain</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1"> passed to create_solution must be valid&#39;</span><span class="p">)</span>
     
@@ -1740,6 +1881,13 @@
 <div class="viewcode-block" id="find_route">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.find_route">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">find_route</span><span class="p">(</span><span class="n">start</span><span class="p">:</span> <span class="n">Zone</span><span class="p">,</span> <span class="n">end</span><span class="p">:</span> <span class="n">Zone</span><span class="p">,</span> <span class="n">in_network</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Connection</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Route</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Finds a path through the network from one Zone to another.</span>
+<span class="sd">    </span>
+<span class="sd">    :param start: The Zone to start finding from.</span>
+<span class="sd">    :param end: The Zone to find the shortest path to.</span>
+<span class="sd">    :in_network: The list of Connections that represents the network.</span>
+<span class="sd">    :returns: The shortest route from start to end. Returns None if no route could be found.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">start</span><span class="o">.</span><span class="n">is_a_source</span><span class="p">(</span><span class="n">in_network</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">end</span><span class="o">.</span><span class="n">is_a_destination</span><span class="p">(</span><span class="n">in_network</span><span class="p">):</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Start zone is not a source in network&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">None</span>
@@ -1761,6 +1909,15 @@
 
 
 <span class="c1"># ------------------------------------------------------------</span>
+<span class="sd">&quot;&quot;&quot; Private function called recursively to find the shortest route.</span>
+
+<span class="sd">:param start: The Zone to start finding from.</span>
+<span class="sd">:param end: The Zone to find the shortest path to.</span>
+<span class="sd">:in_network: The list of Connections that represents the network.</span>
+<span class="sd">:param visited: The set of Zones that has already been visited by this algorithm.</span>
+<span class="sd">:param path: The list of Connections that represent the partly-formed route.</span>
+<span class="sd">:returns: The list of Connections representing a route from start to end.</span>
+<span class="sd">&quot;&quot;&quot;</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">_find_route_dfs</span><span class="p">(</span><span class="n">start</span><span class="p">:</span> <span class="n">Zone</span><span class="p">,</span> <span class="n">end</span><span class="p">:</span> <span class="n">Zone</span><span class="p">,</span> 
                 <span class="n">in_network</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Connection</span><span class="p">],</span> 
                 <span class="n">visited</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">Zone</span><span class="p">],</span> 

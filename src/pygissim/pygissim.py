@@ -333,7 +333,7 @@ class Simulator:
         now: int = 0
         if next_work is not None and (next_queue is None or next_work[1] < next_queue[1]):
             # print(next_work[0].name)
-            g_r: Tuple[ClientRequestGroup, list[ClientRequest]] = next_work[0].create_client_requests(self.design.network, next_work[1])
+            g_r: Tuple[Transaction, list[ClientRequest]] = next_work[0].create_client_requests(self.design.network, next_work[1])
             requests = g_r[1]
             now = next_work[1]
             self._next_event_time_for_workflows[next_work[0].name] = next_work[0].calculate_next_event_time(now)

@@ -113,11 +113,11 @@ class TestQueue(unittest.TestCase):
         step: ClientRequestSolutionStep = ClientRequestSolutionStep(st_calculator=cls.sample_connection_queue().service_time_calculator, 
                                                                     is_response=True, data_size=2000, chatter=10, service_time=0)
         sln: ClientRequestSolution = ClientRequestSolution(steps=[step])
-        return ClientRequest(name=ClientRequest.next_name(), desc='', wf_name='', request_clock=10, solution=sln, group_id=ClientRequestGroup.next_id())
+        return ClientRequest(name=ClientRequest.next_name(), desc='', wf_name='', request_clock=10, solution=sln, group_id=Transaction.next_id())
     
     @classmethod
     def sample_compute_cr(cls) -> ClientRequest:
         step: ClientRequestSolutionStep = ClientRequestSolutionStep(st_calculator=cls.sample_compute_queue().service_time_calculator,
                                                                     is_response=True, data_size=2000, chatter=0, service_time=141)
         sln: ClientRequestSolution = ClientRequestSolution(steps=[step])
-        return ClientRequest(name=ClientRequest.next_name(), desc='', wf_name='', request_clock=10, solution=sln, group_id=ClientRequestGroup.next_id())
+        return ClientRequest(name=ClientRequest.next_name(), desc='', wf_name='', request_clock=10, solution=sln, group_id=Transaction.next_id())

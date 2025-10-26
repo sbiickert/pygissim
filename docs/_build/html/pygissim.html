@@ -49,7 +49,6 @@
 <li class="toctree-l3"><a class="reference internal" href="#module-pygissim.engine">pygissim.engine module</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#pygissim.engine.BalancingModel"><code class="docutils literal notranslate"><span class="pre">BalancingModel</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pygissim.engine.ClientRequest"><code class="docutils literal notranslate"><span class="pre">ClientRequest</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#pygissim.engine.ClientRequestGroup"><code class="docutils literal notranslate"><span class="pre">ClientRequestGroup</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pygissim.engine.ClientRequestSolution"><code class="docutils literal notranslate"><span class="pre">ClientRequestSolution</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pygissim.engine.ClientRequestSolutionStep"><code class="docutils literal notranslate"><span class="pre">ClientRequestSolutionStep</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pygissim.engine.ComputeNode"><code class="docutils literal notranslate"><span class="pre">ComputeNode</span></code></a></li>
@@ -65,6 +64,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#pygissim.engine.ServiceProvider"><code class="docutils literal notranslate"><span class="pre">ServiceProvider</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pygissim.engine.ServiceTimeCalculator"><code class="docutils literal notranslate"><span class="pre">ServiceTimeCalculator</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pygissim.engine.ThreadingModel"><code class="docutils literal notranslate"><span class="pre">ThreadingModel</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pygissim.engine.Transaction"><code class="docutils literal notranslate"><span class="pre">Transaction</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pygissim.engine.ValidationMessage"><code class="docutils literal notranslate"><span class="pre">ValidationMessage</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pygissim.engine.WaitMode"><code class="docutils literal notranslate"><span class="pre">WaitMode</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pygissim.engine.WaitingRequest"><code class="docutils literal notranslate"><span class="pre">WaitingRequest</span></code></a></li>
@@ -182,66 +182,99 @@ They are grouped in this file by function: (general, network, compute, queue, wo
 
 <dl class="py class">
 <dt class="sig sig-object py" id="pygissim.engine.ClientRequest">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pygissim.engine.</span></span><span class="sig-name descname"><span class="pre">ClientRequest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">desc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wf_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">request_clock</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solution</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.engine.ClientRequestSolution" title="pygissim.engine.ClientRequestSolution"><span class="pre">ClientRequestSolution</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/engine.html#ClientRequest"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.ClientRequest" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pygissim.engine.</span></span><span class="sig-name descname"><span class="pre">ClientRequest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">desc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wf_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">request_clock</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solution</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.engine.ClientRequestSolution" title="pygissim.engine.ClientRequestSolution"><span class="pre">ClientRequestSolution</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">tx_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/engine.html#ClientRequest"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.ClientRequest" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Represents a single request originating from a configured Workflow.
+ClientRequests are created by the simulator, so not usually created by other means.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – Usually auto-generated by next_name</p></li>
+<li><p><strong>desc</strong> – Additional descriptive text. Usually empty.</p></li>
+<li><p><strong>wf_name</strong> – The name of the workflow that caused this request.</p></li>
+<li><p><strong>request_clock</strong> – The simulation time when the request was created.</p></li>
+<li><p><strong>solution</strong> – The ClientRequestSolution that defines the work to be done.</p></li>
+<li><p><strong>tx_id</strong> – A Workflow execution can create a set of ClientRequests. This is the Transaction id.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.ClientRequest.is_finished">
 <span class="sig-name descname"><span class="pre">is_finished</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#ClientRequest.is_finished"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.ClientRequest.is_finished" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Convenience function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the <a class="reference internal" href="#pygissim.engine.ClientRequestSolution" title="pygissim.engine.ClientRequestSolution"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClientRequestSolution</span></code></a> solution is finished.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.ClientRequest.next_id">
 <em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">next_id</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#ClientRequest.next_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.ClientRequest.next_id" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Increments and returns the next in a sequence of numbers.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.ClientRequest.next_name">
 <em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">next_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#ClientRequest.next_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.ClientRequest.next_name" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Creates a new unique name based on next_id</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.ClientRequest.summary_metric">
 <span class="sig-name descname"><span class="pre">summary_metric</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pygissim.engine.RequestMetric" title="pygissim.engine.RequestMetric"><span class="pre">RequestMetric</span></a></span></span><a class="reference internal" href="_modules/pygissim/engine.html#ClientRequest.summary_metric"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.ClientRequest.summary_metric" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
+<dd><p>A ClientRequest accumulates a metric after every step.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A single RequestMetric that sums all of the accumulated metrics to date.</p>
+</dd>
+</dl>
 </dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="pygissim.engine.ClientRequestGroup">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pygissim.engine.</span></span><span class="sig-name descname"><span class="pre">ClientRequestGroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">clock</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">workflow</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.engine.Workflow" title="pygissim.engine.Workflow"><span class="pre">Workflow</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/engine.html#ClientRequestGroup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.ClientRequestGroup" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="pygissim.engine.ClientRequestGroup.next_id">
-<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">next_id</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#ClientRequestGroup.next_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.ClientRequestGroup.next_id" title="Link to this definition"></a></dt>
-<dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="pygissim.engine.ClientRequestSolution">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pygissim.engine.</span></span><span class="sig-name descname"><span class="pre">ClientRequestSolution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">steps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pygissim.engine.ClientRequestSolutionStep" title="pygissim.engine.ClientRequestSolutionStep"><span class="pre">ClientRequestSolutionStep</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/engine.html#ClientRequestSolution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.ClientRequestSolution" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pygissim.engine.</span></span><span class="sig-name descname"><span class="pre">ClientRequestSolution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">steps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pygissim.engine.ClientRequestSolutionStep" title="pygissim.engine.ClientRequestSolutionStep"><span class="pre">ClientRequestSolutionStep</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/engine.html#ClientRequestSolution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.ClientRequestSolution" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>When a Workflow is executed, a ClientRequestSolution is created for each WorkflowChain.
+The solution is then assigned to the <a class="reference internal" href="#pygissim.engine.ClientRequest" title="pygissim.engine.ClientRequest"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClientRequest</span></code></a>.</p>
+<p>A ClientRequestSolution is processed one step at a time. As steps are finished, they are popped
+off the front of the list. The solution is finished when there are no more steps to complete.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.ClientRequestSolution.current_step">
 <span class="sig-name descname"><span class="pre">current_step</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pygissim.engine.ClientRequestSolutionStep" title="pygissim.engine.ClientRequestSolutionStep"><span class="pre">ClientRequestSolutionStep</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#ClientRequestSolution.current_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.ClientRequestSolution.current_step" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The first step in the remainder. Returns None if no steps remain.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.ClientRequestSolution.goto_next_step">
 <span class="sig-name descname"><span class="pre">goto_next_step</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/engine.html#ClientRequestSolution.goto_next_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.ClientRequestSolution.goto_next_step" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Pops the first step off the remaining steps.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.ClientRequestSolution.is_finished">
 <span class="sig-name descname"><span class="pre">is_finished</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#ClientRequestSolution.is_finished"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.ClientRequestSolution.is_finished" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if list of steps is empty.</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="pygissim.engine.ClientRequestSolutionStep">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pygissim.engine.</span></span><span class="sig-name descname"><span class="pre">ClientRequestSolutionStep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">st_calculator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'ServiceTimeCalculator'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_response</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chatter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/engine.html#ClientRequestSolutionStep"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.ClientRequestSolutionStep" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pygissim.engine.</span></span><span class="sig-name descname"><span class="pre">ClientRequestSolutionStep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">st_calculator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.engine.ServiceTimeCalculator" title="pygissim.engine.ServiceTimeCalculator"><span class="pre">ServiceTimeCalculator</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_response</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chatter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/engine.html#ClientRequestSolutionStep"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.ClientRequestSolutionStep" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Read-only data class capturing a step needed to finish a ClientRequest.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pygissim.engine.ClientRequestSolutionStep.chatter">
 <span class="sig-name descname"><span class="pre">chatter</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#pygissim.engine.ClientRequestSolutionStep.chatter" title="Link to this definition"></a></dt>
@@ -377,6 +410,12 @@ The channel count for them is an arbitrarily large number.</p>
 <dd class="field-odd"><p><strong>count</strong> – Sets the number of virtual cores assigned to this virtual machine. Will be ignored if not a virtual host.</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pygissim.engine.ComputeNode.specint_rate2017_per_core">
+<span class="sig-name descname"><span class="pre">specint_rate2017_per_core</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#ComputeNode.specint_rate2017_per_core"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.ComputeNode.specint_rate2017_per_core" title="Link to this definition"></a></dt>
+<dd><p>Per-core performance of the hardware. Including threading factor.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -577,6 +616,7 @@ This takes the data size and determines how many milliseconds it would take to t
 <dt class="sig sig-object py" id="pygissim.engine.DataSourceType">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pygissim.engine.</span></span><span class="sig-name descname"><span class="pre">DataSourceType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/engine.html#DataSourceType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.DataSourceType" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>Enumeration of different data source types. Not fully integrated (yet).</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pygissim.engine.DataSourceType.BIG">
 <span class="sig-name descname"><span class="pre">BIG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'big'</span></em><a class="headerlink" href="#pygissim.engine.DataSourceType.BIG" title="Link to this definition"></a></dt>
@@ -615,13 +655,14 @@ This takes the data size and determines how many milliseconds it would take to t
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.DataSourceType.from_str">
 <em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pygissim.engine.DataSourceType" title="pygissim.engine.DataSourceType"><span class="pre">DataSourceType</span></a></span></span><a class="reference internal" href="_modules/pygissim/engine.html#DataSourceType.from_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.DataSourceType.from_str" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Convenience method for creating from string representation.</p>
+</dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="pygissim.engine.HardwareDef">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pygissim.engine.</span></span><span class="sig-name descname"><span class="pre">HardwareDef</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">processor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cores</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">specint_rate2017</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threading</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.engine.ThreadingModel" title="pygissim.engine.ThreadingModel"><span class="pre">ThreadingModel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">baseline_per_core</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/engine.html#HardwareDef"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.HardwareDef" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pygissim.engine.</span></span><span class="sig-name descname"><span class="pre">HardwareDef</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">processor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cores</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">specint_rate2017</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">baseline_per_core</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/engine.html#HardwareDef"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.HardwareDef" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Read-only data class representing a hardware platform.</p>
 <dl class="field-list simple">
@@ -630,7 +671,6 @@ This takes the data size and determines how many milliseconds it would take to t
 <li><p><strong>processor</strong> – A name for the hardware. It must be a unique string in a <a class="reference internal" href="#pygissim.pygissim.Design" title="pygissim.pygissim.Design"><code class="xref py py-class docutils literal notranslate"><span class="pre">pygissim.pygissim.Design</span></code></a>.</p></li>
 <li><p><strong>cores</strong> – The number of physical cores in the hardware platform.</p></li>
 <li><p><strong>specint_rate2017</strong> – The performance of the hardware from <a class="reference external" href="https://www.spec.org/cpu2017/results/rint2017/">https://www.spec.org/cpu2017/results/rint2017/</a></p></li>
-<li><p><strong>threading</strong> – The threading model will be used when calculating service times.</p></li>
 </ul>
 </dd>
 </dl>
@@ -657,13 +697,8 @@ This takes the data size and determines how many milliseconds it would take to t
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.HardwareDef.specint_rate2017_per_core">
 <span class="sig-name descname"><span class="pre">specint_rate2017_per_core</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#HardwareDef.specint_rate2017_per_core"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.HardwareDef.specint_rate2017_per_core" title="Link to this definition"></a></dt>
-<dd><p>Per-core performance of the hardware. Includes factor for <a class="reference internal" href="#pygissim.engine.ThreadingModel" title="pygissim.engine.ThreadingModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">ThreadingModel</span></code></a>.</p>
+<dd><p>Per-core performance of the hardware.</p>
 </dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pygissim.engine.HardwareDef.threading">
-<span class="sig-name descname"><span class="pre">threading</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#pygissim.engine.ThreadingModel" title="pygissim.engine.ThreadingModel"><span class="pre">ThreadingModel</span></a></em><a class="headerlink" href="#pygissim.engine.HardwareDef.threading" title="Link to this definition"></a></dt>
-<dd></dd></dl>
 
 </dd></dl>
 
@@ -1149,6 +1184,23 @@ Hyperthreaded represents 2:1 threads to cores. Used for <a class="reference inte
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="pygissim.engine.Transaction">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pygissim.engine.</span></span><span class="sig-name descname"><span class="pre">Transaction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">clock</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">workflow</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.engine.Workflow" title="pygissim.engine.Workflow"><span class="pre">Workflow</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/engine.html#Transaction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.Transaction" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A way to identify which group of <a class="reference internal" href="#pygissim.engine.ClientRequest" title="pygissim.engine.ClientRequest"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClientRequest</span></code></a> are all satisfying one triggering of a <a class="reference internal" href="#pygissim.engine.Workflow" title="pygissim.engine.Workflow"><code class="xref py py-class docutils literal notranslate"><span class="pre">Workflow</span></code></a>.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pygissim.engine.Transaction.next_id">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">next_id</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#Transaction.next_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.Transaction.next_id" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Next integer id in sequence.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="pygissim.engine.ValidationMessage">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pygissim.engine.</span></span><span class="sig-name descname"><span class="pre">ValidationMessage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/engine.html#ValidationMessage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.ValidationMessage" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
@@ -1240,30 +1292,81 @@ the type of processor, either a Connection or a ComputeNode.</p>
 <dt class="sig sig-object py" id="pygissim.engine.Workflow">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pygissim.engine.</span></span><span class="sig-name descname"><span class="pre">Workflow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">desc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.engine.WorkflowType" title="pygissim.engine.WorkflowType"><span class="pre">WorkflowType</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">definition</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.engine.WorkflowDef" title="pygissim.engine.WorkflowDef"><span class="pre">WorkflowDef</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_count</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">productivity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tph</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/engine.html#Workflow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.Workflow" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Represents a configuration of a <a class="reference internal" href="#pygissim.engine.WorkflowDef" title="pygissim.engine.WorkflowDef"><code class="xref py py-class docutils literal notranslate"><span class="pre">WorkflowDef</span></code></a>, with productivity stats.
+The configuration of the productivity will determine how frequently this Workflow is triggered.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – A descriptive name.</p></li>
+<li><p><strong>desc</strong> – Additional descriptive text</p></li>
+<li><p><strong>definition</strong> – The workflow definition (chains, steps)</p></li>
+<li><p><strong>type</strong> – Whether this workflow’s transaction rate is calculated from numbers of users or tph.</p></li>
+<li><p><strong>user_count</strong> – The number of users. Only applies to WorkflowType.USER.</p></li>
+<li><p><strong>productivity</strong> – The number of transactions per minute per user. Only applies to WorkflowType.USER.</p></li>
+<li><p><strong>tph</strong> – The transactions per hour. Only applies to WorkflowType.TRANSACTIONAL.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.Workflow.calculate_next_event_time">
 <span class="sig-name descname"><span class="pre">calculate_next_event_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">clock</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#Workflow.calculate_next_event_time"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.Workflow.calculate_next_event_time" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>transaction_rate is in transactions per hour, while the time between events is in ms.
+This function calculates the time between transactions and then applies a normalized random factor
+which allows a more “natural” arrival of requests.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>clock</strong> – The current simulation time.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The next time this Workflow will execute.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.Workflow.create_client_requests">
-<span class="sig-name descname"><span class="pre">create_client_requests</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">network</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pygissim.engine.Connection" title="pygissim.engine.Connection"><span class="pre">Connection</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clock</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pygissim.engine.ClientRequestGroup" title="pygissim.engine.ClientRequestGroup"><span class="pre">ClientRequestGroup</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pygissim.engine.ClientRequest" title="pygissim.engine.ClientRequest"><span class="pre">ClientRequest</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#Workflow.create_client_requests"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.Workflow.create_client_requests" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">create_client_requests</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">network</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pygissim.engine.Connection" title="pygissim.engine.Connection"><span class="pre">Connection</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clock</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pygissim.engine.Transaction" title="pygissim.engine.Transaction"><span class="pre">Transaction</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pygissim.engine.ClientRequest" title="pygissim.engine.ClientRequest"><span class="pre">ClientRequest</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#Workflow.create_client_requests"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.Workflow.create_client_requests" title="Link to this definition"></a></dt>
+<dd><p>When a transaction starts, each chain needs to be solved for. This will result in one or more ClientRequests.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>network</strong> – The set of Connections that represent the network.</p></li>
+<li><p><strong>clock</strong> – The current simulation time.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.Workflow.is_valid">
 <span class="sig-name descname"><span class="pre">is_valid</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#Workflow.is_valid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.Workflow.is_valid" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if validate returns no messages.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.Workflow.transaction_rate">
 <span class="sig-name descname"><span class="pre">transaction_rate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#Workflow.transaction_rate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.Workflow.transaction_rate" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The number of transactions per hour.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.Workflow.validate">
 <span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pygissim.engine.ValidationMessage" title="pygissim.engine.ValidationMessage"><span class="pre">ValidationMessage</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#Workflow.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.Workflow.validate" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Tests the transaction rate and the validity of the definition.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of ValidationMessages. An empty list indicates the Workflow is valid.</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -1271,45 +1374,86 @@ the type of processor, either a Connection or a ComputeNode.</p>
 <dt class="sig sig-object py" id="pygissim.engine.WorkflowChain">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pygissim.engine.</span></span><span class="sig-name descname"><span class="pre">WorkflowChain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">desc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">steps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pygissim.engine.WorkflowDefStep" title="pygissim.engine.WorkflowDefStep"><span class="pre">WorkflowDefStep</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service_providers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#pygissim.engine.ServiceProvider" title="pygissim.engine.ServiceProvider"><span class="pre">ServiceProvider</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">additional_client_step</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.engine.WorkflowDefStep" title="pygissim.engine.WorkflowDefStep"><span class="pre">WorkflowDefStep</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/engine.html#WorkflowChain"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.WorkflowChain" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Represents a series of steps that define the parts of a Workflow.
+Most Workflows will have more than one chain of steps that are independent from each other.</p>
+<p>Example: a mobile WorkflowDef might specify (1) fetching features from a hosted service and (2) fetching basemap tiles.</p>
+<p>Example WorkflowChain: ArcGIS Field Maps &gt; Web Adaptor &gt; Portal &gt; AGS &gt; Relational DataStore</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.WorkflowChain.all_required_service_types">
 <span class="sig-name descname"><span class="pre">all_required_service_types</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Set</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#WorkflowChain.all_required_service_types"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.WorkflowChain.all_required_service_types" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>All of the service types specified by steps.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.WorkflowChain.configured_service_types">
 <span class="sig-name descname"><span class="pre">configured_service_types</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Set</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#WorkflowChain.configured_service_types"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.WorkflowChain.configured_service_types" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>All of the service types specified by the configured dict of <a class="reference internal" href="#pygissim.engine.ServiceProvider" title="pygissim.engine.ServiceProvider"><code class="xref py py-class docutils literal notranslate"><span class="pre">ServiceProvider</span></code></a>.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.WorkflowChain.is_valid">
 <span class="sig-name descname"><span class="pre">is_valid</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#WorkflowChain.is_valid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.WorkflowChain.is_valid" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if validate returns no messages.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.WorkflowChain.missing_service_providers">
 <span class="sig-name descname"><span class="pre">missing_service_providers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#WorkflowChain.missing_service_providers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.WorkflowChain.missing_service_providers" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>The service types needed by the chain, but not available in the ServiceProviders.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.WorkflowChain.service_provider_for_step">
 <span class="sig-name descname"><span class="pre">service_provider_for_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">step</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.engine.WorkflowDefStep" title="pygissim.engine.WorkflowDefStep"><span class="pre">WorkflowDefStep</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pygissim.engine.ServiceProvider" title="pygissim.engine.ServiceProvider"><span class="pre">ServiceProvider</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#WorkflowChain.service_provider_for_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.WorkflowChain.service_provider_for_step" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The configured ServiceProvider that matches the service type of a step. Returns None if no ServiceProvider matches the service type of the step.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.WorkflowChain.service_provider_for_step_at_index">
 <span class="sig-name descname"><span class="pre">service_provider_for_step_at_index</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pygissim.engine.ServiceProvider" title="pygissim.engine.ServiceProvider"><span class="pre">ServiceProvider</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#WorkflowChain.service_provider_for_step_at_index"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.WorkflowChain.service_provider_for_step_at_index" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The configured ServiceProvider that matches the service type of the step at an index. Returns None for an invalid index or no configured ServiceProvider for the step.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.WorkflowChain.update_client_step">
 <span class="sig-name descname"><span class="pre">update_client_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client_step</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.engine.WorkflowDefStep" title="pygissim.engine.WorkflowDefStep"><span class="pre">WorkflowDefStep</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/engine.html#WorkflowChain.update_client_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.WorkflowChain.update_client_step" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Convenience method to replace the first step in the chain.
+Useful when multiple WorkflowChains differ only in their client.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>client_step</strong> – The step that will replace the first step in this chain.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.WorkflowChain.validate">
 <span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pygissim.engine.ValidationMessage" title="pygissim.engine.ValidationMessage"><span class="pre">ValidationMessage</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#WorkflowChain.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.WorkflowChain.validate" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Method that evaluates the validity of the configuration of this WorkflowChain.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Messages indicating invalid configuration.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list[<a class="reference internal" href="#pygissim.engine.ValidationMessage" title="pygissim.engine.ValidationMessage">ValidationMessage</a>]</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -1317,32 +1461,57 @@ the type of processor, either a Connection or a ComputeNode.</p>
 <dt class="sig sig-object py" id="pygissim.engine.WorkflowDef">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pygissim.engine.</span></span><span class="sig-name descname"><span class="pre">WorkflowDef</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">desc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">think_time_s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chains</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pygissim.engine.WorkflowChain" title="pygissim.engine.WorkflowChain"><span class="pre">WorkflowChain</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/engine.html#WorkflowDef"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.WorkflowDef" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Represents a collection of parallel WorkflowChains and the expected think time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – A descriptive name</p></li>
+<li><p><strong>desc</strong> – Additional descriptive text</p></li>
+<li><p><strong>think_time_s</strong> – The expected amount of time in seconds that a user will be able to think before issuing the next request</p></li>
+<li><p><strong>chains</strong> – A list of WorkflowChains</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.WorkflowDef.all_required_service_types">
 <span class="sig-name descname"><span class="pre">all_required_service_types</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Set</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#WorkflowDef.all_required_service_types"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.WorkflowDef.all_required_service_types" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of all service types needed by all WorkflowChain steps</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.WorkflowDef.assign_service_provider">
 <span class="sig-name descname"><span class="pre">assign_service_provider</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">service_provider</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.engine.ServiceProvider" title="pygissim.engine.ServiceProvider"><span class="pre">ServiceProvider</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/engine.html#WorkflowDef.assign_service_provider"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.WorkflowDef.assign_service_provider" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Assigns a ServiceProvider to all of the chains.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.WorkflowDef.clear_service_providers">
 <span class="sig-name descname"><span class="pre">clear_service_providers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/engine.html#WorkflowDef.clear_service_providers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.WorkflowDef.clear_service_providers" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Removes all ServiceProviders for all workflow chains.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.WorkflowDef.missing_service_providers">
 <span class="sig-name descname"><span class="pre">missing_service_providers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#WorkflowDef.missing_service_providers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.WorkflowDef.missing_service_providers" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of the service types needed by one or more chains that are not satisfied by any assigned ServiceProvider.</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="pygissim.engine.WorkflowDefStep">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pygissim.engine.</span></span><span class="sig-name descname"><span class="pre">WorkflowDefStep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chatter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">request_size_kb</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">response_size_kb</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_source_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.engine.DataSourceType" title="pygissim.engine.DataSourceType"><span class="pre">pygissim.engine.DataSourceType</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_pct</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/engine.html#WorkflowDefStep"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.WorkflowDefStep" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pygissim.engine.</span></span><span class="sig-name descname"><span class="pre">WorkflowDefStep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chatter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">request_size_kb</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">response_size_kb</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_source_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.engine.DataSourceType" title="pygissim.engine.DataSourceType"><span class="pre">DataSourceType</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_pct</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/engine.html#WorkflowDefStep"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.WorkflowDefStep" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Read-only class capturing a step in a workflow.</p>
+<p>Service time is relative to the baseline_per_core in <a class="reference internal" href="#pygissim.engine.HardwareDef" title="pygissim.engine.HardwareDef"><code class="xref py py-class docutils literal notranslate"><span class="pre">HardwareDef</span></code></a>.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pygissim.engine.WorkflowDefStep.cache_pct">
 <span class="sig-name descname"><span class="pre">cache_pct</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#pygissim.engine.WorkflowDefStep.cache_pct" title="Link to this definition"></a></dt>
@@ -1394,6 +1563,11 @@ the type of processor, either a Connection or a ComputeNode.</p>
 <dt class="sig sig-object py" id="pygissim.engine.WorkflowType">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pygissim.engine.</span></span><span class="sig-name descname"><span class="pre">WorkflowType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/engine.html#WorkflowType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.WorkflowType" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>Enumeration of workflow types.</p>
+<ul class="simple">
+<li><p>USER indicates that transaction rates will be calculated from user counts and productivity.</p></li>
+<li><p>TRANSACTIONAL indicates that transaction rates will be entered directly as transactions per hour.</p></li>
+</ul>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pygissim.engine.WorkflowType.TRANSACTIONAL">
 <span class="sig-name descname"><span class="pre">TRANSACTIONAL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'transactional'</span></em><a class="headerlink" href="#pygissim.engine.WorkflowType.TRANSACTIONAL" title="Link to this definition"></a></dt>
@@ -1639,12 +1813,43 @@ The source and destination will be this Zone.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="pygissim.engine.create_solution">
 <span class="sig-prename descclassname"><span class="pre">pygissim.engine.</span></span><span class="sig-name descname"><span class="pre">create_solution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chain</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.engine.WorkflowChain" title="pygissim.engine.WorkflowChain"><span class="pre">WorkflowChain</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_network</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pygissim.engine.Connection" title="pygissim.engine.Connection"><span class="pre">Connection</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pygissim.engine.ClientRequestSolution" title="pygissim.engine.ClientRequestSolution"><span class="pre">ClientRequestSolution</span></a></span></span><a class="reference internal" href="_modules/pygissim/engine.html#create_solution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.create_solution" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Creates a ClientRequestSolution for one WorkflowChain.</p>
+<p>This is a key part of pygissim! The request is solved by hopping from ServiceProvider to ServiceProvider.</p>
+<ol class="arabic simple">
+<li><p>The request passes through the WorkflowChain in order</p></li>
+<li><p>The request passes back through the WorkflowChain in reverse order, back to the caller.</p></li>
+</ol>
+<p>For every step, the request is processed by the ServiceProvider,
+and then may take zero or more network hops to get to the next ServiceProvider.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>chain</strong> – The WorkflowChain that is being solved for.</p></li>
+<li><p><strong>in_network</strong> – The list of Connections that represent the network.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pygissim.engine.find_route">
 <span class="sig-prename descclassname"><span class="pre">pygissim.engine.</span></span><span class="sig-name descname"><span class="pre">find_route</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.engine.Zone" title="pygissim.engine.Zone"><span class="pre">Zone</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.engine.Zone" title="pygissim.engine.Zone"><span class="pre">Zone</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_network</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pygissim.engine.Connection" title="pygissim.engine.Connection"><span class="pre">Connection</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pygissim.engine.Route" title="pygissim.engine.Route"><span class="pre">Route</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#find_route"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.find_route" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Finds a path through the network from one Zone to another.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start</strong> – The Zone to start finding from.</p></li>
+<li><p><strong>end</strong> – The Zone to find the shortest path to.</p></li>
+</ul>
+</dd>
+<dt class="field-even">In_network<span class="colon">:</span></dt>
+<dd class="field-even"><p>The list of Connections that represents the network.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The shortest route from start to end. Returns None if no route could be found.</p>
+</dd>
+</dl>
+</dd></dl>
 
 </section>
 <section id="module-pygissim.util">

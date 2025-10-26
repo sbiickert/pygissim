@@ -955,12 +955,10 @@ class MultiQueue:
 # `8b d8'8b d8' `8b  d8' 88 `88. 88 `88.
 #  `8b8' `8d8'   `Y88P'  88   YD YP   YD
 
-from enum import Enum
-from dataclasses import dataclass
-from typing import Optional, Set, Tuple
 
 # ------------------------------------------------------------
 class DataSourceType(Enum):
+    """ Enumeration of different data source types. Not fully integrated (yet). """
     RELATIONAL = 'relational'
     OBJECT = 'object'
     FILE = 'file'
@@ -971,6 +969,7 @@ class DataSourceType(Enum):
 
     @classmethod
     def from_str(cls, value: str) -> 'DataSourceType':
+        """ Convenience method for creating from string representation. """
         match value.lower():
             case 'relational': return DataSourceType.RELATIONAL
             case 'object': return DataSourceType.OBJECT
@@ -982,12 +981,21 @@ class DataSourceType(Enum):
 
 # ------------------------------------------------------------
 class WorkflowType(Enum):
+    """ Enumeration of workflow types.
+    
+    - USER indicates that transaction rates will be calculated from user counts and productivity.
+    - TRANSACTIONAL indicates that transaction rates will be entered directly as transactions per hour.
+    """
     USER = 'user'
     TRANSACTIONAL = 'transactional'
 
 # ------------------------------------------------------------
 @dataclass(frozen=True)
 class WorkflowDefStep:
+    """ Read-only class capturing a step in a workflow.
+    
+    Service time is relative to the baseline_per_core in :class:`HardwareDef`.
+    """
     name:str
     description: str
     service_type: str
@@ -1001,6 +1009,7 @@ class WorkflowDefStep:
 # ------------------------------------------------------------
 @dataclass(frozen=True)
 class ClientRequestSolutionStep:
+    """ Read-only data class capturing a step needed to finish a ClientRequest. """
     st_calculator: 'ServiceTimeCalculator'
     is_response: bool
     data_size: int
@@ -1009,6 +1018,13 @@ class ClientRequestSolutionStep:
 
 # ------------------------------------------------------------
 class WorkflowChain:
+    """ Represents a series of steps that define the parts of a Workflow.
+    Most Workflows will have more than one chain of steps that are independent from each other.
+    
+    Example: a mobile WorkflowDef might specify (1) fetching features from a hosted service and (2) fetching basemap tiles.
+
+    Example WorkflowChain: ArcGIS Field Maps > Web Adaptor > Portal > AGS > Relational DataStore
+    """
     def __init__(self, name: str, desc: str, 
                  steps: list[WorkflowDefStep], 
                  service_providers: dict[str,ServiceProvider],
@@ -1021,9 +1037,18 @@ class WorkflowChain:
             self.steps.insert(0, additional_client_step)
 
     def is_valid(self) -> bool:
+        """ 
+        :returns: True if validate returns no messages.
+        :rtype: bool
+        """
         return len(self.validate()) == 0
     
     def validate(self) -> list[ValidationMessage]:
+        """ Method that evaluates the validity of the configuration of this WorkflowChain.
+        
+        :returns: Messages indicating invalid configuration.
+        :rtype: list[ValidationMessage]
+        """
         result: list[ValidationMessage] = []
        
         msp: list[str] = self.missing_service_providers()
@@ -1034,33 +1059,54 @@ class WorkflowChain:
         return result
 
     def update_client_step(self, client_step: WorkflowDefStep):
+        """ Convenience method to replace the first step in the chain.
+        Useful when multiple WorkflowChains differ only in their client.
+        
+        :param client_step: The step that will replace the first step in this chain.
+        """
         self.steps.pop(0)
         self.steps.insert(0, client_step)
 
     def all_required_service_types(self) -> Set[str]:
+        """ All of the service types specified by steps. """
         types: list[str] = list(map(lambda step: (step.service_type), self.steps))
         return set(types)
     
     def configured_service_types(self) -> Set[str]:
+        """ All of the service types specified by the configured dict of :class:`ServiceProvider`."""
         return set(self.service_providers.keys())
     
     def missing_service_providers(self) -> list[str]:
+        """ The service types needed by the chain, but not available in the ServiceProviders. """
         all_req: Set[str] = self.all_required_service_types()
         configured: Set[str] = self.configured_service_types()
         return list(all_req.difference(configured))
     
     def service_provider_for_step(self, step: WorkflowDefStep) -> Optional[ServiceProvider]:
+        """ 
+        :returns: The configured ServiceProvider that matches the service type of a step. Returns None if no ServiceProvider matches the service type of the step. 
+        """
         if step.service_type in self.service_providers.keys():
             return self.service_providers[step.service_type]
         return None
     
     def service_provider_for_step_at_index(self, index: int) -> Optional[ServiceProvider]:
+        """
+        :returns: The configured ServiceProvider that matches the service type of the step at an index. Returns None for an invalid index or no configured ServiceProvider for the step.
+        """
         if index < 0 or index >= len(self.steps): return None
         return self.service_provider_for_step(self.steps[index])
 
 
 # ------------------------------------------------------------
 class WorkflowDef:
+    """ Represents a collection of parallel WorkflowChains and the expected think time. 
+    
+    :param name: A descriptive name
+    :param desc: Additional descriptive text
+    :param think_time_s: The expected amount of time in seconds that a user will be able to think before issuing the next request
+    :param chains: A list of WorkflowChains
+    """
     def __init__(self, name: str, desc: str, think_time_s: int, chains: list[WorkflowChain]):
         self.name: str = name
         self.description: str = desc
@@ -1068,16 +1114,23 @@ class WorkflowDef:
         self.chains: list[WorkflowChain] = chains
 
     def all_required_service_types(self) -> Set[str]:
+        """
+        :returns: A list of all service types needed by all WorkflowChain steps
+        """
         result: Set[str] = set()
         for chain in self.chains:
             result = result.union(chain.all_required_service_types())
         return result
     
     def assign_service_provider(self, service_provider: ServiceProvider):
+        """ Assigns a ServiceProvider to all of the chains. """
         for chain in self.chains:
             chain.service_providers[service_provider.service.service_type] = service_provider
     
     def missing_service_providers(self) -> list[str]:
+        """
+        :returns: A list of the service types needed by one or more chains that are not satisfied by any assigned ServiceProvider.
+        """
         result: Set[str] = set()
         for chain in self.chains:
             # m = chain.missing_service_providers()
@@ -1086,71 +1139,111 @@ class WorkflowDef:
         return list(result)
     
     def clear_service_providers(self):
+        """ Removes all ServiceProviders for all workflow chains. """
         for chain in self.chains:
             chain.service_providers.clear()
 
 # ------------------------------------------------------------
-class ClientRequestGroup:
+class Transaction:
+    """ A way to identify which group of :class:`ClientRequest` are all satisfying one triggering of a :class:`Workflow`. """
     _next_id: int = 0
 
     @classmethod
     def next_id(cls) -> int:
+        """
+        :returns: Next integer id in sequence.
+        """
         cls._next_id = cls._next_id + 1
         return cls._next_id
 
     def __init__(self, clock: int, workflow: 'Workflow'):
-        self.id: int = ClientRequestGroup.next_id()
+        """
+        :param clock: The current simulation time.
+        :param workflow: The workflow that the Transaction is being generated from.
+        """
+        self.id: int = Transaction.next_id()
         self.request_clock: int = clock
         self.workflow: Workflow = workflow
 
 
 # ------------------------------------------------------------
 class ClientRequestSolution:
-    def __init__(self, steps: list[ClientRequestSolutionStep] = []):
-        self.steps: list[ClientRequestSolutionStep] = steps
+    """ When a Workflow is executed, a ClientRequestSolution is created for each WorkflowChain.
+    The solution is then assigned to the :class:`ClientRequest`.
+
+    A ClientRequestSolution is processed one step at a time. As steps are finished, they are popped
+    off the front of the list. The solution is finished when there are no more steps to complete.
+    """
+    def __init__(self, steps: Optional[list[ClientRequestSolutionStep]] = None):
+        self.steps: list[ClientRequestSolutionStep] = []            
+        if steps is not None:
+            self.steps = steps
 
     def is_finished(self) -> bool:
+        """ :returns: True if list of steps is empty. """
         return len(self.steps) == 0
     
     def current_step(self) -> Optional[ClientRequestSolutionStep]:
+        """ :returns: The first step in the remainder. Returns None if no steps remain. """
         if len(self.steps) == 0: return None
         return self.steps[0]
     
     def goto_next_step(self):
+        """ Pops the first step off the remaining steps. """
         if len(self.steps) > 0:
             self.steps.pop(0) # Drop first item. 
     
 
 # ------------------------------------------------------------
 class ClientRequest:
+    """ Represents a single request originating from a configured Workflow.
+    ClientRequests are created by the simulator, so not usually created by other means.
+    
+    :param name: Usually auto-generated by next_name
+    :param desc: Additional descriptive text. Usually empty.
+    :param wf_name: The name of the workflow that caused this request.
+    :param request_clock: The simulation time when the request was created.
+    :param solution: The ClientRequestSolution that defines the work to be done.
+    :param tx_id: A Workflow execution can create a set of ClientRequests. This is the Transaction id.
+    """
     _next_id: int = 0
 
     @classmethod
     def next_id(cls) -> int:
+        """ Increments and returns the next in a sequence of numbers. """
         cls._next_id = cls._next_id + 1
         return cls._next_id
     
     @classmethod
     def next_name(cls) -> str:
+        """ Creates a new unique name based on next_id """
         return f'CR-{cls.next_id()}'
     
     def __init__(self, name: str, desc: str, wf_name: str,
-                 request_clock: int, solution: ClientRequestSolution, group_id: int):
+                 request_clock: int, solution: ClientRequestSolution, tx_id: int):
         self.name: str = name
         self.description: str = desc
         self.workflow_name: str = wf_name
         self.request_clock: int = request_clock
         self.solution: ClientRequestSolution = solution
-        self.group_id: int = group_id
+        self.tx_id: int = tx_id
         self.accumulating_metrics: list[RequestMetric] = []
 
     def __eq__(self, other):
         return self.name == other.name
     
     def is_finished(self) -> bool:
+        """ Convenience function.
+        
+        :returns: True if the :class:`ClientRequestSolution` solution is finished.
+        """
         return self.solution.is_finished()
     
     def summary_metric(self) -> RequestMetric:
+        """ A ClientRequest accumulates a metric after every step. 
+        
+        :returns: A single RequestMetric that sums all of the accumulated metrics to date.
+        """
         clock: int = 0
         st: int = 0
         qt: int = 0
@@ -1167,6 +1260,17 @@ class ClientRequest:
 
 # ------------------------------------------------------------
 class Workflow:
+    """ Represents a configuration of a :class:`WorkflowDef`, with productivity stats.
+    The configuration of the productivity will determine how frequently this Workflow is triggered.
+    
+    :param name: A descriptive name.
+    :param desc: Additional descriptive text
+    :param definition: The workflow definition (chains, steps)
+    :param type: Whether this workflow's transaction rate is calculated from numbers of users or tph.
+    :param user_count: The number of users. Only applies to WorkflowType.USER.
+    :param productivity: The number of transactions per minute per user. Only applies to WorkflowType.USER.
+    :param tph: The transactions per hour. Only applies to WorkflowType.TRANSACTIONAL.
+    """
     def __init__(self, name: str, desc: str, 
                  type: WorkflowType, definition: WorkflowDef, 
                  user_count: int = 0, productivity: int = 0, tph: int = 0):
@@ -1182,13 +1286,21 @@ class Workflow:
         return f'{self.type} {self.definition.name} workflow with tx rate {self.transaction_rate()}'
 
     def transaction_rate(self) -> int:
+        """
+        :returns: The number of transactions per hour. 
+        """
         if self.type == WorkflowType.USER:
             return self.user_count * self.productivity * 60
         else:
             return self.tph
     
-    def create_client_requests(self, network: list[Connection], clock: int) -> Tuple[ClientRequestGroup, list[ClientRequest]]:
-        group: ClientRequestGroup = ClientRequestGroup(clock, self)
+    def create_client_requests(self, network: list[Connection], clock: int) -> Tuple[Transaction, list[ClientRequest]]:
+        """ When a transaction starts, each chain needs to be solved for. This will result in one or more ClientRequests.
+        
+        :param network: The set of Connections that represent the network.
+        :param clock: The current simulation time.
+        """
+        tx: Transaction = Transaction(clock, self)
         requests: list[ClientRequest] = []
         for chain in self.definition.chains:
             # for step in chain.steps:
@@ -1199,21 +1311,31 @@ class Workflow:
             #     print(step.st_calculator.name) # type: ignore
 
             request: ClientRequest = ClientRequest(ClientRequest.next_name(), desc='', wf_name=self.name,
-                                                   request_clock=clock, solution=solution, group_id=group.id)
+                                                   request_clock=clock, solution=solution, tx_id=tx.id)
             requests.append(request)
-        return (group,requests)
+        return (tx,requests)
     
     def calculate_next_event_time(self, clock: int) -> int:
-        # transaction_rate is in transactions per hour
-        # time between events is in ms
+        """ transaction_rate is in transactions per hour, while the time between events is in ms.
+        This function calculates the time between transactions and then applies a normalized random factor
+        which allows a more "natural" arrival of requests.
+
+        :param clock: The current simulation time.
+        :returns: The next time this Workflow will execute.
+        """
         ms_per_event: float = 3600000.0 / float(self.transaction_rate())
         r_val: int = int(random.normal(loc=ms_per_event, scale=ms_per_event*0.25, size=(1,1))[0][0])
         return clock + r_val
     
     def is_valid(self) -> bool:
+        """ :returns: True if validate returns no messages. """
         return len(self.validate()) == 0
 
     def validate(self) -> list[ValidationMessage]:
+        """ Tests the transaction rate and the validity of the definition. 
+        
+        :returns: A list of ValidationMessages. An empty list indicates the Workflow is valid.
+        """
         result: list[ValidationMessage] = []
 
         if len(self.definition.chains) == 0:
@@ -1238,6 +1360,19 @@ class Workflow:
 
 # ------------------------------------------------------------
 def create_solution(chain: WorkflowChain, in_network: list[Connection]) -> ClientRequestSolution:
+    """ Creates a ClientRequestSolution for one WorkflowChain. 
+
+    This is a key part of pygissim! The request is solved by hopping from ServiceProvider to ServiceProvider.
+
+    1. The request passes through the WorkflowChain in order
+    2. The request passes back through the WorkflowChain in reverse order, back to the caller.
+
+    For every step, the request is processed by the ServiceProvider,
+    and then may take zero or more network hops to get to the next ServiceProvider.
+    
+    :param chain: The WorkflowChain that is being solved for.
+    :param in_network: The list of Connections that represent the network.
+    """
     if chain.is_valid() == False:
         raise ValueError(f'Workflow Chain {chain.name} passed to create_solution must be valid')
     
@@ -1328,6 +1463,13 @@ def create_solution(chain: WorkflowChain, in_network: list[Connection]) -> Clien
 
 # ------------------------------------------------------------
 def find_route(start: Zone, end: Zone, in_network: list[Connection]) -> Optional[Route]:
+    """ Finds a path through the network from one Zone to another.
+    
+    :param start: The Zone to start finding from.
+    :param end: The Zone to find the shortest path to.
+    :in_network: The list of Connections that represents the network.
+    :returns: The shortest route from start to end. Returns None if no route could be found.
+    """
     if not start.is_a_source(in_network) or not end.is_a_destination(in_network):
         print('Start zone is not a source in network')
         return None
@@ -1348,6 +1490,15 @@ def find_route(start: Zone, end: Zone, in_network: list[Connection]) -> Optional
     return Route(path)
 
 # ------------------------------------------------------------
+""" Private function called recursively to find the shortest route.
+
+:param start: The Zone to start finding from.
+:param end: The Zone to find the shortest path to.
+:in_network: The list of Connections that represents the network.
+:param visited: The set of Zones that has already been visited by this algorithm.
+:param path: The list of Connections that represent the partly-formed route.
+:returns: The list of Connections representing a route from start to end.
+"""
 def _find_route_dfs(start: Zone, end: Zone, 
                 in_network: list[Connection], 
                 visited: Set[Zone], 
