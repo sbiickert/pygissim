@@ -70,6 +70,14 @@
              
   <h1>Source code for pygissim.pygissim</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">pygissim.py</span>
+
+<span class="sd">The higher-level classes: Design and Simulator.</span>
+
+<span class="sd">Uses the pygissim.engine extensively to build a simulation design and then run it.</span>
+<span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Tuple</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">pygissim.engine</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
@@ -77,6 +85,15 @@
 <div class="viewcode-block" id="Design">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Design</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; The Design is the setup of the infrastructure (network, compute) and the workflows that define</span>
+<span class="sd">    the system that is being simulated.</span>
+
+<span class="sd">    :param name: A descriptive name</span>
+<span class="sd">    :param desc: Additional descriptive text</span>
+<span class="sd">    :param network: The list of Connections that will represent the network</span>
+<span class="sd">    :param services: The dictionary of all known service types (keys) and ServiceDefs (values)</span>
+<span class="sd">    :param workflow_definitions: The workflows (chains, steps) that are defined in the design.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">desc</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> 
                  <span class="n">zones</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Zone</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
                  <span class="n">network</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Connection</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
@@ -97,6 +114,10 @@
 <div class="viewcode-block" id="Design.compute_nodes">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.compute_nodes">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">ComputeNode</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; The _compute_nodes private variable only holds physical compute nodes.</span>
+<span class="sd">        </span>
+<span class="sd">        :returns: All ComputeNodes, including virtual nodes hosted on physical servers.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">result</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ComputeNode</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_nodes</span><span class="p">:</span>
@@ -113,12 +134,21 @@
 <div class="viewcode-block" id="Design.is_valid">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.is_valid">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">is_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">        :returns: True if validate returns no messages.</span>
+<span class="sd">        :rtype: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">())</span> <span class="o">==</span> <span class="mi">0</span></div>
 
 
 <div class="viewcode-block" id="Design.validate">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.validate">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">ValidationMessage</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Method that evaluates the validity of the configuration of this Design.</span>
+<span class="sd">        </span>
+<span class="sd">        :returns: Messages indicating invalid configuration.</span>
+<span class="sd">        :rtype: list[ValidationMessage]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">messages</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ValidationMessage</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="n">all_sps_valid</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">sp</span><span class="p">:</span> <span class="p">(</span><span class="n">sp</span><span class="o">.</span><span class="n">is_valid</span><span class="p">()</span> <span class="o">==</span> <span class="kc">False</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">service_providers</span><span class="p">)))</span> <span class="o">==</span> <span class="mi">0</span>
@@ -159,6 +189,12 @@
 <div class="viewcode-block" id="Design.add_zone">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.add_zone">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">add_zone</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">zone</span><span class="p">:</span> <span class="n">Zone</span><span class="p">,</span> <span class="n">local_bw_mbps</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">local_latency_ms</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Convenience method to add the Zone and a local Connection at the same time.</span>
+<span class="sd">        </span>
+<span class="sd">        :param zone: The Zone to add to the design.</span>
+<span class="sd">        :param local_bw_mbps: The bandwidth of the local Connection for the Zone in megabits per second (Mbps)</span>
+<span class="sd">        :param local_latency_ms: The latence of the local Connection for the Zone in milliseconds (ms)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">zone</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">zones</span><span class="p">:</span> <span class="k">return</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">zones</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">zone</span><span class="p">)</span>
         <span class="n">internal_conn</span><span class="p">:</span> <span class="n">Connection</span> <span class="o">=</span> <span class="n">zone</span><span class="o">.</span><span class="n">self_connect</span><span class="p">(</span><span class="n">bw</span><span class="o">=</span><span class="n">local_bw_mbps</span><span class="p">,</span> <span class="n">lat</span><span class="o">=</span><span class="n">local_latency_ms</span><span class="p">)</span>
@@ -168,6 +204,13 @@
 <div class="viewcode-block" id="Design.remove_zone">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.remove_zone">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">remove_zone</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">zone</span><span class="p">:</span> <span class="n">Zone</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Removes a Zone from the Design. Doing so can have cascading effects, </span>
+<span class="sd">        so internally this method removes any Connections that touched this Zone</span>
+<span class="sd">        and then calls :func:`update_service_providers` and :func:`update_workflow_definitions`</span>
+<span class="sd">        because removing a Zone could have removed ComputeNodes. </span>
+<span class="sd">        </span>
+<span class="sd">        :param zone: The Zone to remove.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">zones</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">zone</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">network</span> <span class="o">=</span> <span class="n">zone</span><span class="o">.</span><span class="n">other_connections</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_compute_nodes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">c</span><span class="p">:</span> <span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">zone</span> <span class="o">!=</span> <span class="n">zone</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_nodes</span><span class="p">))</span>
@@ -179,6 +222,11 @@
 <div class="viewcode-block" id="Design.get_zone">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.get_zone">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_zone</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Zone</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Convenience method to find a Zone in the Design by name. Assumes name is unique.</span>
+<span class="sd">        </span>
+<span class="sd">        :param name: The name of the Zone to find.</span>
+<span class="sd">        :returns: The named Zone. Returns None if no Zone exists with that name.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">zone</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">zones</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">zone</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span> <span class="k">return</span> <span class="n">zone</span>
         <span class="k">return</span> <span class="kc">None</span></div>
@@ -188,6 +236,11 @@
 <div class="viewcode-block" id="Design.add_connection">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.add_connection">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">add_connection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conn</span><span class="p">:</span> <span class="n">Connection</span><span class="p">,</span> <span class="n">add_reciprocal</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Convenience method to add a Connection to the design with an option to add the return Connection too.</span>
+<span class="sd">        </span>
+<span class="sd">        :param conn: The Connection to add to the Design.</span>
+<span class="sd">        :param add_reciprocal: If True, will add a second Connection to the Design, in the reciprocal direction.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">conn</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">add_reciprocal</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">conn</span><span class="o">.</span><span class="n">inverted</span><span class="p">())</span></div>
@@ -196,6 +249,7 @@
 <div class="viewcode-block" id="Design.remove_connection">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.remove_connection">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">remove_connection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conn</span><span class="p">:</span> <span class="n">Connection</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Convenience method to remove a Connection from the Design. &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">conn</span><span class="p">)</span></div>
 
     
@@ -203,6 +257,12 @@
 <div class="viewcode-block" id="Design.add_compute">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.add_compute">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">add_compute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">ComputeNode</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Adds a ComputeNode to the Design. Will not allow a node with :class:`ComputeNodeType` V_SERVER to be added, since</span>
+<span class="sd">        virtual servers are added implicitly when their physical host is added. </span>
+<span class="sd">        </span>
+<span class="sd">        :param node: The ComputeNode to add to the Design.</span>
+<span class="sd">        :raises: TypeError if node.type is ComputeNodeType.V_SERVER</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">ComputeNodeType</span><span class="o">.</span><span class="n">V_SERVER</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Cannot add a virtual server to design. Add to physical host.&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_compute_nodes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="p">)</span></div>
@@ -211,9 +271,20 @@
 <div class="viewcode-block" id="Design.remove_compute">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.remove_compute">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">remove_compute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">ComputeNode</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Removes a ComputeNode from the Design. May have cascading effects, </span>
+<span class="sd">        so internally this method calls :func:`update_service_providers` and :func:`update_workflow_definitions`</span>
+<span class="sd">        because the removed ComputeNode could have been a node for a ServiceProvider. </span>
+<span class="sd">        </span>
+<span class="sd">        Because of the above logic, this is the best way to remove a V_SERVER.</span>
+
+<span class="sd">        :param node: The ComputeNode to add to the Design.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">ComputeNodeType</span><span class="o">.</span><span class="n">V_SERVER</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Cannot remove a virtual server from design. Remove from physical host.&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_compute_nodes</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_nodes</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">n</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">ComputeNodeType</span><span class="o">.</span><span class="n">P_SERVER</span> <span class="ow">and</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">n</span><span class="o">.</span><span class="n">_v_hosts</span><span class="p">:</span>
+                    <span class="n">n</span><span class="o">.</span><span class="n">remove_virtual_host</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_compute_nodes</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update_service_providers</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update_workflow_definitions</span><span class="p">()</span></div>
 
@@ -221,20 +292,39 @@
 <div class="viewcode-block" id="Design.get_compute_node">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.get_compute_node">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_compute_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ComputeNode</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Convenience method to find a ComputeNode by name in the Design.</span>
+<span class="sd">        </span>
+<span class="sd">        :param name: The name of the ComputeNode to find.</span>
+<span class="sd">        :returns: The named ComputeNode. Returns None if no compute node has that name.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_nodes</span><span class="p">():</span>
             <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span> <span class="k">return</span> <span class="n">node</span>
+            <span class="k">elif</span> <span class="n">node</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">ComputeNodeType</span><span class="o">.</span><span class="n">P_SERVER</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">v_node</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">_v_hosts</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">v_node</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span> <span class="k">return</span> <span class="n">v_node</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
 
 <div class="viewcode-block" id="Design.add_servicedef">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.add_servicedef">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">add_servicedef</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sd</span><span class="p">:</span> <span class="n">ServiceDef</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Convenience method to add a service definition. If a ServiceDefinition with the same</span>
+<span class="sd">        service_type exists, it will be replaced. </span>
+<span class="sd">        </span>
+<span class="sd">        :param sd: The ServiceDef to add.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">services</span><span class="p">[</span><span class="n">sd</span><span class="o">.</span><span class="n">service_type</span><span class="p">]</span> <span class="o">=</span> <span class="n">sd</span></div>
 
 
 <div class="viewcode-block" id="Design.remove_servicedef">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.remove_servicedef">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">remove_servicedef</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sd</span><span class="p">:</span> <span class="n">ServiceDef</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Removes a ServiceDef from the Design. May have cascading effects, </span>
+<span class="sd">        so internally this method calls :func:`update_service_providers` and :func:`update_workflow_definitions`</span>
+<span class="sd">        because the removed ServiceDef could have been a type for a ServiceProvider. </span>
+<span class="sd">        </span>
+<span class="sd">        :param sd: The ServiceDef to remove.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">sd</span><span class="o">.</span><span class="n">service_type</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">sd</span><span class="o">.</span><span class="n">service_type</span><span class="p">)</span>
         <span class="c1"># Might have removed a whole type of provider</span>
@@ -246,6 +336,11 @@
 <div class="viewcode-block" id="Design.add_service_provider">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.add_service_provider">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">add_service_provider</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sp</span><span class="p">:</span> <span class="n">ServiceProvider</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Adds a ServiceProvider to the Design. Internally checks that this </span>
+<span class="sd">        ServiceProvider does not already exist in the Design.</span>
+<span class="sd">        </span>
+<span class="sd">        :param sp: The ServiceProvider to add.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">sp</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">service_providers</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">service_providers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sp</span><span class="p">)</span></div>
 
@@ -253,6 +348,12 @@
 <div class="viewcode-block" id="Design.remove_service_provider">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.remove_service_provider">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">remove_service_provider</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sp</span><span class="p">:</span> <span class="n">ServiceProvider</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Removes a ServiceProvider from the Design. May have cascading effects, </span>
+<span class="sd">        so internally this method calls :func:`update_workflow_definitions`</span>
+<span class="sd">        because the removed ServiceProvider could have been referenced in a WorkflowDef. </span>
+<span class="sd">        </span>
+<span class="sd">        :param sp: The ServiceProvider to remove.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">service_providers</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">sp</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update_workflow_definitions</span><span class="p">()</span></div>
 
@@ -261,12 +362,22 @@
 <div class="viewcode-block" id="Design.add_workflowdef">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.add_workflowdef">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">add_workflowdef</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wdef</span><span class="p">:</span> <span class="n">WorkflowDef</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Convenience method to add a WorkflowDef to the Design.</span>
+<span class="sd">        </span>
+<span class="sd">        :param wdef: The WorkflowDef to add.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">workflow_definitions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wdef</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Design.remove_workflowdef">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.remove_workflowdef">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">remove_workflowdef</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wdef</span><span class="p">:</span> <span class="n">WorkflowDef</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Removes a WorkflowDef from the Design. May have cascading effects, </span>
+<span class="sd">        so internally this method calls :func:`update_configured_workflows`</span>
+<span class="sd">        because the removed WorkflowDef could have been referenced in a Workflow. </span>
+<span class="sd">        </span>
+<span class="sd">        :param wdef: The WorkflowDef to remove.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">workflow_definitions</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">wdef</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update_configured_workflows</span><span class="p">()</span></div>
 
@@ -274,6 +385,11 @@
 <div class="viewcode-block" id="Design.get_workflowdef">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.get_workflowdef">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_workflowdef</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">WorkflowDef</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Convenience method to find a WorkflowDef by name in the Design.</span>
+<span class="sd">        </span>
+<span class="sd">        :param name: The name of the WorkflowDef to find.</span>
+<span class="sd">        :returns: The named WorkflowDef. Returns None if no workflow definition has that name.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">wdef</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">workflow_definitions</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">wdef</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span> <span class="k">return</span> <span class="n">wdef</span>
         <span class="k">return</span> <span class="kc">None</span></div>
@@ -282,31 +398,67 @@
 
 <div class="viewcode-block" id="Design.add_client_workflow">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.add_client_workflow">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">add_client_workflow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span> <span class="n">desc</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">wdef</span><span class="p">:</span> <span class="n">WorkflowDef</span><span class="p">,</span> <span class="n">users</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">productivity</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_client_workflow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span> <span class="n">desc</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">wdef_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">users</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">productivity</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Workflow</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Convenience method to configure a USER Workflow from a named WorkflowDef in the Design.</span>
+
+<span class="sd">        :param name: The name of the new configured Workflow.</span>
+<span class="sd">        :param desc: Addtional descriptive text.</span>
+<span class="sd">        :param wdef_name: The name of the WorkflowDef that will define the new Workflow.</span>
+<span class="sd">        :param users: The number of users.</span>
+<span class="sd">        :param productivity: The number of transactions per minute per user.</span>
+<span class="sd">        :raises: ValueError if wdef_name is not a known name of a WorkflowDef in the Design.</span>
+<span class="sd">        :returns: The created Workflow.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">wdef</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">WorkflowDef</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_workflowdef</span><span class="p">(</span><span class="n">wdef_name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">wdef</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No WorkflowDef named </span><span class="si">{</span><span class="n">wdef_name</span><span class="si">}</span><span class="s2"> in the Design.&quot;</span><span class="p">)</span>
         <span class="n">w</span><span class="p">:</span> <span class="n">Workflow</span> <span class="o">=</span> <span class="n">Workflow</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="n">desc</span><span class="p">,</span> 
                                <span class="nb">type</span><span class="o">=</span><span class="n">WorkflowType</span><span class="o">.</span><span class="n">USER</span><span class="p">,</span> <span class="n">definition</span><span class="o">=</span><span class="n">wdef</span><span class="p">,</span> 
                                <span class="n">user_count</span><span class="o">=</span><span class="n">users</span><span class="p">,</span> <span class="n">productivity</span><span class="o">=</span><span class="n">productivity</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_workflows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">w</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_workflows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">w</span></div>
 
 
 <div class="viewcode-block" id="Design.add_transactional_workflow">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.add_transactional_workflow">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">add_transactional_workflow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span> <span class="n">desc</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">wdef</span><span class="p">:</span> <span class="n">WorkflowDef</span><span class="p">,</span> <span class="n">tph</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_transactional_workflow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span> <span class="n">desc</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">wdef_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">tph</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Workflow</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Convenience method to configure a TRANSACTIONAL Workflow from a named WorkflowDef in the Design.</span>
+
+<span class="sd">        :param name: The name of the new configured Workflow.</span>
+<span class="sd">        :param desc: Addtional descriptive text.</span>
+<span class="sd">        :param wdef_name: The name of the WorkflowDef that will define the new Workflow.</span>
+<span class="sd">        :param tph: The number of transactions per hour.</span>
+<span class="sd">        :raises: ValueError if wdef_name is not a known name of a WorkflowDef in the Design.</span>
+<span class="sd">        :returns: The created Workflow.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">wdef</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">WorkflowDef</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_workflowdef</span><span class="p">(</span><span class="n">wdef_name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">wdef</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No WorkflowDef named </span><span class="si">{</span><span class="n">wdef_name</span><span class="si">}</span><span class="s2"> in the Design.&quot;</span><span class="p">)</span>
         <span class="n">w</span><span class="p">:</span> <span class="n">Workflow</span> <span class="o">=</span> <span class="n">Workflow</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="n">desc</span><span class="p">,</span> 
                                <span class="nb">type</span><span class="o">=</span><span class="n">WorkflowType</span><span class="o">.</span><span class="n">TRANSACTIONAL</span><span class="p">,</span> <span class="n">definition</span><span class="o">=</span><span class="n">wdef</span><span class="p">,</span> 
                                <span class="n">tph</span><span class="o">=</span><span class="n">tph</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_workflows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">w</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_workflows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">w</span></div>
 
 
 <div class="viewcode-block" id="Design.remove_workflow">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.remove_workflow">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">remove_workflow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">w</span><span class="p">:</span> <span class="n">Workflow</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Convenience method to remove a Workflow from the Design.</span>
+<span class="sd">        </span>
+<span class="sd">        :raises: ValueError if the Workflow does not exist in the Design.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_workflows</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">w</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Design.get_workflow">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.get_workflow">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_workflow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Workflow</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Convenience method to find a Workflow by name in the Design.</span>
+<span class="sd">        </span>
+<span class="sd">        :param name: The name of the Workflow to find.</span>
+<span class="sd">        :returns: The named Workflow. Returns None if no workflow has that name.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_workflows</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">w</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span> <span class="k">return</span> <span class="n">w</span>
         <span class="k">return</span> <span class="kc">None</span></div>
@@ -315,13 +467,19 @@
 <div class="viewcode-block" id="Design.all_workflows">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.all_workflows">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">all_workflows</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Workflow</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns a list of all workflows in the Design. &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_workflows</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span></div>
 
 
-    <span class="c1">### A ServiceDef or ComputeNode has been removed. ###</span>
 <div class="viewcode-block" id="Design.update_service_providers">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.update_service_providers">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update_service_providers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Function to be called if a change has been made that may invalidate one or more ServiceProviders.</span>
+<span class="sd">        Examples of changes that might do this:</span>
+<span class="sd">        </span>
+<span class="sd">        - A ServiceDef has been removed</span>
+<span class="sd">        - A ComputeNode has been removed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">remaining</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ServiceProvider</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="k">for</span> <span class="n">sp</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">service_providers</span><span class="p">:</span>
@@ -338,10 +496,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">service_providers</span> <span class="o">=</span> <span class="n">remaining</span></div>
 
 
-    <span class="c1">### A ServiceProvider has been removed. ###</span>
 <div class="viewcode-block" id="Design.update_workflow_definitions">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.update_workflow_definitions">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update_workflow_definitions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Function to be called if a change has been made that may invalidate one or more WorkflowDefs.</span>
+<span class="sd">        Examples of changes that might do this:</span>
+<span class="sd">        </span>
+<span class="sd">        - A ServiceProvider has been removed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">wdef</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">workflow_definitions</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">chain</span> <span class="ow">in</span> <span class="n">wdef</span><span class="o">.</span><span class="n">chains</span><span class="p">:</span>
                 <span class="n">remaining</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ServiceProvider</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
@@ -351,10 +513,14 @@
                 <span class="n">chain</span><span class="o">.</span><span class="n">service_providers</span> <span class="o">=</span> <span class="n">remaining</span></div>
 
 
-    <span class="c1">### WorkflowDef has been removed. ###</span>
 <div class="viewcode-block" id="Design.update_configured_workflows">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.update_configured_workflows">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update_configured_workflows</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Function to be called if a change has been made that may invalidate one or more Workflows.</span>
+<span class="sd">        Examples of changes that might do this:</span>
+<span class="sd">        </span>
+<span class="sd">        - A WorkflowDef has been removed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">remaining</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Workflow</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_workflows</span><span class="p">:</span>
@@ -367,6 +533,10 @@
 <div class="viewcode-block" id="Design.provide_queues">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.provide_queues">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">provide_queues</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">MultiQueue</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Calls :func:`provide_queue` on every ComputeNode and Connection in the Design.</span>
+<span class="sd">        </span>
+<span class="sd">        :returns: A list of all queues in the Design.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">conn_queues</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">MultiQueue</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">c</span><span class="p">:</span> <span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">provide_queue</span><span class="p">()),</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="p">))</span>
         <span class="n">comp_queues</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">MultiQueue</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">c</span><span class="p">:</span> <span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">provide_queue</span><span class="p">()),</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_nodes</span><span class="p">()))</span>
         <span class="k">return</span> <span class="n">conn_queues</span> <span class="o">+</span> <span class="n">comp_queues</span></div>
@@ -375,6 +545,9 @@
 <div class="viewcode-block" id="Design.print_validation_messages">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.print_validation_messages">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">print_validation_messages</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Method to print out all validation messages in all components of the Design. </span>
+<span class="sd">        Useful for debugging if :func:`is_valid` is returning False.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
             <span class="k">for</span> <span class="n">vm</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">():</span>
                 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Design </span><span class="si">{</span><span class="n">vm</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -394,6 +567,7 @@
 <a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.next_id">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">next_id</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; :returns: The next number in a sequence of Design ids. &quot;&quot;&quot;</span>
         <span class="bp">cls</span><span class="o">.</span><span class="n">_next_id</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_next_id</span> <span class="o">+</span> <span class="mi">1</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_next_id</span></div>
 
@@ -402,6 +576,7 @@
 <a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.next_name">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">next_name</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; :returns: The next name in a sequence of Design names. &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;Design </span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">next_id</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span></div>
 </div>
 

@@ -1,9 +1,26 @@
 #!/usr/bin/env python
+
+"""
+pygissim.py
+
+The higher-level classes: Design and Simulator.
+
+Uses the pygissim.engine extensively to build a simulation design and then run it.
+"""
 from typing import Optional, Set, Tuple
 
 from pygissim.engine import *
 
 class Design:
+    """ The Design is the setup of the infrastructure (network, compute) and the workflows that define
+    the system that is being simulated.
+
+    :param name: A descriptive name
+    :param desc: Additional descriptive text
+    :param network: The list of Connections that will represent the network
+    :param services: The dictionary of all known service types (keys) and ServiceDefs (values)
+    :param workflow_definitions: The workflows (chains, steps) that are defined in the design.
+    """
     def __init__(self, name: str, desc: str, 
                  zones: Optional[list[Zone]] = None, 
                  network: Optional[list[Connection]] = None, 
@@ -22,6 +39,10 @@ class Design:
         self._compute_nodes: list[ComputeNode] = []
 
     def compute_nodes(self) -> list[ComputeNode]:
+        """ The _compute_nodes private variable only holds physical compute nodes.
+        
+        :returns: All ComputeNodes, including virtual nodes hosted on physical servers.
+        """
         result: list[ComputeNode] = []
 
         for node in self._compute_nodes:
@@ -35,9 +56,18 @@ class Design:
         return result
     
     def is_valid(self) -> bool:
+        """ 
+        :returns: True if validate returns no messages.
+        :rtype: bool
+        """
         return len(self.validate()) == 0
 
     def validate(self) -> list[ValidationMessage]:
+        """ Method that evaluates the validity of the configuration of this Design.
+        
+        :returns: Messages indicating invalid configuration.
+        :rtype: list[ValidationMessage]
+        """
         messages: list[ValidationMessage] = []
 
         all_sps_valid: bool = len(list(filter(lambda sp: (sp.is_valid() == False), self.service_providers))) == 0
@@ -75,12 +105,25 @@ class Design:
     
 
     def add_zone(self, zone: Zone, local_bw_mbps: int, local_latency_ms: int):
+        """ Convenience method to add the Zone and a local Connection at the same time.
+        
+        :param zone: The Zone to add to the design.
+        :param local_bw_mbps: The bandwidth of the local Connection for the Zone in megabits per second (Mbps)
+        :param local_latency_ms: The latence of the local Connection for the Zone in milliseconds (ms)
+        """
         if zone in self.zones: return
         self.zones.append(zone)
         internal_conn: Connection = zone.self_connect(bw=local_bw_mbps, lat=local_latency_ms)
         self.network.append(internal_conn)
 
     def remove_zone(self, zone: Zone):
+        """ Removes a Zone from the Design. Doing so can have cascading effects, 
+        so internally this method removes any Connections that touched this Zone
+        and then calls :func:`update_service_providers` and :func:`update_workflow_definitions`
+        because removing a Zone could have removed ComputeNodes. 
+        
+        :param zone: The Zone to remove.
+        """
         self.zones.remove(zone)
         self.network = zone.other_connections(self.network)
         self._compute_nodes = list(filter(lambda c: (c.zone != zone), self._compute_nodes))
@@ -89,41 +132,85 @@ class Design:
         self.update_workflow_definitions()
 
     def get_zone(self, name: str) -> Optional[Zone]:
+        """ Convenience method to find a Zone in the Design by name. Assumes name is unique.
+        
+        :param name: The name of the Zone to find.
+        :returns: The named Zone. Returns None if no Zone exists with that name.
+        """
         for zone in self.zones:
             if zone.name == name: return zone
         return None
     
 
     def add_connection(self, conn: Connection, add_reciprocal: bool = False):
+        """ Convenience method to add a Connection to the design with an option to add the return Connection too.
+        
+        :param conn: The Connection to add to the Design.
+        :param add_reciprocal: If True, will add a second Connection to the Design, in the reciprocal direction.
+        """
         self.network.append(conn)
         if add_reciprocal:
             self.network.append(conn.inverted())
 
     def remove_connection(self, conn: Connection):
+        """ Convenience method to remove a Connection from the Design. """
         self.network.remove(conn)
     
 
     def add_compute(self, node: ComputeNode):
+        """ Adds a ComputeNode to the Design. Will not allow a node with :class:`ComputeNodeType` V_SERVER to be added, since
+        virtual servers are added implicitly when their physical host is added. 
+        
+        :param node: The ComputeNode to add to the Design.
+        :raises: TypeError if node.type is ComputeNodeType.V_SERVER
+        """
         if node.type == ComputeNodeType.V_SERVER:
             raise TypeError('Cannot add a virtual server to design. Add to physical host.')
         self._compute_nodes.append(node)
 
     def remove_compute(self, node: ComputeNode):
+        """ Removes a ComputeNode from the Design. May have cascading effects, 
+        so internally this method calls :func:`update_service_providers` and :func:`update_workflow_definitions`
+        because the removed ComputeNode could have been a node for a ServiceProvider. 
+        
+        Because of the above logic, this is the best way to remove a V_SERVER.
+
+        :param node: The ComputeNode to add to the Design.
+        """
         if node.type == ComputeNodeType.V_SERVER:
-            raise TypeError('Cannot remove a virtual server from design. Remove from physical host.')
-        self._compute_nodes.remove(node)
+            for n in self._compute_nodes:
+                if n.type == ComputeNodeType.P_SERVER and node in n._v_hosts:
+                    n.remove_virtual_host(node)
+        else:
+            self._compute_nodes.remove(node)
         self.update_service_providers()
         self.update_workflow_definitions()
 
     def get_compute_node(self, name: str) -> Optional[ComputeNode]:
-        for node in self.compute_nodes():
+        """ Convenience method to find a ComputeNode by name in the Design.
+        
+        :param name: The name of the ComputeNode to find.
+        :returns: The named ComputeNode. Returns None if no compute node has that name.
+        """
+        for node in self.compute_nodes(): # Includes V_SERVER nodes
             if node.name == name: return node
         return None
 
     def add_servicedef(self, sd: ServiceDef):
+        """ Convenience method to add a service definition. If a ServiceDefinition with the same
+        service_type exists, it will be replaced. 
+        
+        :param sd: The ServiceDef to add.
+        """
         self.services[sd.service_type] = sd
 
     def remove_servicedef(self, sd: ServiceDef):
+        """ Removes a ServiceDef from the Design. May have cascading effects, 
+        so internally this method calls :func:`update_service_providers` and :func:`update_workflow_definitions`
+        because the removed ServiceDef could have been a type for a ServiceProvider. 
+        
+        :param sd: The ServiceDef to remove.
+        """
         if sd.service_type in self.services.keys():
             self.services.pop(sd.service_type)
         # Might have removed a whole type of provider
@@ -132,52 +219,120 @@ class Design:
 
 
     def add_service_provider(self, sp: ServiceProvider):
+        """ Adds a ServiceProvider to the Design. Internally checks that this 
+        ServiceProvider does not already exist in the Design.
+        
+        :param sp: The ServiceProvider to add.
+        """
         if sp not in self.service_providers:
             self.service_providers.append(sp)
 
     def remove_service_provider(self, sp: ServiceProvider):
+        """ Removes a ServiceProvider from the Design. May have cascading effects, 
+        so internally this method calls :func:`update_workflow_definitions`
+        because the removed ServiceProvider could have been referenced in a WorkflowDef. 
+        
+        :param sp: The ServiceProvider to remove.
+        """
         self.service_providers.remove(sp)
         self.update_workflow_definitions()
 
 
     def add_workflowdef(self, wdef: WorkflowDef):
+        """ Convenience method to add a WorkflowDef to the Design.
+        
+        :param wdef: The WorkflowDef to add.
+        """
         self.workflow_definitions.append(wdef)
 
     def remove_workflowdef(self, wdef: WorkflowDef):
+        """ Removes a WorkflowDef from the Design. May have cascading effects, 
+        so internally this method calls :func:`update_configured_workflows`
+        because the removed WorkflowDef could have been referenced in a Workflow. 
+        
+        :param wdef: The WorkflowDef to remove.
+        """
         self.workflow_definitions.remove(wdef)
         self.update_configured_workflows()
 
     def get_workflowdef(self, name: str) -> Optional[WorkflowDef]:
+        """ Convenience method to find a WorkflowDef by name in the Design.
+        
+        :param name: The name of the WorkflowDef to find.
+        :returns: The named WorkflowDef. Returns None if no workflow definition has that name.
+        """
         for wdef in self.workflow_definitions:
             if wdef.name == name: return wdef
         return None
 
 
-    def add_client_workflow(self, name:str, desc: str, wdef: WorkflowDef, users: int, productivity: int):
+    def add_client_workflow(self, name:str, desc: str, wdef_name: str, users: int, productivity: int) -> Workflow:
+        """ Convenience method to configure a USER Workflow from a named WorkflowDef in the Design.
+
+        :param name: The name of the new configured Workflow.
+        :param desc: Addtional descriptive text.
+        :param wdef_name: The name of the WorkflowDef that will define the new Workflow.
+        :param users: The number of users.
+        :param productivity: The number of transactions per minute per user.
+        :raises: ValueError if wdef_name is not a known name of a WorkflowDef in the Design.
+        :returns: The created Workflow.
+        """
+        wdef: Optional[WorkflowDef] = self.get_workflowdef(wdef_name)
+        if wdef is None:
+            raise ValueError(f"No WorkflowDef named {wdef_name} in the Design.")
         w: Workflow = Workflow(name=name, desc=desc, 
                                type=WorkflowType.USER, definition=wdef, 
                                user_count=users, productivity=productivity)
         self._workflows.append(w)
+        return w
 
-    def add_transactional_workflow(self, name:str, desc: str, wdef: WorkflowDef, tph: int):
+    def add_transactional_workflow(self, name:str, desc: str, wdef_name: str, tph: int) -> Workflow:
+        """ Convenience method to configure a TRANSACTIONAL Workflow from a named WorkflowDef in the Design.
+
+        :param name: The name of the new configured Workflow.
+        :param desc: Addtional descriptive text.
+        :param wdef_name: The name of the WorkflowDef that will define the new Workflow.
+        :param tph: The number of transactions per hour.
+        :raises: ValueError if wdef_name is not a known name of a WorkflowDef in the Design.
+        :returns: The created Workflow.
+        """
+        wdef: Optional[WorkflowDef] = self.get_workflowdef(wdef_name)
+        if wdef is None:
+            raise ValueError(f"No WorkflowDef named {wdef_name} in the Design.")
         w: Workflow = Workflow(name=name, desc=desc, 
                                type=WorkflowType.TRANSACTIONAL, definition=wdef, 
                                tph=tph)
         self._workflows.append(w)
+        return w
 
     def remove_workflow(self, w: Workflow):
+        """ Convenience method to remove a Workflow from the Design.
+        
+        :raises: ValueError if the Workflow does not exist in the Design.
+        """
         self._workflows.remove(w)
 
     def get_workflow(self, name: str) -> Optional[Workflow]:
+        """ Convenience method to find a Workflow by name in the Design.
+        
+        :param name: The name of the Workflow to find.
+        :returns: The named Workflow. Returns None if no workflow has that name.
+        """
         for w in self._workflows:
             if w.name == name: return w
         return None
     
     def all_workflows(self) -> list[Workflow]:
+        """ Returns a list of all workflows in the Design. """
         return self._workflows.copy()
 
-    ### A ServiceDef or ComputeNode has been removed. ###
     def update_service_providers(self):
+        """ Function to be called if a change has been made that may invalidate one or more ServiceProviders.
+        Examples of changes that might do this:
+        
+        - A ServiceDef has been removed
+        - A ComputeNode has been removed
+        """
         remaining: list[ServiceProvider] = []
 
         for sp in self.service_providers:
@@ -193,8 +348,12 @@ class Design:
 
         self.service_providers = remaining
 
-    ### A ServiceProvider has been removed. ###
     def update_workflow_definitions(self):
+        """ Function to be called if a change has been made that may invalidate one or more WorkflowDefs.
+        Examples of changes that might do this:
+        
+        - A ServiceProvider has been removed.
+        """
         for wdef in self.workflow_definitions:
             for chain in wdef.chains:
                 remaining: dict[str, ServiceProvider] = dict()
@@ -203,8 +362,12 @@ class Design:
                         remaining[sp.service.service_type] = sp
                 chain.service_providers = remaining
 
-    ### WorkflowDef has been removed. ###
     def update_configured_workflows(self):
+        """ Function to be called if a change has been made that may invalidate one or more Workflows.
+        Examples of changes that might do this:
+        
+        - A WorkflowDef has been removed.
+        """
         remaining: list[Workflow] = []
 
         for w in self._workflows:
@@ -214,11 +377,18 @@ class Design:
         self._workflows = remaining
 
     def provide_queues(self) -> list[MultiQueue]:
+        """ Calls :func:`provide_queue` on every ComputeNode and Connection in the Design.
+        
+        :returns: A list of all queues in the Design.
+        """
         conn_queues: list[MultiQueue] = list(map(lambda c: (c.provide_queue()), self.network))
         comp_queues: list[MultiQueue] = list(map(lambda c: (c.provide_queue()), self.compute_nodes()))
         return conn_queues + comp_queues
 
     def print_validation_messages(self):
+        """ Method to print out all validation messages in all components of the Design. 
+        Useful for debugging if :func:`is_valid` is returning False.
+        """
         if not self.is_valid():
             for vm in self.validate():
                 print(f'Design {vm}')
@@ -235,11 +405,13 @@ class Design:
     _next_id: int = 0
     @classmethod
     def next_id(cls) -> int:
+        """ :returns: The next number in a sequence of Design ids. """
         cls._next_id = cls._next_id + 1
         return cls._next_id
 
     @classmethod
     def next_name(cls) -> str:
+        """ :returns: The next name in a sequence of Design names. """
         return f'Design {cls.next_id()}'
 
 class Simulator:

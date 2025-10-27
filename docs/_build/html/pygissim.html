@@ -1931,159 +1931,402 @@ and could be expanded on when needed.</p>
 </section>
 <section id="module-pygissim.pygissim">
 <span id="pygissim-pygissim-module"></span><h2>pygissim.pygissim module<a class="headerlink" href="#module-pygissim.pygissim" title="Link to this heading"></a></h2>
+<p>pygissim.py</p>
+<p>The higher-level classes: Design and Simulator.</p>
+<p>Uses the pygissim.engine extensively to build a simulation design and then run it.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="pygissim.pygissim.Design">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pygissim.pygissim.</span></span><span class="sig-name descname"><span class="pre">Design</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">desc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zones</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pygissim.engine.Zone" title="pygissim.engine.Zone"><span class="pre">Zone</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">network</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pygissim.engine.Connection" title="pygissim.engine.Connection"><span class="pre">Connection</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">services</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#pygissim.engine.ServiceDef" title="pygissim.engine.ServiceDef"><span class="pre">ServiceDef</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service_providers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pygissim.engine.ServiceProvider" title="pygissim.engine.ServiceProvider"><span class="pre">ServiceProvider</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">workflow_definitions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pygissim.engine.WorkflowDef" title="pygissim.engine.WorkflowDef"><span class="pre">WorkflowDef</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/pygissim.html#Design"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.pygissim.Design" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>The Design is the setup of the infrastructure (network, compute) and the workflows that define
+the system that is being simulated.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – A descriptive name</p></li>
+<li><p><strong>desc</strong> – Additional descriptive text</p></li>
+<li><p><strong>network</strong> – The list of Connections that will represent the network</p></li>
+<li><p><strong>services</strong> – The dictionary of all known service types (keys) and ServiceDefs (values)</p></li>
+<li><p><strong>workflow_definitions</strong> – The workflows (chains, steps) that are defined in the design.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.pygissim.Design.add_client_workflow">
-<span class="sig-name descname"><span class="pre">add_client_workflow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">desc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wdef</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.engine.WorkflowDef" title="pygissim.engine.WorkflowDef"><span class="pre">WorkflowDef</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">users</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">productivity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/pygissim.html#Design.add_client_workflow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.pygissim.Design.add_client_workflow" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">add_client_workflow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">desc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wdef_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">users</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">productivity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pygissim.engine.Workflow" title="pygissim.engine.Workflow"><span class="pre">Workflow</span></a></span></span><a class="reference internal" href="_modules/pygissim/pygissim.html#Design.add_client_workflow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.pygissim.Design.add_client_workflow" title="Link to this definition"></a></dt>
+<dd><p>Convenience method to configure a USER Workflow from a named WorkflowDef in the Design.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – The name of the new configured Workflow.</p></li>
+<li><p><strong>desc</strong> – Addtional descriptive text.</p></li>
+<li><p><strong>wdef_name</strong> – The name of the WorkflowDef that will define the new Workflow.</p></li>
+<li><p><strong>users</strong> – The number of users.</p></li>
+<li><p><strong>productivity</strong> – The number of transactions per minute per user.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p>ValueError if wdef_name is not a known name of a WorkflowDef in the Design.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The created Workflow.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.pygissim.Design.add_compute">
 <span class="sig-name descname"><span class="pre">add_compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.engine.ComputeNode" title="pygissim.engine.ComputeNode"><span class="pre">ComputeNode</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/pygissim.html#Design.add_compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.pygissim.Design.add_compute" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Adds a ComputeNode to the Design. Will not allow a node with <code class="xref py py-class docutils literal notranslate"><span class="pre">ComputeNodeType</span></code> V_SERVER to be added, since
+virtual servers are added implicitly when their physical host is added.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>node</strong> – The ComputeNode to add to the Design.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p>TypeError if node.type is ComputeNodeType.V_SERVER</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.pygissim.Design.add_connection">
 <span class="sig-name descname"><span class="pre">add_connection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.engine.Connection" title="pygissim.engine.Connection"><span class="pre">Connection</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_reciprocal</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/pygissim.html#Design.add_connection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.pygissim.Design.add_connection" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Convenience method to add a Connection to the design with an option to add the return Connection too.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>conn</strong> – The Connection to add to the Design.</p></li>
+<li><p><strong>add_reciprocal</strong> – If True, will add a second Connection to the Design, in the reciprocal direction.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.pygissim.Design.add_service_provider">
 <span class="sig-name descname"><span class="pre">add_service_provider</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.engine.ServiceProvider" title="pygissim.engine.ServiceProvider"><span class="pre">ServiceProvider</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/pygissim.html#Design.add_service_provider"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.pygissim.Design.add_service_provider" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Adds a ServiceProvider to the Design. Internally checks that this 
+ServiceProvider does not already exist in the Design.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>sp</strong> – The ServiceProvider to add.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.pygissim.Design.add_servicedef">
 <span class="sig-name descname"><span class="pre">add_servicedef</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.engine.ServiceDef" title="pygissim.engine.ServiceDef"><span class="pre">ServiceDef</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/pygissim.html#Design.add_servicedef"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.pygissim.Design.add_servicedef" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Convenience method to add a service definition. If a ServiceDefinition with the same
+service_type exists, it will be replaced.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>sd</strong> – The ServiceDef to add.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.pygissim.Design.add_transactional_workflow">
-<span class="sig-name descname"><span class="pre">add_transactional_workflow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">desc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wdef</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.engine.WorkflowDef" title="pygissim.engine.WorkflowDef"><span class="pre">WorkflowDef</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">tph</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/pygissim.html#Design.add_transactional_workflow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.pygissim.Design.add_transactional_workflow" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">add_transactional_workflow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">desc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wdef_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tph</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pygissim.engine.Workflow" title="pygissim.engine.Workflow"><span class="pre">Workflow</span></a></span></span><a class="reference internal" href="_modules/pygissim/pygissim.html#Design.add_transactional_workflow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.pygissim.Design.add_transactional_workflow" title="Link to this definition"></a></dt>
+<dd><p>Convenience method to configure a TRANSACTIONAL Workflow from a named WorkflowDef in the Design.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – The name of the new configured Workflow.</p></li>
+<li><p><strong>desc</strong> – Addtional descriptive text.</p></li>
+<li><p><strong>wdef_name</strong> – The name of the WorkflowDef that will define the new Workflow.</p></li>
+<li><p><strong>tph</strong> – The number of transactions per hour.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p>ValueError if wdef_name is not a known name of a WorkflowDef in the Design.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The created Workflow.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.pygissim.Design.add_workflowdef">
 <span class="sig-name descname"><span class="pre">add_workflowdef</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wdef</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.engine.WorkflowDef" title="pygissim.engine.WorkflowDef"><span class="pre">WorkflowDef</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/pygissim.html#Design.add_workflowdef"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.pygissim.Design.add_workflowdef" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Convenience method to add a WorkflowDef to the Design.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>wdef</strong> – The WorkflowDef to add.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.pygissim.Design.add_zone">
 <span class="sig-name descname"><span class="pre">add_zone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">zone</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.engine.Zone" title="pygissim.engine.Zone"><span class="pre">Zone</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">local_bw_mbps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local_latency_ms</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/pygissim.html#Design.add_zone"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.pygissim.Design.add_zone" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Convenience method to add the Zone and a local Connection at the same time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>zone</strong> – The Zone to add to the design.</p></li>
+<li><p><strong>local_bw_mbps</strong> – The bandwidth of the local Connection for the Zone in megabits per second (Mbps)</p></li>
+<li><p><strong>local_latency_ms</strong> – The latence of the local Connection for the Zone in milliseconds (ms)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.pygissim.Design.all_workflows">
 <span class="sig-name descname"><span class="pre">all_workflows</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pygissim.engine.Workflow" title="pygissim.engine.Workflow"><span class="pre">Workflow</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/pygissim/pygissim.html#Design.all_workflows"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.pygissim.Design.all_workflows" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Returns a list of all workflows in the Design.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.pygissim.Design.compute_nodes">
 <span class="sig-name descname"><span class="pre">compute_nodes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pygissim.engine.ComputeNode" title="pygissim.engine.ComputeNode"><span class="pre">ComputeNode</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/pygissim/pygissim.html#Design.compute_nodes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.pygissim.Design.compute_nodes" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>The _compute_nodes private variable only holds physical compute nodes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>All ComputeNodes, including virtual nodes hosted on physical servers.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.pygissim.Design.get_compute_node">
 <span class="sig-name descname"><span class="pre">get_compute_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pygissim.engine.ComputeNode" title="pygissim.engine.ComputeNode"><span class="pre">ComputeNode</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="_modules/pygissim/pygissim.html#Design.get_compute_node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.pygissim.Design.get_compute_node" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Convenience method to find a ComputeNode by name in the Design.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> – The name of the ComputeNode to find.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The named ComputeNode. Returns None if no compute node has that name.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.pygissim.Design.get_workflow">
 <span class="sig-name descname"><span class="pre">get_workflow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pygissim.engine.Workflow" title="pygissim.engine.Workflow"><span class="pre">Workflow</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="_modules/pygissim/pygissim.html#Design.get_workflow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.pygissim.Design.get_workflow" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Convenience method to find a Workflow by name in the Design.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> – The name of the Workflow to find.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The named Workflow. Returns None if no workflow has that name.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.pygissim.Design.get_workflowdef">
 <span class="sig-name descname"><span class="pre">get_workflowdef</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pygissim.engine.WorkflowDef" title="pygissim.engine.WorkflowDef"><span class="pre">WorkflowDef</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="_modules/pygissim/pygissim.html#Design.get_workflowdef"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.pygissim.Design.get_workflowdef" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Convenience method to find a WorkflowDef by name in the Design.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> – The name of the WorkflowDef to find.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The named WorkflowDef. Returns None if no workflow definition has that name.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.pygissim.Design.get_zone">
 <span class="sig-name descname"><span class="pre">get_zone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pygissim.engine.Zone" title="pygissim.engine.Zone"><span class="pre">Zone</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="_modules/pygissim/pygissim.html#Design.get_zone"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.pygissim.Design.get_zone" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Convenience method to find a Zone in the Design by name. Assumes name is unique.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> – The name of the Zone to find.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The named Zone. Returns None if no Zone exists with that name.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.pygissim.Design.is_valid">
 <span class="sig-name descname"><span class="pre">is_valid</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/pygissim/pygissim.html#Design.is_valid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.pygissim.Design.is_valid" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if validate returns no messages.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.pygissim.Design.next_id">
 <em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">next_id</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/pygissim/pygissim.html#Design.next_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.pygissim.Design.next_id" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The next number in a sequence of Design ids.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.pygissim.Design.next_name">
 <em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">next_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/pygissim/pygissim.html#Design.next_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.pygissim.Design.next_name" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The next name in a sequence of Design names.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.pygissim.Design.print_validation_messages">
 <span class="sig-name descname"><span class="pre">print_validation_messages</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/pygissim.html#Design.print_validation_messages"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.pygissim.Design.print_validation_messages" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Method to print out all validation messages in all components of the Design. 
+Useful for debugging if <a class="reference internal" href="#pygissim.pygissim.Design.is_valid" title="pygissim.pygissim.Design.is_valid"><code class="xref py py-func docutils literal notranslate"><span class="pre">is_valid()</span></code></a> is returning False.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.pygissim.Design.provide_queues">
 <span class="sig-name descname"><span class="pre">provide_queues</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pygissim.engine.MultiQueue" title="pygissim.engine.MultiQueue"><span class="pre">MultiQueue</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/pygissim/pygissim.html#Design.provide_queues"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.pygissim.Design.provide_queues" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Calls <code class="xref py py-func docutils literal notranslate"><span class="pre">provide_queue()</span></code> on every ComputeNode and Connection in the Design.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of all queues in the Design.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.pygissim.Design.remove_compute">
 <span class="sig-name descname"><span class="pre">remove_compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.engine.ComputeNode" title="pygissim.engine.ComputeNode"><span class="pre">ComputeNode</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/pygissim.html#Design.remove_compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.pygissim.Design.remove_compute" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Removes a ComputeNode from the Design. May have cascading effects, 
+so internally this method calls <a class="reference internal" href="#pygissim.pygissim.Design.update_service_providers" title="pygissim.pygissim.Design.update_service_providers"><code class="xref py py-func docutils literal notranslate"><span class="pre">update_service_providers()</span></code></a> and <a class="reference internal" href="#pygissim.pygissim.Design.update_workflow_definitions" title="pygissim.pygissim.Design.update_workflow_definitions"><code class="xref py py-func docutils literal notranslate"><span class="pre">update_workflow_definitions()</span></code></a>
+because the removed ComputeNode could have been a node for a ServiceProvider.</p>
+<p>Because of the above logic, this is the best way to remove a V_SERVER.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>node</strong> – The ComputeNode to add to the Design.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.pygissim.Design.remove_connection">
 <span class="sig-name descname"><span class="pre">remove_connection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.engine.Connection" title="pygissim.engine.Connection"><span class="pre">Connection</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/pygissim.html#Design.remove_connection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.pygissim.Design.remove_connection" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Convenience method to remove a Connection from the Design.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.pygissim.Design.remove_service_provider">
 <span class="sig-name descname"><span class="pre">remove_service_provider</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.engine.ServiceProvider" title="pygissim.engine.ServiceProvider"><span class="pre">ServiceProvider</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/pygissim.html#Design.remove_service_provider"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.pygissim.Design.remove_service_provider" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Removes a ServiceProvider from the Design. May have cascading effects, 
+so internally this method calls <a class="reference internal" href="#pygissim.pygissim.Design.update_workflow_definitions" title="pygissim.pygissim.Design.update_workflow_definitions"><code class="xref py py-func docutils literal notranslate"><span class="pre">update_workflow_definitions()</span></code></a>
+because the removed ServiceProvider could have been referenced in a WorkflowDef.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>sp</strong> – The ServiceProvider to remove.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.pygissim.Design.remove_servicedef">
 <span class="sig-name descname"><span class="pre">remove_servicedef</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.engine.ServiceDef" title="pygissim.engine.ServiceDef"><span class="pre">ServiceDef</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/pygissim.html#Design.remove_servicedef"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.pygissim.Design.remove_servicedef" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Removes a ServiceDef from the Design. May have cascading effects, 
+so internally this method calls <a class="reference internal" href="#pygissim.pygissim.Design.update_service_providers" title="pygissim.pygissim.Design.update_service_providers"><code class="xref py py-func docutils literal notranslate"><span class="pre">update_service_providers()</span></code></a> and <a class="reference internal" href="#pygissim.pygissim.Design.update_workflow_definitions" title="pygissim.pygissim.Design.update_workflow_definitions"><code class="xref py py-func docutils literal notranslate"><span class="pre">update_workflow_definitions()</span></code></a>
+because the removed ServiceDef could have been a type for a ServiceProvider.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>sd</strong> – The ServiceDef to remove.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.pygissim.Design.remove_workflow">
 <span class="sig-name descname"><span class="pre">remove_workflow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">w</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.engine.Workflow" title="pygissim.engine.Workflow"><span class="pre">Workflow</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/pygissim.html#Design.remove_workflow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.pygissim.Design.remove_workflow" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Convenience method to remove a Workflow from the Design.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ValueError if the Workflow does not exist in the Design.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.pygissim.Design.remove_workflowdef">
 <span class="sig-name descname"><span class="pre">remove_workflowdef</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wdef</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.engine.WorkflowDef" title="pygissim.engine.WorkflowDef"><span class="pre">WorkflowDef</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/pygissim.html#Design.remove_workflowdef"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.pygissim.Design.remove_workflowdef" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Removes a WorkflowDef from the Design. May have cascading effects, 
+so internally this method calls <a class="reference internal" href="#pygissim.pygissim.Design.update_configured_workflows" title="pygissim.pygissim.Design.update_configured_workflows"><code class="xref py py-func docutils literal notranslate"><span class="pre">update_configured_workflows()</span></code></a>
+because the removed WorkflowDef could have been referenced in a Workflow.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>wdef</strong> – The WorkflowDef to remove.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.pygissim.Design.remove_zone">
 <span class="sig-name descname"><span class="pre">remove_zone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">zone</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.engine.Zone" title="pygissim.engine.Zone"><span class="pre">Zone</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/pygissim.html#Design.remove_zone"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.pygissim.Design.remove_zone" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Removes a Zone from the Design. Doing so can have cascading effects, 
+so internally this method removes any Connections that touched this Zone
+and then calls <a class="reference internal" href="#pygissim.pygissim.Design.update_service_providers" title="pygissim.pygissim.Design.update_service_providers"><code class="xref py py-func docutils literal notranslate"><span class="pre">update_service_providers()</span></code></a> and <a class="reference internal" href="#pygissim.pygissim.Design.update_workflow_definitions" title="pygissim.pygissim.Design.update_workflow_definitions"><code class="xref py py-func docutils literal notranslate"><span class="pre">update_workflow_definitions()</span></code></a>
+because removing a Zone could have removed ComputeNodes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>zone</strong> – The Zone to remove.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.pygissim.Design.update_configured_workflows">
 <span class="sig-name descname"><span class="pre">update_configured_workflows</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/pygissim.html#Design.update_configured_workflows"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.pygissim.Design.update_configured_workflows" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Function to be called if a change has been made that may invalidate one or more Workflows.
+Examples of changes that might do this:</p>
+<ul class="simple">
+<li><p>A WorkflowDef has been removed.</p></li>
+</ul>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.pygissim.Design.update_service_providers">
 <span class="sig-name descname"><span class="pre">update_service_providers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/pygissim.html#Design.update_service_providers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.pygissim.Design.update_service_providers" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Function to be called if a change has been made that may invalidate one or more ServiceProviders.
+Examples of changes that might do this:</p>
+<ul class="simple">
+<li><p>A ServiceDef has been removed</p></li>
+<li><p>A ComputeNode has been removed</p></li>
+</ul>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.pygissim.Design.update_workflow_definitions">
 <span class="sig-name descname"><span class="pre">update_workflow_definitions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/pygissim.html#Design.update_workflow_definitions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.pygissim.Design.update_workflow_definitions" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Function to be called if a change has been made that may invalidate one or more WorkflowDefs.
+Examples of changes that might do this:</p>
+<ul class="simple">
+<li><p>A ServiceProvider has been removed.</p></li>
+</ul>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.pygissim.Design.validate">
 <span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pygissim.engine.ValidationMessage" title="pygissim.engine.ValidationMessage"><span class="pre">ValidationMessage</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/pygissim/pygissim.html#Design.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.pygissim.Design.validate" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Method that evaluates the validity of the configuration of this Design.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Messages indicating invalid configuration.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list[<a class="reference internal" href="#pygissim.engine.ValidationMessage" title="pygissim.engine.ValidationMessage">ValidationMessage</a>]</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
