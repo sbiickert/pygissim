@@ -2185,7 +2185,7 @@ service_type exists, it will be replaced.</p>
 <dt class="sig sig-object py" id="pygissim.pygissim.Design.print_validation_messages">
 <span class="sig-name descname"><span class="pre">print_validation_messages</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/pygissim.html#Design.print_validation_messages"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.pygissim.Design.print_validation_messages" title="Link to this definition"></a></dt>
 <dd><p>Method to print out all validation messages in all components of the Design. 
-Useful for debugging if <a class="reference internal" href="#pygissim.pygissim.Design.is_valid" title="pygissim.pygissim.Design.is_valid"><code class="xref py py-func docutils literal notranslate"><span class="pre">is_valid()</span></code></a> is returning False.</p>
+Useful for debugging if <a class="reference internal" href="#pygissim.pygissim.Design.is_valid" title="pygissim.pygissim.Design.is_valid"><code class="xref py py-func docutils literal notranslate"><span class="pre">Design.is_valid()</span></code></a> is returning False.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -2334,55 +2334,133 @@ Examples of changes that might do this:</p>
 <dt class="sig sig-object py" id="pygissim.pygissim.Simulator">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pygissim.pygissim.</span></span><span class="sig-name descname"><span class="pre">Simulator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">desc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">design</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.pygissim.Design" title="pygissim.pygissim.Design"><span class="pre">Design</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/pygissim.html#Simulator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.pygissim.Simulator" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>The Simulator is the functional part of pygissim.
+The Simulator takes the setup from a Design and runs it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – A descriptive name</p></li>
+<li><p><strong>desc</strong> – Additional descriptive text</p></li>
+<li><p><strong>design</strong> – A design to simulate. If not specified, an empty Design will be created.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.pygissim.Simulator.active_requests">
 <span class="sig-name descname"><span class="pre">active_requests</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pygissim.engine.WaitingRequest" title="pygissim.engine.WaitingRequest"><span class="pre">WaitingRequest</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/pygissim/pygissim.html#Simulator.active_requests"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.pygissim.Simulator.active_requests" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of all requests in all queues.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.pygissim.Simulator.advance_time_by">
 <span class="sig-name descname"><span class="pre">advance_time_by</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ms</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/pygissim/pygissim.html#Simulator.advance_time_by"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.pygissim.Simulator.advance_time_by" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Moves the Simulator clock forward by a number of milliseconds.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ms</strong> – The number of milliseconds to move the clock forward.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The new Simulator clock.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ValueError if ms is negative or zero.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.pygissim.Simulator.advance_time_to">
 <span class="sig-name descname"><span class="pre">advance_time_to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">clock</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/pygissim/pygissim.html#Simulator.advance_time_to"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.pygissim.Simulator.advance_time_to" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pygissim.pygissim.Simulator.do_the_next_task">
-<span class="sig-name descname"><span class="pre">do_the_next_task</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/pygissim.html#Simulator.do_the_next_task"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.pygissim.Simulator.do_the_next_task" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Moves the Simulator clock forward to a specific future time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>clock</strong> – The future Simulator time to go to.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The new Simulator clock (will be the same as the clock parameter passed)</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ValueError if the specified clock time is not after the current Simulator clock.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.pygissim.Simulator.find_queue">
 <span class="sig-name descname"><span class="pre">find_queue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">st_calc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.engine.ServiceTimeCalculator" title="pygissim.engine.ServiceTimeCalculator"><span class="pre">ServiceTimeCalculator</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pygissim.engine.MultiQueue" title="pygissim.engine.MultiQueue"><span class="pre">MultiQueue</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="_modules/pygissim/pygissim.html#Simulator.find_queue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.pygissim.Simulator.find_queue" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Convenience method to find the MultiQueue that has a particular <a class="reference internal" href="#pygissim.engine.ComputeNode" title="pygissim.engine.ComputeNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">pygissim.engine.ComputeNode</span></code></a> 
+or <a class="reference internal" href="#pygissim.engine.Connection" title="pygissim.engine.Connection"><code class="xref py py-class docutils literal notranslate"><span class="pre">pygissim.engine.Connection</span></code></a> as its <a class="reference internal" href="#pygissim.engine.ServiceTimeCalculator" title="pygissim.engine.ServiceTimeCalculator"><code class="xref py py-class docutils literal notranslate"><span class="pre">pygissim.engine.ServiceTimeCalculator</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>st_calc</strong> – The ComputeNode or Connection.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The MultiQueue that has st_calc as its service time calculator. Returns None if no queue is found.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.pygissim.Simulator.gather_queue_metrics">
 <span class="sig-name descname"><span class="pre">gather_queue_metrics</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/pygissim.html#Simulator.gather_queue_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.pygissim.Simulator.gather_queue_metrics" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Gathers a <a class="reference internal" href="#pygissim.engine.QueueMetric" title="pygissim.engine.QueueMetric"><code class="xref py py-class docutils literal notranslate"><span class="pre">pygissim.engine.QueueMetric</span></code></a> from every queue and stores it in queue_metrics.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.pygissim.Simulator.next_event_time">
 <span class="sig-name descname"><span class="pre">next_event_time</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="_modules/pygissim/pygissim.html#Simulator.next_event_time"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.pygissim.Simulator.next_event_time" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>If the simulator is started or there are existing requests in the system, then
+there will be a clock value in the future when the next event happens, such as a new
+Transaction starting or a request being finished processing or passing through a Connection.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The clock time when the next thing happens. Returns None if there are no forecast events.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.pygissim.Simulator.reset">
 <span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/pygissim.html#Simulator.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.pygissim.Simulator.reset" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Resets the clock and all artifacts from previous run(s). Is called by <a class="reference internal" href="#pygissim.pygissim.Simulator.start" title="pygissim.pygissim.Simulator.start"><code class="xref py py-func docutils literal notranslate"><span class="pre">start()</span></code></a>.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.pygissim.Simulator.start">
 <span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/pygissim.html#Simulator.start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.pygissim.Simulator.start" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Puts the Simulator into a mode where time can be moved forward and requests will be generated.</p>
+<p>Normal process for running the Simulator:</p>
+<ol class="arabic simple">
+<li><p><a class="reference internal" href="#pygissim.pygissim.Simulator.start" title="pygissim.pygissim.Simulator.start"><code class="xref py py-func docutils literal notranslate"><span class="pre">start()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#pygissim.pygissim.Simulator.advance_time_by" title="pygissim.pygissim.Simulator.advance_time_by"><code class="xref py py-func docutils literal notranslate"><span class="pre">advance_time_by()</span></code></a> or <a class="reference internal" href="#pygissim.pygissim.Simulator.advance_time_to" title="pygissim.pygissim.Simulator.advance_time_to"><code class="xref py py-func docutils literal notranslate"><span class="pre">advance_time_to()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#pygissim.pygissim.Simulator.stop" title="pygissim.pygissim.Simulator.stop"><code class="xref py py-func docutils literal notranslate"><span class="pre">stop()</span></code></a></p></li>
+</ol>
+<p>The simulator time does not advance by itself, code to run the simulator might look like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sim</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">500</span><span class="p">):</span>
+    <span class="n">sim</span><span class="o">.</span><span class="n">advance_time_by</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>
+    <span class="n">sim</span><span class="o">.</span><span class="n">gather_queue_metrics</span><span class="p">()</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ValueError if the Design is None or the Design is not valid.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.pygissim.Simulator.stop">
 <span class="sig-name descname"><span class="pre">stop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/pygissim.html#Simulator.stop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.pygissim.Simulator.stop" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Stops the Simulator from generating new requests.
+Time can still be advanced, and existing requests will continue to be processed until 
+they are all finished.</p>
+</dd></dl>
 
 </dd></dl>
 

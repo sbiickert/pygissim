@@ -297,11 +297,8 @@
 <span class="sd">        :param name: The name of the ComputeNode to find.</span>
 <span class="sd">        :returns: The named ComputeNode. Returns None if no compute node has that name.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_nodes</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_nodes</span><span class="p">():</span> <span class="c1"># Includes V_SERVER nodes</span>
             <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span> <span class="k">return</span> <span class="n">node</span>
-            <span class="k">elif</span> <span class="n">node</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">ComputeNodeType</span><span class="o">.</span><span class="n">P_SERVER</span><span class="p">:</span>
-                <span class="k">for</span> <span class="n">v_node</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">_v_hosts</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="n">v_node</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span> <span class="k">return</span> <span class="n">v_node</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
 
@@ -546,7 +543,7 @@
 <a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.print_validation_messages">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">print_validation_messages</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Method to print out all validation messages in all components of the Design. </span>
-<span class="sd">        Useful for debugging if :func:`is_valid` is returning False.</span>
+<span class="sd">        Useful for debugging if :func:`Design.is_valid` is returning False.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
             <span class="k">for</span> <span class="n">vm</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">():</span>
@@ -584,6 +581,13 @@
 <div class="viewcode-block" id="Simulator">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Simulator">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Simulator</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; The Simulator is the functional part of pygissim.</span>
+<span class="sd">    The Simulator takes the setup from a Design and runs it.</span>
+<span class="sd">    </span>
+<span class="sd">    :param name: A descriptive name</span>
+<span class="sd">    :param desc: Additional descriptive text</span>
+<span class="sd">    :param design: A design to simulate. If not specified, an empty Design will be created.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">desc</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">design</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Design</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">desc</span>
@@ -601,6 +605,24 @@
 <div class="viewcode-block" id="Simulator.start">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Simulator.start">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Puts the Simulator into a mode where time can be moved forward and requests will be generated.</span>
+
+<span class="sd">        Normal process for running the Simulator:</span>
+
+<span class="sd">        1. :func:`start`</span>
+<span class="sd">        2. :func:`advance_time_by` or :func:`advance_time_to`</span>
+<span class="sd">        3. :func:`stop`</span>
+
+<span class="sd">        The simulator time does not advance by itself, code to run the simulator might look like::</span>
+
+<span class="sd">            sim.start()</span>
+<span class="sd">            for i in range(1,500):</span>
+<span class="sd">                sim.advance_time_by(500)</span>
+<span class="sd">                sim.gather_queue_metrics()</span>
+<span class="sd">            sim.stop()</span>
+<span class="sd">        </span>
+<span class="sd">        :raises: ValueError if the Design is None or the Design is not valid.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">design</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;design has not been set&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">design</span><span class="o">.</span><span class="n">is_valid</span><span class="p">()</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
@@ -615,12 +637,17 @@
 <div class="viewcode-block" id="Simulator.stop">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Simulator.stop">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Stops the Simulator from generating new requests.</span>
+<span class="sd">        Time can still be advanced, and existing requests will continue to be processed until </span>
+<span class="sd">        they are all finished. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">is_generating_new_requests</span> <span class="o">=</span> <span class="kc">False</span></div>
 
 
 <div class="viewcode-block" id="Simulator.reset">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Simulator.reset">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Resets the clock and all artifacts from previous run(s). Is called by :func:`start`. &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">clock</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">finished_requests</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_next_event_time_for_workflows</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
@@ -632,6 +659,12 @@
 <div class="viewcode-block" id="Simulator.next_event_time">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Simulator.next_event_time">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">next_event_time</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; If the simulator is started or there are existing requests in the system, then</span>
+<span class="sd">        there will be a clock value in the future when the next event happens, such as a new</span>
+<span class="sd">        Transaction starting or a request being finished processing or passing through a Connection.</span>
+<span class="sd">        </span>
+<span class="sd">        :returns: The clock time when the next thing happens. Returns None if there are no forecast events.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">times</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">wf_t</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Workflow</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_next_workflow</span><span class="p">()</span>
         <span class="n">q_t</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">MultiQueue</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_next_queue</span><span class="p">()</span>
@@ -663,6 +696,12 @@
 <div class="viewcode-block" id="Simulator.advance_time_by">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Simulator.advance_time_by">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">advance_time_by</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ms</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Moves the Simulator clock forward by a number of milliseconds.</span>
+<span class="sd">        </span>
+<span class="sd">        :param ms: The number of milliseconds to move the clock forward.</span>
+<span class="sd">        :returns: The new Simulator clock.</span>
+<span class="sd">        :raises: ValueError if ms is negative or zero.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">ms</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span> <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Cannot advance time by a negative amount or zero.&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">advance_time_to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">clock</span> <span class="o">+</span> <span class="n">ms</span><span class="p">)</span></div>
 
@@ -670,22 +709,29 @@
 <div class="viewcode-block" id="Simulator.advance_time_to">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Simulator.advance_time_to">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">advance_time_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clock</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Moves the Simulator clock forward to a specific future time.</span>
+<span class="sd">        </span>
+<span class="sd">        :param clock: The future Simulator time to go to.</span>
+<span class="sd">        :returns: The new Simulator clock (will be the same as the clock parameter passed)</span>
+<span class="sd">        :raises: ValueError if the specified clock time is not after the current Simulator clock.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">clock</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">clock</span><span class="p">:</span> <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Cannot set clock to </span><span class="si">{</span><span class="n">clock</span><span class="si">}</span><span class="s1">, which is before or equal to current clock (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">clock</span><span class="si">}</span><span class="s1">).&#39;</span><span class="p">)</span>
         
         <span class="n">time</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">next_event_time</span><span class="p">()</span>
         <span class="k">while</span> <span class="n">time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">time</span> <span class="o">&lt;=</span> <span class="n">clock</span><span class="p">:</span>
             <span class="c1"># print(f&#39;{time} &lt;= {clock}&#39;)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">do_the_next_task</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_do_the_next_task</span><span class="p">()</span>
             <span class="n">time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">next_event_time</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">clock</span> <span class="o">=</span> <span class="n">clock</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">clock</span></div>
 
 
-<div class="viewcode-block" id="Simulator.do_the_next_task">
-<a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Simulator.do_the_next_task">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">do_the_next_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_do_the_next_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Finds the next event that happens chronologically and executes it. &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">design</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="k">return</span>
+
+        <span class="c1"># Next work might be a new Transaction or an existing request has finished waiting.</span>
         <span class="n">next_work</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Workflow</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_next_workflow</span><span class="p">()</span>
         <span class="n">next_queue</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">MultiQueue</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_next_queue</span><span class="p">()</span>
 
@@ -727,12 +773,17 @@
                     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Could not find queue corresponding to ST Calculator </span><span class="si">{</span><span class="n">st_calc</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span> <span class="c1"># type: ignore</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="c1"># print(f&#39;Putting request {req.name} in queue {queue.name()}&#39;)</span>
-                    <span class="n">queue</span><span class="o">.</span><span class="n">enqueue</span><span class="p">(</span><span class="n">req</span><span class="p">,</span> <span class="n">clock</span><span class="o">=</span><span class="n">now</span><span class="p">)</span></div>
-
+                    <span class="n">queue</span><span class="o">.</span><span class="n">enqueue</span><span class="p">(</span><span class="n">req</span><span class="p">,</span> <span class="n">clock</span><span class="o">=</span><span class="n">now</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Simulator.find_queue">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Simulator.find_queue">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">find_queue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">st_calc</span><span class="p">:</span> <span class="n">ServiceTimeCalculator</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">MultiQueue</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Convenience method to find the MultiQueue that has a particular :class:`pygissim.engine.ComputeNode` </span>
+<span class="sd">        or :class:`pygissim.engine.Connection` as its :class:`pygissim.engine.ServiceTimeCalculator`.</span>
+
+<span class="sd">        :param st_calc: The ComputeNode or Connection.</span>
+<span class="sd">        :returns: The MultiQueue that has st_calc as its service time calculator. Returns None if no queue is found. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">result</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">MultiQueue</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">queues</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">q</span><span class="o">.</span><span class="n">service_time_calculator</span> <span class="o">==</span> <span class="n">st_calc</span><span class="p">:</span> <span class="k">return</span> <span class="n">q</span>
@@ -742,6 +793,7 @@
 <div class="viewcode-block" id="Simulator.active_requests">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Simulator.active_requests">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">active_requests</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">WaitingRequest</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; :returns: A list of all requests in all queues. &quot;&quot;&quot;</span>
         <span class="n">result</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">WaitingRequest</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">queues</span><span class="p">:</span>
@@ -753,6 +805,7 @@
 <div class="viewcode-block" id="Simulator.gather_queue_metrics">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Simulator.gather_queue_metrics">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">gather_queue_metrics</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Gathers a :class:`pygissim.engine.QueueMetric` from every queue and stores it in queue_metrics. &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">queues</span><span class="p">:</span>
             <span class="n">qm</span><span class="p">:</span> <span class="n">QueueMetric</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">get_performance_metric</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">clock</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">queue_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">qm</span><span class="p">)</span></div>

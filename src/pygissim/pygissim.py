@@ -387,7 +387,7 @@ class Design:
 
     def print_validation_messages(self):
         """ Method to print out all validation messages in all components of the Design. 
-        Useful for debugging if :func:`is_valid` is returning False.
+        Useful for debugging if :func:`Design.is_valid` is returning False.
         """
         if not self.is_valid():
             for vm in self.validate():
@@ -415,6 +415,13 @@ class Design:
         return f'Design {cls.next_id()}'
 
 class Simulator:
+    """ The Simulator is the functional part of pygissim.
+    The Simulator takes the setup from a Design and runs it.
+    
+    :param name: A descriptive name
+    :param desc: Additional descriptive text
+    :param design: A design to simulate. If not specified, an empty Design will be created.
+    """
     def __init__(self, name: str, desc: str, design: Optional[Design] = None):
         self.name: str = name
         self.description: str = desc
@@ -430,6 +437,24 @@ class Simulator:
         self.request_metrics: list[RequestMetric] = list()
 
     def start(self):
+        """ Puts the Simulator into a mode where time can be moved forward and requests will be generated.
+
+        Normal process for running the Simulator:
+
+        1. :func:`start`
+        2. :func:`advance_time_by` or :func:`advance_time_to`
+        3. :func:`stop`
+
+        The simulator time does not advance by itself, code to run the simulator might look like::
+
+            sim.start()
+            for i in range(1,500):
+                sim.advance_time_by(500)
+                sim.gather_queue_metrics()
+            sim.stop()
+        
+        :raises: ValueError if the Design is None or the Design is not valid.
+        """
         if self.design is None:
             raise ValueError('design has not been set')
         if self.design.is_valid() == False:
@@ -441,9 +466,14 @@ class Simulator:
             self._next_event_time_for_workflows[wf.name] = wf.calculate_next_event_time(self.clock)
         
     def stop(self):
+        """ Stops the Simulator from generating new requests.
+        Time can still be advanced, and existing requests will continue to be processed until 
+        they are all finished. 
+        """
         self.is_generating_new_requests = False
 
     def reset(self):
+        """ Resets the clock and all artifacts from previous run(s). Is called by :func:`start`. """
         self.clock = 0
         self.finished_requests.clear()
         self._next_event_time_for_workflows.clear()
@@ -452,6 +482,12 @@ class Simulator:
         self.queues = self.design.provide_queues() if self.design is not None else []
 
     def next_event_time(self) -> Optional[int]:
+        """ If the simulator is started or there are existing requests in the system, then
+        there will be a clock value in the future when the next event happens, such as a new
+        Transaction starting or a request being finished processing or passing through a Connection.
+        
+        :returns: The clock time when the next thing happens. Returns None if there are no forecast events.
+        """
         times: list[int] = []
         wf_t: Optional[Tuple[Workflow, int]] = self._next_workflow()
         q_t: Optional[Tuple[MultiQueue, int]] = self._next_queue()
@@ -480,23 +516,38 @@ class Simulator:
         return result
     
     def advance_time_by(self, ms: int) -> int:
+        """ Moves the Simulator clock forward by a number of milliseconds.
+        
+        :param ms: The number of milliseconds to move the clock forward.
+        :returns: The new Simulator clock.
+        :raises: ValueError if ms is negative or zero.
+        """
         if ms <= 0: raise ValueError('Cannot advance time by a negative amount or zero.')
         return self.advance_time_to(self.clock + ms)
 
     def advance_time_to(self, clock: int) -> int:
+        """ Moves the Simulator clock forward to a specific future time.
+        
+        :param clock: The future Simulator time to go to.
+        :returns: The new Simulator clock (will be the same as the clock parameter passed)
+        :raises: ValueError if the specified clock time is not after the current Simulator clock.
+        """
         if clock <= self.clock: raise ValueError(f'Cannot set clock to {clock}, which is before or equal to current clock ({self.clock}).')
         
         time: Optional[int] = self.next_event_time()
         while time is not None and time <= clock:
             # print(f'{time} <= {clock}')
-            self.do_the_next_task()
+            self._do_the_next_task()
             time = self.next_event_time()
 
         self.clock = clock
         return self.clock
 
-    def do_the_next_task(self):
+    def _do_the_next_task(self):
+        """ Finds the next event that happens chronologically and executes it. """
         if self.design is None: return
+
+        # Next work might be a new Transaction or an existing request has finished waiting.
         next_work: Optional[Tuple[Workflow, int]] = self._next_workflow()
         next_queue: Optional[Tuple[MultiQueue, int]] = self._next_queue()
 
@@ -541,12 +592,19 @@ class Simulator:
                     queue.enqueue(req, clock=now)
 
     def find_queue(self, st_calc: ServiceTimeCalculator) -> Optional[MultiQueue]:
+        """ Convenience method to find the MultiQueue that has a particular :class:`pygissim.engine.ComputeNode` 
+        or :class:`pygissim.engine.Connection` as its :class:`pygissim.engine.ServiceTimeCalculator`.
+
+        :param st_calc: The ComputeNode or Connection.
+        :returns: The MultiQueue that has st_calc as its service time calculator. Returns None if no queue is found. 
+        """
         result: Optional[MultiQueue] = None
         for q in self.queues:
             if q.service_time_calculator == st_calc: return q
         return result
 
     def active_requests(self) -> list[WaitingRequest]:
+        """ :returns: A list of all requests in all queues. """
         result: list[WaitingRequest] = []
 
         for q in self.queues:
@@ -555,6 +613,7 @@ class Simulator:
         return result
     
     def gather_queue_metrics(self):
+        """ Gathers a :class:`pygissim.engine.QueueMetric` from every queue and stores it in queue_metrics. """
         for q in self.queues:
             qm: QueueMetric = q.get_performance_metric(self.clock)
             self.queue_metrics.append(qm)
