@@ -225,30 +225,47 @@ def sp_to_graph(sps: list[ServiceProvider]) -> Tuple[list, list]:
     return (nodes, edges)
 
 def workflows_to_graph(workflows:list[Workflow]) -> Tuple[list, list]:
-    nodes = []
-    edges = []
+    nodes:Dict = dict()
+    edges:Dict = dict()
 
     for w in workflows:
-        nodes.append({"id": w.name, "properties":{'label': w.name, 'type': 'Workflow'}})
+        nodes[w.name] = {"id": w.name, "properties":{'label': w.name, 'type': 'Workflow'}}
         wdef = w.definition
-        nodes.append({"id": wdef.name, "properties":{'label': wdef.name, 'type': 'Definition'}})
-        edges.append({"id": f'{w.name}-{wdef.name}', "start": w.name, "end": wdef.name, 'properties': {'wf': w.name}})
+        nodes[wdef.name] = {"id": wdef.name, "properties":{'label': wdef.name, 'type': 'Definition'}}
+        e_id = f'{w.name}-{wdef.name}'
+        if e_id not in edges.keys():
+            edges[e_id] = {"id": e_id, "start": w.name, "end": wdef.name, 'properties': {'wf': w.name}}
         for chain in wdef.chains:
-            nodes.append({"id": chain.name, "properties":{'label': chain.name, 'type': 'Chain'}})
-            edges.append({"id": f'{wdef.name}-{chain.name}', "start": wdef.name, "end": chain.name, 'properties': {'wf': w.name}})
+            if chain.name not in nodes.keys():
+                nodes[chain.name] = {"id": chain.name, "properties":{'label': chain.name, 'type': 'Chain'}}
+            e_id = f'{wdef.name}-{chain.name}'
+            if e_id not in edges.keys():
+                edges[e_id] = {"id": e_id, "start": wdef.name, "end": chain.name, 'properties': {'wf': w.name}}
             if len(chain.steps) == 0: continue
-            nodes.append({"id": f'{chain.name}-{chain.steps[0].name}', "properties":{'label': chain.steps[0].name, 'type': 'Step'}})
-            edges.append({"id": f'{chain.name}-{nodes[-1]['id']}', "start": chain.name, "end": nodes[-1]['id'], 'properties': {'wf': w.name}})
+            step = chain.steps[0]
+            if step.name not in nodes.keys():
+                nodes[step.name] = {"id": f'{step.name}', 
+                                    "properties":{'label': step.name,
+                                                  'type': f'{step.service_type} step',
+                                                  'st': step.service_time,
+                                                  'response size': f'{step.response_size_kb} kB'}}
+            e_id = f'{chain.name}-{nodes[step.name]}'
+            if e_id not in edges.keys():
+                edges[e_id] =  {"id": e_id, "start": chain.name, "end": step.name, 'properties': {'wf': w.name}}
             for i in range(1, len(chain.steps)):
-                nodes.append({"id": f'{chain.name}-{chain.steps[i].name}', "properties":{'label': chain.steps[i].name, 'type': 'Step'}})
-                edges.append({"id": f'{nodes[-2]['id']}-{nodes[-1]['id']}', "start": nodes[-2]['id'], "end": nodes[-1]['id'], 'properties': {'wf': w.name}})
+                prev_step = chain.steps[i-1]
+                step = chain.steps[i]
+                if step.name not in nodes.keys():
+                    nodes[step.name] = {"id": step.name, 
+                                        "properties":{'label': step.name, 
+                                                      'type': f'{step.service_type} step',
+                                                      'st': step.service_time,
+                                                      'response size': f'{step.response_size_kb} kB' }}
+                e_id = f'{prev_step.name}-{step.name}'
+                if e_id not in edges.keys():
+                    edges[e_id] = {"id": e_id, "start": prev_step.name, "end": step.name, 'properties': {'wf': w.name}}
 
-    # Eliminate duplicate nodes
-    n_dict = dict()
-    for node in nodes: n_dict[node['id']] = node
-    nodes = list(n_dict.values())
-
-    return (nodes, edges)
+    return (list(nodes.values()), list(edges.values()))
 
 def zone_compute_sp_node_color_mapping(node: Dict) -> str:
     if 'ZoneType' in node['properties']['type']:
