@@ -180,11 +180,7 @@ class TestDesign(unittest.TestCase):
             d.workflow_definitions[1].assign_service_provider(sp)
 
         # Workflows
-        web_wdef: Optional[WorkflowDef] = d.get_workflowdef('Web Map Definition')
-        mobile_wdef: Optional[WorkflowDef] = d.get_workflowdef('Mobile Map Definition')
-        if web_wdef is None or mobile_wdef is None:
-            raise ValueError('Could not get web and mobile workflow definitions from design.')
-        d.add_transactional_workflow('Web', desc='', wdef=web_wdef, tph=1000)
-        d.add_client_workflow('Mobile', desc='', wdef=mobile_wdef, users=15, productivity=6)
+        d.add_transactional_workflow('Web', desc='', wdef_name='Web Map Definition', tph=1000)
+        d.add_client_workflow('Mobile', desc='', wdef_name='Mobile Map Definition', users=15, productivity=6)
 
         return d

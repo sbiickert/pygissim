@@ -391,16 +391,16 @@ class Design:
         """
         if not self.is_valid():
             for vm in self.validate():
-                print(f'Design {vm}')
+                print(f'{vm}')
             for w in self._workflows:
                 for vm in w.validate():
-                    print(f'Workflow {vm}')
-                    for chain in w.definition.chains:
-                        for wc_vm in chain.validate():
-                            print(f'Workflow chain {vm}')
+                    print(f'{vm}')
+                for chain in w.definition.chains:
+                    for wc_vm in chain.validate():
+                        print(f'{wc_vm}')
             for sp in self.service_providers:
                 for vm in sp.validate():
-                    print(f'Service provider {vm}')
+                    print(f'{vm}')
 
     _next_id: int = 0
     @classmethod

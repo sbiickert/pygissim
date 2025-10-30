@@ -1343,7 +1343,7 @@ class Workflow:
         
         invalid_chains: list[WorkflowChain] = list(filter(lambda chain: (chain.is_valid() == False), self.definition.chains))
         for chain in invalid_chains:
-            result.append(ValidationMessage(message=f'Workflow Chain {chain.name} is invalid', source=chain.name))
+            result.append(ValidationMessage(message=f'Workflow Chain {chain.name} is invalid', source=self.name))
 
         if self.transaction_rate() < 0:
             result.append(ValidationMessage(message='Transaction rate must be greater than or equal to zero', source=self.name))
