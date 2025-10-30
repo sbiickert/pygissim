@@ -237,6 +237,13 @@ class Design:
         self.service_providers.remove(sp)
         self.update_workflow_definitions()
 
+    def get_service_providers_with_tag(self, tag: str) -> list[ServiceProvider]:
+        """
+        :param tag: The tag to find.
+        :returns: A list of service providers that have the given tag.
+        """
+        return list(filter(lambda sp: (tag in sp.tags), self.service_providers))
+
 
     def add_workflowdef(self, wdef: WorkflowDef):
         """ Convenience method to add a WorkflowDef to the Design.

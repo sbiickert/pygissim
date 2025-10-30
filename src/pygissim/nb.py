@@ -328,13 +328,13 @@ def draw_workflows(workflows: list[Workflow]) -> GraphWidget:
 
     return w
 
-def create_service_provider(d: Design, name: str, service: str, node_names: list[str]):
+def create_service_provider(d: Design, name: str, service: str, node_names: list[str], tags: Optional[Set[str]]):
     nodes: list[ComputeNode] = []
     for node_name in node_names:
         node = d.get_compute_node(node_name)
         if node is not None:
             nodes.append(node)
-    d.add_service_provider(ServiceProvider(name, "", service=d.services[service], nodes=nodes))
+    d.add_service_provider(ServiceProvider(name, "", service=d.services[service], nodes=nodes, tags=tags))
 
 
 def create_agol_service_providers(d: Design, zone_name: str):
@@ -342,12 +342,12 @@ def create_agol_service_providers(d: Design, zone_name: str):
     agol: Optional[Zone] = d.get_zone(zone_name)
     if agol is None: raise ValueError(f'No zone named "{zone_name} found in design.')
     servers: list[ComputeNode] = list(filter(lambda node: (node.zone == agol), d.compute_nodes()))
-    sp_agol.append(ServiceProvider(name='AGOL Edge', desc='', service=d.services['web'], nodes=servers))
-    sp_agol.append(ServiceProvider(name='AGOL Portal', desc='', service=d.services['portal'], nodes=servers))
-    sp_agol.append(ServiceProvider(name='AGOL GIS', desc='', service=d.services['feature'], nodes=servers))
-    sp_agol.append(ServiceProvider(name='AGOL Basemap', desc='', service=d.services['map'], nodes=servers))
-    sp_agol.append(ServiceProvider(name='AGOL DB', desc='', service=d.services['relational'], nodes=servers))
-    sp_agol.append(ServiceProvider(name='AGOL File', desc='', service=d.services['file'], nodes=servers))
+    sp_agol.append(ServiceProvider(name='AGOL Edge', desc='', service=d.services['web'], nodes=servers, tags={'agol'}))
+    sp_agol.append(ServiceProvider(name='AGOL Portal', desc='', service=d.services['portal'], nodes=servers, tags={'agol'}))
+    sp_agol.append(ServiceProvider(name='AGOL GIS', desc='', service=d.services['feature'], nodes=servers, tags={'agol'}))
+    sp_agol.append(ServiceProvider(name='AGOL Basemap', desc='', service=d.services['map'], nodes=servers, tags={'agol'}))
+    sp_agol.append(ServiceProvider(name='AGOL DB', desc='', service=d.services['relational'], nodes=servers, tags={'agol'}))
+    sp_agol.append(ServiceProvider(name='AGOL File', desc='', service=d.services['file'], nodes=servers, tags={'agol'}))
 
     for sp in sp_agol:
         d.add_service_provider(sp)

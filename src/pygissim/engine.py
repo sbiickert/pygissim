@@ -627,13 +627,18 @@ class ServiceProvider:
     :param desc: Additional descriptive text.
     :param service: The definition of the service that this provides.
     :param nodes: The list of ComputeNodes that will handle the service requests.
+    :param tags: A set of tags for grouping service providers if needed.
     """
-    def __init__(self, name:str, desc: str, service: ServiceDef, nodes: list[ComputeNode]):
+    def __init__(self, name:str, desc: str, service: ServiceDef, nodes: list[ComputeNode], tags: Optional[Set[str]] = None):
         self.name: str = name
         self.description: str = desc
         self.service: ServiceDef = service
         self.nodes: list[ComputeNode] = nodes
         self._primary: int = 0
+        if tags is None:
+            self.tags: Set[str] = set()
+        else:
+            self.tags = tags
 
     def __eq__(self, other):
         if not isinstance(other, ServiceProvider):
@@ -1142,6 +1147,17 @@ class WorkflowDef:
         """ Removes all ServiceProviders for all workflow chains. """
         for chain in self.chains:
             chain.service_providers.clear()
+
+    def get_chain(self, name:str) -> Optional[WorkflowChain]:
+        """ Find a chain by name in the list.
+        
+        :param name: The name of the chain to find. Case-insensitive.
+        :returns: The named chain. Returns None if not found.
+        """
+        name_uc:str = name.upper()
+        for chain in self.chains:
+            if chain.name.upper() == name_uc: return chain
+        return None
 
 # ------------------------------------------------------------
 class Transaction:
