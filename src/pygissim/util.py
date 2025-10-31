@@ -110,14 +110,14 @@ class LibManager:
                 wdef: WorkflowDef = WorkflowDef(row['name'], row['description'], int(row['think']), chains)
                 self.workflow_definitions[wdef.name] = wdef
 
-network_list: list[str] = ["Local Only", "Local and ArcGIS Online", "Branch Offices", "Cloudy", "Backhaul Cloudy"]
-
 class NetworkNames(Enum):
     LOCAL_ONLY = "Local Only"
     LOCAL_AND_AGOL = "Local and ArcGIS Online"
     BRANCH_OFFICES = "Branch Offices"
     CLOUDY = "Cloudy"
     BACKHAUL_CLOUDY = "Backhaul Cloudy"
+
+network_list: list[str] = NetworkNames._member_names_
 
 def load_network(name: NetworkNames) -> Tuple[list[Zone], list[Connection]]:
     """ Creates a set of network Zones and Connections. These would cover most basic examples,

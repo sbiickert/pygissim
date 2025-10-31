@@ -27,7 +27,7 @@ class ValidationMessage:
     source: str
 
     def __str__(self):
-        return f'VM {self.source}: "{self.message}"'
+        return f'{self.source}: "{self.message}"'
     
 @dataclass(frozen=True)
 class QueueMetric:

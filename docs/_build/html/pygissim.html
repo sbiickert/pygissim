@@ -1020,7 +1020,7 @@ provides and how requests are balanced.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="pygissim.engine.ServiceProvider">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pygissim.engine.</span></span><span class="sig-name descname"><span class="pre">ServiceProvider</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">desc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.engine.ServiceDef" title="pygissim.engine.ServiceDef"><span class="pre">ServiceDef</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pygissim.engine.ComputeNode" title="pygissim.engine.ComputeNode"><span class="pre">ComputeNode</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/engine.html#ServiceProvider"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.ServiceProvider" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pygissim.engine.</span></span><span class="sig-name descname"><span class="pre">ServiceProvider</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">desc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.engine.ServiceDef" title="pygissim.engine.ServiceDef"><span class="pre">ServiceDef</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pygissim.engine.ComputeNode" title="pygissim.engine.ComputeNode"><span class="pre">ComputeNode</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tags</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Set</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/engine.html#ServiceProvider"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.ServiceProvider" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Represents one or more ComputeNodes that are assigned to handle a particular service type.</p>
 <dl class="field-list simple">
@@ -1030,6 +1030,7 @@ provides and how requests are balanced.</p>
 <li><p><strong>desc</strong> – Additional descriptive text.</p></li>
 <li><p><strong>service</strong> – The definition of the service that this provides.</p></li>
 <li><p><strong>nodes</strong> – The list of ComputeNodes that will handle the service requests.</p></li>
+<li><p><strong>tags</strong> – A set of tags for grouping service providers if needed.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1492,6 +1493,20 @@ Useful when multiple WorkflowChains differ only in their client.</p>
 <dt class="sig sig-object py" id="pygissim.engine.WorkflowDef.clear_service_providers">
 <span class="sig-name descname"><span class="pre">clear_service_providers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/engine.html#WorkflowDef.clear_service_providers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.WorkflowDef.clear_service_providers" title="Link to this definition"></a></dt>
 <dd><p>Removes all ServiceProviders for all workflow chains.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pygissim.engine.WorkflowDef.get_chain">
+<span class="sig-name descname"><span class="pre">get_chain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pygissim.engine.WorkflowChain" title="pygissim.engine.WorkflowChain"><span class="pre">WorkflowChain</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#WorkflowDef.get_chain"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.WorkflowDef.get_chain" title="Link to this definition"></a></dt>
+<dd><p>Find a chain by name in the list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> – The name of the chain to find. Case-insensitive.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The named chain. Returns None if not found.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -2102,6 +2117,19 @@ service_type exists, it will be replaced.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The named ComputeNode. Returns None if no compute node has that name.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pygissim.pygissim.Design.get_service_providers_with_tag">
+<span class="sig-name descname"><span class="pre">get_service_providers_with_tag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pygissim.engine.ServiceProvider" title="pygissim.engine.ServiceProvider"><span class="pre">ServiceProvider</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/pygissim/pygissim.html#Design.get_service_providers_with_tag"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.pygissim.Design.get_service_providers_with_tag" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>tag</strong> – The tag to find.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of service providers that have the given tag.</p>
 </dd>
 </dl>
 </dd></dl>

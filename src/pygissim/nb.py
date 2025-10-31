@@ -1,6 +1,7 @@
 from typing import Optional, Dict
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 from yfiles_jupyter_graphs import GraphWidget
 
 
@@ -106,6 +107,29 @@ def perf_stats_for_requests(metrics: list[RequestMetric]) -> pd.DataFrame:
 
     return pd.DataFrame(data, columns=columns)
 
+def draw_queue_utilization(df: pd.DataFrame, rolling: bool = False):
+    min_val = 0.0
+    max_val = 1.0
+    
+    for col in df.columns:
+        if col == 'Clock': continue;
+        df[col] = pd.to_numeric(df[col])
+        if rolling:
+            df[col] = df[col].rolling(3).mean()
+        max_val = max(max_val, df[col].max())
+
+    fig, ax = plt.subplots(figsize=(15,7))
+    ax.grid(True)
+    plt.xlim(df.index.min(), df.index.max())
+    plt.ylim(min_val, max_val)
+
+    for col in df.columns:
+        if col == 'Clock': continue;
+        plt.plot(df.index, df[col], label=col, linewidth=1.75)#, color=SERIES_INFO[vm]['color'])
+
+    plt.legend(loc='upper left')
+    plt.title('Utilization')
+    plt.show()
 
 # d8888b. d88888b .d8888.  .o88b. d8888b. d888888b d8888b. d88888b
 # 88  `8D 88'     88'  YP d8P  Y8 88  `8D   `88'   88  `8D 88'    
@@ -337,10 +361,10 @@ def create_service_provider(d: Design, name: str, service: str, node_names: list
     d.add_service_provider(ServiceProvider(name, "", service=d.services[service], nodes=nodes, tags=tags))
 
 
-def create_agol_service_providers(d: Design, zone_name: str):
+def create_agol_service_providers(d: Design, agol_zone_name: str):
     sp_agol: list[ServiceProvider] = list()
-    agol: Optional[Zone] = d.get_zone(zone_name)
-    if agol is None: raise ValueError(f'No zone named "{zone_name} found in design.')
+    agol: Optional[Zone] = d.get_zone(agol_zone_name)
+    if agol is None: raise ValueError(f'No zone named "{agol_zone_name} found in design.')
     servers: list[ComputeNode] = list(filter(lambda node: (node.zone == agol), d.compute_nodes()))
     sp_agol.append(ServiceProvider(name='AGOL Edge', desc='', service=d.services['web'], nodes=servers, tags={'agol'}))
     sp_agol.append(ServiceProvider(name='AGOL Portal', desc='', service=d.services['portal'], nodes=servers, tags={'agol'}))
