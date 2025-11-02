@@ -16,7 +16,7 @@ from pygissim.pygissim import *
 # YP  YP  YP Y88888P    YP    88   YD Y888888P  `Y88P' `8888Y'
 
 def _qm_list_to_df(data: list[QueueMetric], queue_type: Optional[str] = None) -> pd.DataFrame:
-    df = pd.DataFrame(list(map(lambda qm: ([qm.source, qm.stc_type, qm.clock, qm.channel_count, qm.request_count, qm.utilization()]), data)),
+    df = pd.DataFrame(list(map(lambda qm: ([qm.source, qm.stc_type, qm.clock, qm.channel_count, qm.request_count, qm.utilization]), data)),
                       columns=['Source', 'Type', 'Clock', 'Channels', 'Requests', 'Utilization'])
     if queue_type is not None:
         df = df[df['Type'] == queue_type]
@@ -193,6 +193,11 @@ def connections_to_graph_edges(net: list[Connection], metrics: Optional[list[Que
                       "properties":{'name': conn.name, 'label': f'{conn.bandwidth}/{conn.latency_ms}', 'bw': conn.bandwidth, 'lat': conn.latency_ms, 'util': avg}})
     return edges
 
+def network_edge_styles_mapping(index, edge):
+    m = dict()
+    m['thickness'] = 4
+    return m
+
 def network_node_color_mapping(node: Dict) -> str:
     match node['properties']['type']:
         case 'ZoneType.LOCAL': return '#9999FF'
@@ -217,6 +222,7 @@ def draw_network(zones: list[Zone], connections: list[Connection]) -> GraphWidge
     w.graph_layout = 'orthogonal'
     w.set_node_color_mapping(network_node_color_mapping)
     w.set_edge_color_mapping(network_edge_color_mapping)
+    w.default_edge_styles_mapping = network_edge_styles_mapping
     return w
 
 def compute_to_graph(c_nodes: list[ComputeNode]) -> Tuple[list, list]:
@@ -299,7 +305,7 @@ def zone_compute_sp_node_color_mapping(node: Dict) -> str:
     elif node['properties']['type'] == str(ComputeNodeType.P_SERVER):
         return '#000099'
     elif node['properties']['type'] == str(ComputeNodeType.V_SERVER):
-        return '#666699'
+        return '#9999CC'
     else:
         return '#333333'
     

@@ -42,25 +42,29 @@ class QueueMetric:
     :param channel_count: The number of parallel channels in the MultiQueue.
     :type channel_count: int
     :param request_count: The number of requests being processed and queued.
+    :param utilization: The utilization (1.0 = 100%) of this queue.
     """
     source: str
     stc_type: str
     clock: int
     channel_count: int
     request_count: int
+    utilization: float
 
     def __str__(self):
         return f'QM@{self.clock} ({self.source} channels:{self.channel_count} requests:{self.request_count})'
     
-    def utilization(self) -> float:
-        """
-        Utility function to return the utilization of a network connection or a compute node.
+    # Old definition of utilization based on numbers of requests at a point in time
+    # See MultiQueue get_performance_metric for details
+    # def utilization(self) -> float:
+    #     """
+    #     Utility function to return the utilization of a network connection or a compute node.
 
-        * Channels represents the number of parallel channels to do work. If they are all full, then 1.0 is returned (100%)
-        * If all channels are full and more requests were waiting, then the result will be more than 1.0 (> 100%)
-        """
-        if self.channel_count == 0 or self.request_count == 0: return 0.0
-        return self.request_count / self.channel_count
+    #     * Channels represents the number of parallel channels to do work. If they are all full, then 1.0 is returned (100%)
+    #     * If all channels are full and more requests were waiting, then the result will be more than 1.0 (> 100%)
+    #     """
+    #     if self.channel_count == 0 or self.request_count == 0: return 0.0
+    #     return self.request_count / self.channel_count
 
 @dataclass(frozen=True)
 class RequestMetric:
@@ -812,6 +816,8 @@ class MultiQueue:
         self.wait_mode: WaitMode = wait_mode
         self.channels: list[Optional[WaitingRequest]] = [None] * channel_count # Parallel, concurrent requests being worked on
         self.main_queue: list[WaitingRequest] = [] # Serial, requests waiting for a channel
+        self.last_metric_clock: int = 0 # Update every time get_performance_metric is called
+        self.work_done: int = 0         # For utilization
 
     def name(self) -> str:
         """ :returns: The name of the service time calculator (i.e. the Connection or ComputeNode)"""
@@ -901,6 +907,7 @@ class MultiQueue:
                                     latency_time=lt)
             result.append((wr.request, metric))
             wr.request.accumulating_metrics.append(metric)
+            self._log_work_done(wr, clock)
             
             # Move a waiting request into a channel
             if len(self.main_queue) > 0:
@@ -949,9 +956,35 @@ class MultiQueue:
         elif isinstance(self.service_time_calculator, Connection):
             stc = "CONNECTION"
         else: stc = "UNKNOWN"
-        return QueueMetric(source=self.name(), stc_type=stc,
-                           clock=clock, channel_count=len(self.channels), request_count=len(self.all_waiting_requests()))
+        waiting: list[WaitingRequest] = self.all_waiting_requests()
+        for wr in waiting:
+            self._log_work_done(wr, clock)
+
+        qm = QueueMetric(source=self.name(), stc_type=stc,
+                           clock=clock, channel_count=len(self.channels), request_count=len(waiting),
+                           utilization=self._calc_utilization(clock))
+        self.work_done = 0
+        self.last_metric_clock = clock
+        return qm
     
+    def _log_work_done(self, request: WaitingRequest, clock: int):
+        wait_end = request.wait_end()
+        if request.service_time is None or wait_end is None: return
+        # Total work for request is the service time, but if the work started before the last 
+        # time it was logged, ignore that part. Also, if the work isn't done yet, then ignore that too.
+        total_work: int = request.service_time
+        if request.wait_start < self.last_metric_clock:
+            total_work = total_work - (self.last_metric_clock - request.wait_start)
+        if clock < wait_end:
+            total_work = total_work - (wait_end - clock)
+        self.work_done = self.work_done + total_work
+
+    def _calc_utilization(self, clock: int) -> float:
+        # 1.0 is 100% utilization
+        time_window = clock - self.last_metric_clock
+        max_work: int = time_window * len(self.channels)
+        return float(self.work_done) / float(max_work)
+
 
 # db   d8b   db  .d88b.  d8888b. db   dD
 # 88   I8I   88 .8P  Y8. 88  `8D 88 ,8P'
