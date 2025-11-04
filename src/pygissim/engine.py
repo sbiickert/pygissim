@@ -70,23 +70,17 @@ class QueueMetric:
 class RequestMetric:
     """ DataClass for tracking the utilization rate of all queues (compute and network).
     A RequestMetric is reported every time a :class:`ClientRequest` leaves a :class:`MultiQueue`.
-    The time values represent the service time, queue time and latency time the :class:`ClientRequest` experienced
+    The time values represent the service time, queue time, network time and latency time the :class:`ClientRequest` experienced
     between being enqueued and completed.
 
     :param source: The name of the :class:`MultiQueue` that was measured.
-    :type source: str
     :param clock: The simulation time (in ms) when the measurement was taken.
-    :type clock: int
     :param request_name: The name of the :class:`ClientRequest`.
-    :type request_name: str
     :param workflow_name: The name of the :class:`Workflow`.
-    :type workflow_name: str
     :param service_time: The time spent processing the :class:`ClientRequest` (in ms).
-    :type service_time: int
     :param queue_time: The time spent in queue (in ms).
-    :type queue_time: int
+    :param network_time: The time spent transmitting (in ms).
     :param latency_time: The time spent in latency (in ms).
-    :type latency_time: int
     """
     source: str
     clock: int
@@ -94,10 +88,11 @@ class RequestMetric:
     workflow_name: str
     service_time: int
     queue_time: int
+    network_time: int
     latency_time: int
 
     def __str__(self):
-        return f'RM@{self.clock} ({self.request_name} ({self.workflow_name}) in {self.source} st:{self.service_time} qt:{self.queue_time} lt:{self.latency_time})'
+        return f'RM@{self.clock} ({self.request_name} ({self.workflow_name}) in {self.source} st:{self.service_time} qt:{self.queue_time} nt:{self.network_time} lt:{self.latency_time})'
 
 class ServiceTimeCalculator(ABC):
     """ Abstract base class for classes that will be delegates for a MultiQueue to calculate service time and latency time. 
@@ -745,6 +740,7 @@ class WaitMode(Enum):
     TRANSMITTING = 'transmitting'
     PROCESSING = 'processing'
     QUEUEING = 'queueing'
+    LATENCY = 'latency'
 
 
 # ------------------------------------------------------------
@@ -773,6 +769,15 @@ class WaitingRequest:
         self.wait_mode: WaitMode = wait_mode
         self.queue_time: int = queue_time
 
+    def latency_ended(self, clock: int):
+        """ The request is moving out of the latency holding and into the queue.
+        The time spent in the holding is recorded, and the wait mode is updated to reflect queueing.
+        
+        :param clock: The current simulation time.
+        """
+        self.wait_mode = WaitMode.QUEUEING
+        self.latency = clock - self.wait_start
+
     def queue_ended(self, clock: int, wait_mode: WaitMode):
         """ The request is moving out of the queue and into a channel.
         The time spent in the queue is recorded, and the wait mode is updated to reflect
@@ -782,16 +787,20 @@ class WaitingRequest:
         :param wait_mode: The wait mode for this queue's :class:`ServiceTimeCalculator`
         """
         self.wait_mode = wait_mode
-        self.queue_time = clock - self.wait_start
+        lat = 0 if self.latency is None else self.latency
+        self.queue_time = clock - self.wait_start - lat
 
     # TODO: Work out if there is potential for requests to get "stuck" in a MultiQueue.
     def wait_end(self) -> Optional[int]:
         """
-        :returns: The simulation time when this request will be finished processing. None if queueing or service time is None.
+        :returns: The simulation time when this request will be finished latency holding or processing. None if queueing or service time is None.
         """
         if self.wait_mode == WaitMode.QUEUEING or self.service_time is None:
             return None
         lat: int = 0 if self.latency is None else self.latency
+        if self.wait_mode == WaitMode.LATENCY:
+            return self.wait_start + lat
+
         return self.wait_start + self.service_time + lat + self.queue_time
 
 
@@ -816,6 +825,7 @@ class MultiQueue:
         self.wait_mode: WaitMode = wait_mode
         self.channels: list[Optional[WaitingRequest]] = [None] * channel_count # Parallel, concurrent requests being worked on
         self.main_queue: list[WaitingRequest] = [] # Serial, requests waiting for a channel
+        self.latency_holding: Set[WaitingRequest] = set() # Where requests go when waiting out their latency time
         self.last_metric_clock: int = 0 # Update every time get_performance_metric is called
         self.work_done: int = 0         # For utilization
 
@@ -862,12 +872,12 @@ class MultiQueue:
         return result
     
     def request_count(self) -> int:
-        """ :returns: The total count of requests in channels and in the main queue. """
-        return len(self.main_queue) + len(self.channels) - self.available_channel_count()
+        """ :returns: The total count of requests in latency holding, channels and in the main queue. """
+        return len(self.latency_holding) + len(self.main_queue) + len(self.channels_with_requests())
     
     def next_event_time(self) -> Optional[int]:
         """
-        :returns: The simulation clock when the next request in a channel will be finished. Returns None if no requests being processed.
+        :returns: The simulation clock when the next request in a channel (or in latency holding) will be finished. Returns None if no requests being processed.
         """
         result: Optional[int] = None
         for i in self.channels_with_requests():
@@ -877,6 +887,11 @@ class MultiQueue:
                 if wait_end is not None:
                     if result is None or wait_end < result: 
                         result = wait_end
+        for wr in self.latency_holding:
+            wait_end: Optional[int] = wr.wait_end()
+            if wait_end is not None:
+                if result is None or wait_end < result: 
+                    result = wait_end
         return result
     
     def remove_finished_requests(self, clock: int) -> list[Tuple['ClientRequest', RequestMetric]]:
@@ -884,19 +899,36 @@ class MultiQueue:
         
         ClientRequests are unwrapped and returned, along with metrics about how long they waited.
 
+        Requests that were in latency holding are moved to the main_queue.
+
         Any open channels are filled with requests from the main queue, if any are waiting.
 
         :param clock: The current simulation time.
         :returns: A list of all requests that have finished this step and need to move on and their metrics.
         :rtype: Tuple[ClientRequest, RequestMetric]
         """
+        wr_latency_ended: list[WaitingRequest] = []
+        for wr in self.latency_holding:
+            wait_end: Optional[int] = wr.wait_end()
+            if wait_end is not None and wait_end <= clock:
+                wr_latency_ended.append(wr)
+        for wr in wr_latency_ended:
+            self.latency_holding.remove(wr)
+            wr.latency_ended(clock)
+            self.main_queue.append(wr)
+
         finished_channels: list[int] = self.channels_with_finished_requests(clock)
         result: list[Tuple['ClientRequest', RequestMetric]] = []
 
         for i in finished_channels:
             wr: Optional[WaitingRequest] = self.channels[i]
-            if wr is None: continue
+            if wr is None: raise ValueError(f'Found None in channel {i}. Should have been finished request.')
+
             st: int = 0 if wr.service_time is None else wr.service_time
+            nt: int = 0
+            if isinstance(self.service_time_calculator, Connection):
+                nt = st
+                st = 0
             lt: int = 0 if wr.latency is None else wr.latency
             metric = RequestMetric(source=self.name(), 
                                     clock=clock, 
@@ -904,24 +936,29 @@ class MultiQueue:
                                     workflow_name=wr.request.workflow_name,
                                     service_time=st, 
                                     queue_time=wr.queue_time, 
+                                    network_time=nt,
                                     latency_time=lt)
             result.append((wr.request, metric))
             wr.request.accumulating_metrics.append(metric)
             self._log_work_done(wr, clock)
+            self.channels[i] = None
             
-            # Move a waiting request into a channel
-            if len(self.main_queue) > 0:
-                queued_req: WaitingRequest = self.main_queue.pop(0)
-                queued_req.queue_ended(clock, wait_mode=self.wait_mode)
-                self.channels[i] = queued_req
-            else:
-                self.channels[i] = None
+        # Move queued requests into channels
+        first_avail: Optional[int] = self.first_available_channel()
+        while first_avail is not None and len(self.main_queue) > 0:
+            queued_req: WaitingRequest = self.main_queue.pop(0)
+            queued_req.queue_ended(clock, wait_mode=self.wait_mode)
+            self.channels[first_avail] = queued_req
+            first_avail = self.first_available_channel()
 
         return result
     
     def enqueue(self, request: 'ClientRequest', clock: int):
-        """ Wraps the request in a WaitingRequest. If there are available channels, the request will be put in it
-        and immediately start processing. If there are no channels available, the request is added to the end of the main queue.
+        """ Wraps the request in a WaitingRequest.
+        
+        - If the request has latency then the request will be put in the latency holding first. Otherwise:
+        - If there are available channels, the request will be put in it and immediately start processing.
+        - If there are no channels available, the request is added to the end of the main queue.
         
         :param request: The request that needs to be processed by this queue's service time calculator.
         :param clock: The current simulation time.
@@ -932,18 +969,26 @@ class MultiQueue:
         st: Optional[int] = self.service_time_calculator.calculate_service_time(request)
         lt: Optional[int] = self.service_time_calculator.calculate_latency(request)
 
-        index: Optional[int] = self.first_available_channel()
-        if index is None:
-            self.main_queue.append(WaitingRequest(request, wait_start=clock, service_time=st, latency=lt, wait_mode=WaitMode.QUEUEING))
+        if lt is not None and lt > 0:
+            self.latency_holding.add(WaitingRequest(request, wait_start=clock, service_time=st, latency=lt, wait_mode=WaitMode.LATENCY))
         else:
-            self.channels[index] = WaitingRequest(request, wait_start=clock, service_time=st, latency=lt, wait_mode=self.wait_mode)
+            index: Optional[int] = self.first_available_channel()
+            if index is None:
+                self.main_queue.append(WaitingRequest(request, wait_start=clock, service_time=st, latency=lt, wait_mode=WaitMode.QUEUEING))
+            else:
+                self.channels[index] = WaitingRequest(request, wait_start=clock, service_time=st, latency=lt, wait_mode=self.wait_mode)
+
+    def all_processing_requests(self) -> list[WaitingRequest]:
+        """
+        :returns: A list of all waiting requests in channels.
+        """
+        return [item for item in self.channels if item is not None]
 
     def all_waiting_requests(self) -> list[WaitingRequest]:
         """
-        :returns: A list of all waiting requests in channels and in the main queue.
+        :returns: A list of all waiting requests in channels, in the main queue and latency holding.
         """
-        full_channels: list[WaitingRequest] = [item for item in self.channels if item is not None]
-        return full_channels + self.main_queue
+        return self.all_processing_requests() + self.main_queue + list(self.latency_holding)
     
     def get_performance_metric(self, clock: int) -> QueueMetric:
         """ :returns: A performance metric for the queue indicating how busy it is. """
@@ -956,12 +1001,15 @@ class MultiQueue:
         elif isinstance(self.service_time_calculator, Connection):
             stc = "CONNECTION"
         else: stc = "UNKNOWN"
-        waiting: list[WaitingRequest] = self.all_waiting_requests()
-        for wr in waiting:
+
+        processing_wrs: list[WaitingRequest] = self.all_processing_requests()
+        for wr in processing_wrs:
             self._log_work_done(wr, clock)
 
         qm = QueueMetric(source=self.name(), stc_type=stc,
-                           clock=clock, channel_count=len(self.channels), request_count=len(waiting),
+                           clock=clock, 
+                           channel_count=len(self.channels), 
+                           request_count=self.request_count(),
                            utilization=self._calc_utilization(clock))
         self.work_done = 0
         self.last_metric_clock = clock
@@ -973,10 +1021,13 @@ class MultiQueue:
         # Total work for request is the service time, but if the work started before the last 
         # time it was logged, ignore that part. Also, if the work isn't done yet, then ignore that too.
         total_work: int = request.service_time
-        if request.wait_start < self.last_metric_clock:
-            total_work = total_work - (self.last_metric_clock - request.wait_start)
+        work_started_at: int = wait_end - request.service_time
+        if work_started_at < self.last_metric_clock:
+            total_work = total_work - (self.last_metric_clock - work_started_at)
         if clock < wait_end:
             total_work = total_work - (wait_end - clock)
+        if total_work < 0:
+            raise ValueError(f"Neg value {total_work} logging work in {self.name()}. {self.last_metric_clock},{clock},{request.wait_start},{request.service_time},{wait_end}")
         self.work_done = self.work_done + total_work
 
     def _calc_utilization(self, clock: int) -> float:
@@ -1296,15 +1347,17 @@ class ClientRequest:
         clock: int = 0
         st: int = 0
         qt: int = 0
+        nt: int = 0
         lt: int = 0
         if len(self.accumulating_metrics) > 0:
             clock = self.accumulating_metrics[0].clock
             for m in self.accumulating_metrics:
                 st = st + m.service_time
                 qt = qt + m.queue_time
+                nt = nt + m.network_time
                 lt = lt + m.latency_time
         return RequestMetric(source='Summary', clock=clock, request_name=self.name, workflow_name=self.workflow_name, 
-                             service_time=st, queue_time=qt, latency_time=lt)
+                             service_time=st, queue_time=qt, network_time=nt, latency_time=lt)
     
 
 # ------------------------------------------------------------

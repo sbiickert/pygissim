@@ -35,7 +35,7 @@ def utilization_for_queues(data: list[QueueMetric], queue_type: Optional[str] = 
 
     for clock in clocks:
         metrics_for_clock:pd.DataFrame = all_metrics[all_metrics['Clock'] == clock]
-        metrics_for_clock.sort_values(by='Source')
+        metrics_for_clock = metrics_for_clock.sort_values(by='Source')
         util_values = [clock]
         for index, row in metrics_for_clock.iterrows():
             util_values.append(row.loc['Utilization'])
@@ -70,14 +70,15 @@ def util_stats_for_queues(metrics: list[QueueMetric], queue_type: Optional[str] 
 
 def _rm_list_to_df(data: list[RequestMetric]) -> pd.DataFrame:
     df = pd.DataFrame(list(map(lambda rm: ([rm.source, rm.request_name, rm.workflow_name, rm.clock, \
-                                            rm.service_time, rm.queue_time, rm.latency_time, \
-                                            rm.service_time + rm.queue_time + rm.latency_time]), data)),
-                      columns=['Source', 'Request', 'Workflow', 'Clock', "Service_Time", 'Queue_Time', 'Latency_Time', 'Response_Time'])
+                                            rm.service_time, rm.queue_time, rm.network_time, rm.latency_time, \
+                                            rm.service_time + rm.queue_time + rm.network_time + rm.latency_time]), data)),
+                      columns=['Source', 'Request', 'Workflow', 'Clock', "Service_Time", 'Queue_Time', 'Network_Time', 'Latency_Time', 'Response_Time'])
     return df
     
 def perf_stats_for_requests(metrics: list[RequestMetric]) -> pd.DataFrame:
     """ p stats per Workflow
         Response times: p5 p50 p75 p90 min max mean
+        Network: mean
         Latency: mean
         Queue times: min max mean
 
@@ -88,7 +89,7 @@ def perf_stats_for_requests(metrics: list[RequestMetric]) -> pd.DataFrame:
     workflows.sort()
     data = []
     percentiles = [5, 50, 75, 95, 99]
-    columns = ["Workflow", "Count", "QT_Min", "QT_Max", "QT_Avg", "Lat_Avg", "ST_Avg", "RT_Avg"]
+    columns = ["Workflow", "Count", "QT_Min", "QT_Max", "QT_Avg", "Net_Avg", "Lat_Avg", "ST_Avg", "RT_Avg"]
     for p in percentiles:
         columns.append(f'RT_p{p}')
     
@@ -98,6 +99,7 @@ def perf_stats_for_requests(metrics: list[RequestMetric]) -> pd.DataFrame:
         w_data.append(np.nanmin(w_metrics['Queue_Time']))
         w_data.append(np.nanmax(w_metrics['Queue_Time']))
         w_data.append(np.nanmean(w_metrics['Queue_Time']))
+        w_data.append(np.nanmean(w_metrics['Network_Time']))
         w_data.append(np.nanmean(w_metrics['Latency_Time']))
         w_data.append(np.nanmean(w_metrics['Service_Time']))
         w_data.append(np.nanmean(w_metrics['Response_Time']))
@@ -123,11 +125,14 @@ def draw_queue_utilization(df: pd.DataFrame, rolling: bool = False):
     plt.xlim(df.index.min(), df.index.max())
     plt.ylim(min_val, max_val)
 
+    lines = []
+    labels = []
     for col in df.columns:
-        if col == 'Clock': continue;
-        plt.plot(df.index, df[col], label=col, linewidth=1.75)#, color=SERIES_INFO[vm]['color'])
+        if col == 'Clock': continue
+        lines.append(plt.plot(df.index, df[col], label=col, linewidth=1.75)[0])#, color=SERIES_INFO[vm]['color'])
+        labels.append(col)
 
-    plt.legend(loc='upper left')
+    plt.legend(loc='upper left', handles=lines, labels=labels)
     plt.title('Utilization')
     plt.show()
 

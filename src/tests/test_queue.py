@@ -17,27 +17,53 @@ class TestQueue(unittest.TestCase):
     
     def test_network_enqueue(self):
         # A single channel. All requests will queue up in order of arrival
+        # The connection has non-zero latency, so requests end up in latency_holding until time is up
         conn_q: MultiQueue = TestQueue.sample_connection_queue()
         conn_q.enqueue(TestQueue.sample_connection_cr(), clock=13)
+        self.assertEqual(1, len(conn_q.latency_holding))
         self.assertEqual(1, conn_q.request_count())
-        self.assertEqual(0, conn_q.available_channel_count())
+        self.assertEqual(1, conn_q.available_channel_count())
+        # Need to wait until latency is accounted for
+        # 13 ms + 100 ms latency
         # 13 ms + 160 ms ST + 100 ms latency
         self.assertIsNotNone(conn_q.next_event_time())
-        self.assertEqual(13 + 160 + 100, conn_q.next_event_time())
+        self.assertEqual(13 + 100, conn_q.next_event_time())
 
         conn_q.enqueue(TestQueue.sample_connection_cr(), clock=15)
         conn_q.enqueue(TestQueue.sample_connection_cr(), clock=16)
         self.assertEqual(3, conn_q.request_count())
-        self.assertEqual(13 + 160 + 100, conn_q.next_event_time())
+        self.assertEqual(13 + 100, conn_q.next_event_time())
 
-        # Give enough time for the first request to be processed
-        finished: list[Tuple[(ClientRequest, RequestMetric)]] = conn_q.remove_finished_requests(13 + 160 + 100)
-        self.assertEqual(1, len(finished))
-        self.assertEqual(2, conn_q.request_count())
+        # Give enough time for the first request's latency to be processed
+        finished: list[Tuple[(ClientRequest, RequestMetric)]] = conn_q.remove_finished_requests(13 + 100)
+        self.assertEqual(0, len(finished))
+        self.assertEqual(3, conn_q.request_count())
+        self.assertEqual(2, len(conn_q.latency_holding))
         self.assertEqual(0, conn_q.available_channel_count())
+
+        # Give enough time for the second and third requests' latency to be processed
+        finished = conn_q.remove_finished_requests(15 + 100)
+        self.assertEqual(0, len(finished))
+        finished = conn_q.remove_finished_requests(16 + 100)
+        self.assertEqual(0, len(finished))
+        self.assertEqual(3, conn_q.request_count())
+        self.assertEqual(0, len(conn_q.latency_holding))
+        self.assertEqual(0, conn_q.available_channel_count())
+        self.assertEqual(2, len(conn_q.main_queue))
+
+        # The next time should be when the first request has been processed
+        # 13 ms + 160 ms ST + 100 ms latency
+        self.assertEqual(13 + 160 + 100, conn_q.next_event_time())
+        finished = conn_q.remove_finished_requests(13 + 160 + 100)
+        self.assertEqual(1, len(finished))
         self.assertEqual(0, finished[0][1].queue_time)
-        self.assertEqual(160, finished[0][1].service_time)
+        self.assertEqual(0, finished[0][1].service_time)
+        self.assertEqual(160, finished[0][1].network_time)
         self.assertEqual(100, finished[0][1].latency_time)
+        self.assertEqual(2, conn_q.request_count())
+        self.assertEqual(0, len(conn_q.latency_holding))
+        self.assertEqual(0, conn_q.available_channel_count())
+        self.assertEqual(1, len(conn_q.main_queue))
 
         # Give enough time for the second request to be processed
         next_clock: Optional[int] = conn_q.next_event_time()
@@ -47,8 +73,8 @@ class TestQueue(unittest.TestCase):
             self.assertEqual(1, len(finished))
             self.assertEqual(1, conn_q.request_count())
             self.assertEqual(0, conn_q.available_channel_count())
-            self.assertEqual(260 - (15-13), finished[0][1].queue_time) # Arrived 2 ms after the first request
-            self.assertEqual(160, finished[0][1].service_time)
+            self.assertEqual(160 - (15-13), finished[0][1].queue_time) # Arrived 2 ms after the first request
+            self.assertEqual(160, finished[0][1].network_time)
             self.assertEqual(100, finished[0][1].latency_time)
 
     def test_compute_enqueue(self):
@@ -113,11 +139,11 @@ class TestQueue(unittest.TestCase):
         step: ClientRequestSolutionStep = ClientRequestSolutionStep(st_calculator=cls.sample_connection_queue().service_time_calculator, 
                                                                     is_response=True, data_size=2000, chatter=10, service_time=0)
         sln: ClientRequestSolution = ClientRequestSolution(steps=[step])
-        return ClientRequest(name=ClientRequest.next_name(), desc='', wf_name='', request_clock=10, solution=sln, group_id=Transaction.next_id())
+        return ClientRequest(name=ClientRequest.next_name(), desc='', wf_name='', request_clock=10, solution=sln, tx_id=Transaction.next_id())
     
     @classmethod
     def sample_compute_cr(cls) -> ClientRequest:
         step: ClientRequestSolutionStep = ClientRequestSolutionStep(st_calculator=cls.sample_compute_queue().service_time_calculator,
                                                                     is_response=True, data_size=2000, chatter=0, service_time=141)
         sln: ClientRequestSolution = ClientRequestSolution(steps=[step])
-        return ClientRequest(name=ClientRequest.next_name(), desc='', wf_name='', request_clock=10, solution=sln, group_id=Transaction.next_id())
+        return ClientRequest(name=ClientRequest.next_name(), desc='', wf_name='', request_clock=10, solution=sln, tx_id=Transaction.next_id())

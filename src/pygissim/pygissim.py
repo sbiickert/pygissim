@@ -578,7 +578,9 @@ class Simulator:
             now = next_queue[1]
 
         # print(f'There are {len(requests)} requests')
-        assert len(requests) > 0
+        # This assertion is no longer valid: moving from latency to queue to channel will not result in
+        # request being returned.
+        # assert len(requests) > 0
 
         for req in requests:
             if req.is_finished():
