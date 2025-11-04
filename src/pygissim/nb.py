@@ -2,6 +2,7 @@ from typing import Optional, Dict
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import matplotlib.ticker as mtick
 from yfiles_jupyter_graphs import GraphWidget
 
 
@@ -122,6 +123,7 @@ def draw_queue_utilization(df: pd.DataFrame, rolling: bool = False):
 
     fig, ax = plt.subplots(figsize=(15,7))
     ax.grid(True)
+    ax.yaxis.set_major_formatter(mtick.PercentFormatter(xmax=1.0))
     plt.xlim(df.index.min(), df.index.max())
     plt.ylim(min_val, max_val)
 
@@ -180,7 +182,7 @@ def zones_to_graph_nodes(zones: list[Zone]) -> list:
     nodes = []
     for zone in zones:
         nodes.append({"id": zone.id, 
-                      "properties":{'label': zone.name, 'type': 'Network Zone'}})
+                      "properties":{'label': f'{zone.name}\nZone', 'type': 'Network Zone'}})
     return nodes
 
 def connections_to_graph_edges(net: list[Connection], metrics: Optional[list[QueueMetric]] = None):
