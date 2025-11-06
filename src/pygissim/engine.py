@@ -168,23 +168,22 @@ class Connection(ServiceTimeCalculator):
         """
         return Connection(self.destination, self.source, self.bandwidth, self.latency_ms)
 
-    def calculate_service_time(self, request: 'ClientRequest') -> Optional[int]:
+    def calculate_service_time(self, request: 'ClientRequest') -> int:
         """ Calculates the service time for the ClientRequest's current step in this Connection.
         This takes the data size and determines how many milliseconds it would take to transmit. 
         
         :param request: The ClientRequest being transmitted over this Connection.
         :type request: ClientRequest
-        :returns: The number of milliseconds to transmit the current step. Is None if the current step is None.
-        :rtype: Optional[int]
+        :returns: The number of milliseconds to transmit the current step. Is zero if the current step is None.
         """
         step: Optional[ClientRequestSolutionStep] = request.solution.current_step()
-        if step is None: return None
+        if step is None: return 0
         data_kb: int = step.data_size * 8
         # Mbps -> kbps -> kb per millisecond (which is the time scale of the simulation)
         bw_kbpms: int = int(self.bandwidth * 1000 / 1000)
         return int(data_kb / bw_kbpms)
 
-    def calculate_latency(self, request) -> Optional[int]:
+    def calculate_latency(self, request) -> int:
         """ Calculates the latency time for the ClientRequest's current step in this Connection. 
         This is the chatter of the current step times the latency of this Connection.
         
@@ -194,7 +193,7 @@ class Connection(ServiceTimeCalculator):
         :rtype: Optional[int]
         """
         step: Optional[ClientRequestSolutionStep] = request.solution.current_step()
-        if step is None: return None
+        if step is None: return 0
         return self.latency_ms * step.chatter
     
     def provide_queue(self) -> 'MultiQueue':
@@ -517,21 +516,21 @@ class ComputeNode(ServiceTimeCalculator):
         relative = HardwareDef.baseline_per_core / self.specint_rate2017_per_core()
         return int(float(st) * relative)
 
-    def calculate_service_time(self, request: 'ClientRequest') -> Optional[int]:
+    def calculate_service_time(self, request: 'ClientRequest') -> int:
         """
         :param request: The ClientRequest whose current step needs a service time calculation.
-        :returns: The service time in milliseconds (ms). Returns None if there is no current step.
+        :returns: The service time in milliseconds (ms). Returns zero if there is no current step.
         """
         step: Optional[ClientRequestSolutionStep] = request.solution.current_step()
-        if step is None: return None
+        if step is None: return 0
         return self.adjusted_service_time(step.service_time)
 
-    def calculate_latency(self, request) -> Optional[int]:
+    def calculate_latency(self, request) -> int:
         """
         :param request: The ClientRequest whose current step needs a latency time calculation.
-        :returns: None. Only Connections have latency.
+        :returns: Zero. Only Connections have latency.
         """
-        return None
+        return 0
     
     def provide_queue(self) -> 'MultiQueue':
         """ Creates and returns a MultiQueue that represent's this ComputeNode's ability to do work.
@@ -755,17 +754,17 @@ class WaitingRequest:
     
     :param request: The request to be wrapped.
     :param wait_start: The simulation clock when the request was wrapped.
-    :param service_time: The service time for this step of the request. None is to support cases where the current step might be None.
-    :param latency: The latency time for this step of the request. None is supported if latency time is None or there is no current step.
+    :param service_time: The service time for this step of the request.
+    :param latency: The latency time for this step of the request.
     :param wait_mode: The state of this WaitingRequest.
     """
     def __init__(self, request: 'ClientRequest', wait_start: int, 
-                 service_time: Optional[int], latency: Optional[int], 
+                 service_time: int, latency: int, 
                  wait_mode: WaitMode, queue_time: int = 0):
         self.request: ClientRequest = request
         self.wait_start: int = wait_start
-        self.service_time: Optional[int] = service_time
-        self.latency: Optional[int] = latency
+        self.service_time: int = service_time
+        self.latency: int = latency
         self.wait_mode: WaitMode = wait_mode
         self.queue_time: int = queue_time
 
@@ -787,21 +786,18 @@ class WaitingRequest:
         :param wait_mode: The wait mode for this queue's :class:`ServiceTimeCalculator`
         """
         self.wait_mode = wait_mode
-        lat = 0 if self.latency is None else self.latency
-        self.queue_time = clock - self.wait_start - lat
+        self.queue_time = clock - self.wait_start - self.latency
 
-    # TODO: Work out if there is potential for requests to get "stuck" in a MultiQueue.
     def wait_end(self) -> Optional[int]:
         """
-        :returns: The simulation time when this request will be finished latency holding or processing. None if queueing or service time is None.
+        :returns: The simulation time when this request will be finished latency holding or processing. None if queueing.
         """
-        if self.wait_mode == WaitMode.QUEUEING or self.service_time is None:
+        if self.wait_mode == WaitMode.QUEUEING:
             return None
-        lat: int = 0 if self.latency is None else self.latency
         if self.wait_mode == WaitMode.LATENCY:
-            return self.wait_start + lat
+            return self.wait_start + self.latency
 
-        return self.wait_start + self.service_time + lat + self.queue_time
+        return self.wait_start + self.service_time + self.latency + self.queue_time
 
 
 # ------------------------------------------------------------
@@ -924,12 +920,11 @@ class MultiQueue:
             wr: Optional[WaitingRequest] = self.channels[i]
             if wr is None: raise ValueError(f'Found None in channel {i}. Should have been finished request.')
 
-            st: int = 0 if wr.service_time is None else wr.service_time
+            st: int = wr.service_time
             nt: int = 0
             if isinstance(self.service_time_calculator, Connection):
                 nt = st
                 st = 0
-            lt: int = 0 if wr.latency is None else wr.latency
             metric = RequestMetric(source=self.name(), 
                                     clock=clock, 
                                     request_name=wr.request.name, 
@@ -937,7 +932,7 @@ class MultiQueue:
                                     service_time=st, 
                                     queue_time=wr.queue_time, 
                                     network_time=nt,
-                                    latency_time=lt)
+                                    latency_time=wr.latency)
             result.append((wr.request, metric))
             wr.request.accumulating_metrics.append(metric)
             self._log_work_done(wr, clock)
@@ -966,10 +961,10 @@ class MultiQueue:
         current_step: Optional[ClientRequestSolutionStep] = request.solution.current_step()
         if current_step is None: return
 
-        st: Optional[int] = self.service_time_calculator.calculate_service_time(request)
-        lt: Optional[int] = self.service_time_calculator.calculate_latency(request)
+        st: int = self.service_time_calculator.calculate_service_time(request)
+        lt: int = self.service_time_calculator.calculate_latency(request)
 
-        if lt is not None and lt > 0:
+        if lt > 0:
             self.latency_holding.add(WaitingRequest(request, wait_start=clock, service_time=st, latency=lt, wait_mode=WaitMode.LATENCY))
         else:
             index: Optional[int] = self.first_available_channel()

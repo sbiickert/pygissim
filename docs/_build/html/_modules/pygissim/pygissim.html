@@ -221,15 +221,16 @@
 
 <div class="viewcode-block" id="Design.get_zone">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.get_zone">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_zone</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Zone</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_zone</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Zone</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Convenience method to find a Zone in the Design by name. Assumes name is unique.</span>
 <span class="sd">        </span>
 <span class="sd">        :param name: The name of the Zone to find.</span>
-<span class="sd">        :returns: The named Zone. Returns None if no Zone exists with that name.</span>
+<span class="sd">        :returns: The named Zone.</span>
+<span class="sd">        :raises: ValueError if no Zone exists with that name.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">zone</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">zones</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">zone</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span> <span class="k">return</span> <span class="n">zone</span>
-        <span class="k">return</span> <span class="kc">None</span></div>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No zone named </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> found.&quot;</span><span class="p">)</span></div>
 
     
 
@@ -291,15 +292,17 @@
 
 <div class="viewcode-block" id="Design.get_compute_node">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.get_compute_node">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_compute_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ComputeNode</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_compute_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ComputeNode</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Convenience method to find a ComputeNode by name in the Design.</span>
 <span class="sd">        </span>
 <span class="sd">        :param name: The name of the ComputeNode to find.</span>
-<span class="sd">        :returns: The named ComputeNode. Returns None if no compute node has that name.</span>
+<span class="sd">        :returns: The named ComputeNode.</span>
+<span class="sd">        :raises: ValueError if no ComputeNode exists with that name.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_nodes</span><span class="p">():</span> <span class="c1"># Includes V_SERVER nodes</span>
             <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span> <span class="k">return</span> <span class="n">node</span>
-        <span class="k">return</span> <span class="kc">None</span></div>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No compute node named </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> found.&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Design.add_servicedef">
@@ -391,15 +394,16 @@
 
 <div class="viewcode-block" id="Design.get_workflowdef">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.get_workflowdef">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_workflowdef</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">WorkflowDef</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_workflowdef</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">WorkflowDef</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Convenience method to find a WorkflowDef by name in the Design.</span>
 <span class="sd">        </span>
 <span class="sd">        :param name: The name of the WorkflowDef to find.</span>
-<span class="sd">        :returns: The named WorkflowDef. Returns None if no workflow definition has that name.</span>
+<span class="sd">        :returns: The named WorkflowDef.</span>
+<span class="sd">        :raises: ValueError if no workflow definition has that name.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">wdef</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">workflow_definitions</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">wdef</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span> <span class="k">return</span> <span class="n">wdef</span>
-        <span class="k">return</span> <span class="kc">None</span></div>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No workflow definition named </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> found.&quot;</span><span class="p">)</span></div>
 
 
 
@@ -416,9 +420,7 @@
 <span class="sd">        :raises: ValueError if wdef_name is not a known name of a WorkflowDef in the Design.</span>
 <span class="sd">        :returns: The created Workflow.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">wdef</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">WorkflowDef</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_workflowdef</span><span class="p">(</span><span class="n">wdef_name</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">wdef</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No WorkflowDef named </span><span class="si">{</span><span class="n">wdef_name</span><span class="si">}</span><span class="s2"> in the Design.&quot;</span><span class="p">)</span>
+        <span class="n">wdef</span><span class="p">:</span> <span class="n">WorkflowDef</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_workflowdef</span><span class="p">(</span><span class="n">wdef_name</span><span class="p">)</span>
         <span class="n">w</span><span class="p">:</span> <span class="n">Workflow</span> <span class="o">=</span> <span class="n">Workflow</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="n">desc</span><span class="p">,</span> 
                                <span class="nb">type</span><span class="o">=</span><span class="n">WorkflowType</span><span class="o">.</span><span class="n">USER</span><span class="p">,</span> <span class="n">definition</span><span class="o">=</span><span class="n">wdef</span><span class="p">,</span> 
                                <span class="n">user_count</span><span class="o">=</span><span class="n">users</span><span class="p">,</span> <span class="n">productivity</span><span class="o">=</span><span class="n">productivity</span><span class="p">)</span>
@@ -438,9 +440,7 @@
 <span class="sd">        :raises: ValueError if wdef_name is not a known name of a WorkflowDef in the Design.</span>
 <span class="sd">        :returns: The created Workflow.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">wdef</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">WorkflowDef</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_workflowdef</span><span class="p">(</span><span class="n">wdef_name</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">wdef</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No WorkflowDef named </span><span class="si">{</span><span class="n">wdef_name</span><span class="si">}</span><span class="s2"> in the Design.&quot;</span><span class="p">)</span>
+        <span class="n">wdef</span><span class="p">:</span> <span class="n">WorkflowDef</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_workflowdef</span><span class="p">(</span><span class="n">wdef_name</span><span class="p">)</span>
         <span class="n">w</span><span class="p">:</span> <span class="n">Workflow</span> <span class="o">=</span> <span class="n">Workflow</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="n">desc</span><span class="p">,</span> 
                                <span class="nb">type</span><span class="o">=</span><span class="n">WorkflowType</span><span class="o">.</span><span class="n">TRANSACTIONAL</span><span class="p">,</span> <span class="n">definition</span><span class="o">=</span><span class="n">wdef</span><span class="p">,</span> 
                                <span class="n">tph</span><span class="o">=</span><span class="n">tph</span><span class="p">)</span>
@@ -460,15 +460,16 @@
 
 <div class="viewcode-block" id="Design.get_workflow">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.pygissim.Design.get_workflow">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_workflow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Workflow</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_workflow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Workflow</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Convenience method to find a Workflow by name in the Design.</span>
 <span class="sd">        </span>
 <span class="sd">        :param name: The name of the Workflow to find.</span>
-<span class="sd">        :returns: The named Workflow. Returns None if no workflow has that name.</span>
+<span class="sd">        :returns: The named Workflow.</span>
+<span class="sd">        :raises: ValueError if no workflow has that name.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_workflows</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">w</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span> <span class="k">return</span> <span class="n">w</span>
-        <span class="k">return</span> <span class="kc">None</span></div>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No workflow named </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> found.&quot;</span><span class="p">)</span></div>
 
     
 <div class="viewcode-block" id="Design.all_workflows">
@@ -688,8 +689,7 @@
         <span class="n">result</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Workflow</span><span class="p">,</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">design</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_generating_new_requests</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">time</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_next_event_time_for_workflows</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                <span class="n">wf</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Workflow</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">design</span><span class="o">.</span><span class="n">get_workflow</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">wf</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Could not find workflow named </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1"> in design workflows.&#39;</span><span class="p">)</span>
+                <span class="n">wf</span><span class="p">:</span> <span class="n">Workflow</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">design</span><span class="o">.</span><span class="n">get_workflow</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">time</span> <span class="o">&lt;</span> <span class="n">result</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
                     <span class="n">result</span> <span class="o">=</span> <span class="p">(</span><span class="n">wf</span><span class="p">,</span> <span class="n">time</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">result</span>
@@ -765,7 +765,9 @@
             <span class="n">now</span> <span class="o">=</span> <span class="n">next_queue</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
         <span class="c1"># print(f&#39;There are {len(requests)} requests&#39;)</span>
-        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">requests</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="c1"># This assertion is no longer valid: moving from latency to queue to channel will not result in</span>
+        <span class="c1"># request being returned.</span>
+        <span class="c1"># assert len(requests) &gt; 0</span>
 
         <span class="k">for</span> <span class="n">req</span> <span class="ow">in</span> <span class="n">requests</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">req</span><span class="o">.</span><span class="n">is_finished</span><span class="p">():</span>
