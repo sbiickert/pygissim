@@ -369,15 +369,13 @@ def create_service_provider(d: Design, name: str, service: str, node_names: list
     nodes: list[ComputeNode] = []
     for node_name in node_names:
         node = d.get_compute_node(node_name)
-        if node is not None:
-            nodes.append(node)
+        nodes.append(node)
     d.add_service_provider(ServiceProvider(name, "", service=d.services[service], nodes=nodes, tags=tags))
 
 
 def create_agol_service_providers(d: Design, agol_zone_name: str):
     sp_agol: list[ServiceProvider] = list()
-    agol: Optional[Zone] = d.get_zone(agol_zone_name)
-    if agol is None: raise ValueError(f'No zone named "{agol_zone_name} found in design.')
+    agol: Zone = d.get_zone(agol_zone_name)
     servers: list[ComputeNode] = list(filter(lambda node: (node.zone == agol), d.compute_nodes()))
     sp_agol.append(ServiceProvider(name='AGOL Edge', desc='', service=d.services['web'], nodes=servers, tags={'agol'}))
     sp_agol.append(ServiceProvider(name='AGOL Portal', desc='', service=d.services['portal'], nodes=servers, tags={'agol'}))

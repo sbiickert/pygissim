@@ -3,3 +3,6 @@
 *.pyc
 *.pickle
 /src/pygissim/__pycache__
+/src/tests/__pycache__
+/src/tests/__pycache__
+*.pyc

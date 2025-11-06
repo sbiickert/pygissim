@@ -131,15 +131,16 @@ class Design:
         self.update_service_providers()
         self.update_workflow_definitions()
 
-    def get_zone(self, name: str) -> Optional[Zone]:
+    def get_zone(self, name: str) -> Zone:
         """ Convenience method to find a Zone in the Design by name. Assumes name is unique.
         
         :param name: The name of the Zone to find.
-        :returns: The named Zone. Returns None if no Zone exists with that name.
+        :returns: The named Zone.
+        :raises: ValueError if no Zone exists with that name.
         """
         for zone in self.zones:
             if zone.name == name: return zone
-        return None
+        raise ValueError(f"No zone named {name} found.")
     
 
     def add_connection(self, conn: Connection, add_reciprocal: bool = False):
@@ -186,15 +187,17 @@ class Design:
         self.update_service_providers()
         self.update_workflow_definitions()
 
-    def get_compute_node(self, name: str) -> Optional[ComputeNode]:
+    def get_compute_node(self, name: str) -> ComputeNode:
         """ Convenience method to find a ComputeNode by name in the Design.
         
         :param name: The name of the ComputeNode to find.
-        :returns: The named ComputeNode. Returns None if no compute node has that name.
+        :returns: The named ComputeNode.
+        :raises: ValueError if no ComputeNode exists with that name.
+
         """
         for node in self.compute_nodes(): # Includes V_SERVER nodes
             if node.name == name: return node
-        return None
+        raise ValueError(f"No compute node named {name} found.")
 
     def add_servicedef(self, sd: ServiceDef):
         """ Convenience method to add a service definition. If a ServiceDefinition with the same
@@ -262,15 +265,16 @@ class Design:
         self.workflow_definitions.remove(wdef)
         self.update_configured_workflows()
 
-    def get_workflowdef(self, name: str) -> Optional[WorkflowDef]:
+    def get_workflowdef(self, name: str) -> WorkflowDef:
         """ Convenience method to find a WorkflowDef by name in the Design.
         
         :param name: The name of the WorkflowDef to find.
-        :returns: The named WorkflowDef. Returns None if no workflow definition has that name.
+        :returns: The named WorkflowDef.
+        :raises: ValueError if no workflow definition has that name.
         """
         for wdef in self.workflow_definitions:
             if wdef.name == name: return wdef
-        return None
+        raise ValueError(f"No workflow definition named {name} found.")
 
 
     def add_client_workflow(self, name:str, desc: str, wdef_name: str, users: int, productivity: int) -> Workflow:
@@ -284,9 +288,7 @@ class Design:
         :raises: ValueError if wdef_name is not a known name of a WorkflowDef in the Design.
         :returns: The created Workflow.
         """
-        wdef: Optional[WorkflowDef] = self.get_workflowdef(wdef_name)
-        if wdef is None:
-            raise ValueError(f"No WorkflowDef named {wdef_name} in the Design.")
+        wdef: WorkflowDef = self.get_workflowdef(wdef_name)
         w: Workflow = Workflow(name=name, desc=desc, 
                                type=WorkflowType.USER, definition=wdef, 
                                user_count=users, productivity=productivity)
@@ -303,9 +305,7 @@ class Design:
         :raises: ValueError if wdef_name is not a known name of a WorkflowDef in the Design.
         :returns: The created Workflow.
         """
-        wdef: Optional[WorkflowDef] = self.get_workflowdef(wdef_name)
-        if wdef is None:
-            raise ValueError(f"No WorkflowDef named {wdef_name} in the Design.")
+        wdef: WorkflowDef = self.get_workflowdef(wdef_name)
         w: Workflow = Workflow(name=name, desc=desc, 
                                type=WorkflowType.TRANSACTIONAL, definition=wdef, 
                                tph=tph)
@@ -319,15 +319,16 @@ class Design:
         """
         self._workflows.remove(w)
 
-    def get_workflow(self, name: str) -> Optional[Workflow]:
+    def get_workflow(self, name: str) -> Workflow:
         """ Convenience method to find a Workflow by name in the Design.
         
         :param name: The name of the Workflow to find.
-        :returns: The named Workflow. Returns None if no workflow has that name.
+        :returns: The named Workflow.
+        :raises: ValueError if no workflow has that name.
         """
         for w in self._workflows:
             if w.name == name: return w
-        return None
+        raise ValueError(f"No workflow named {name} found.")
     
     def all_workflows(self) -> list[Workflow]:
         """ Returns a list of all workflows in the Design. """
@@ -507,8 +508,7 @@ class Simulator:
         result: Optional[Tuple[Workflow,int]] = None
         if self.design is not None and self.is_generating_new_requests:
             for name, time in self._next_event_time_for_workflows.items():
-                wf: Optional[Workflow] = self.design.get_workflow(name)
-                if wf is None: raise ValueError(f'Could not find workflow named {name} in design workflows.')
+                wf: Workflow = self.design.get_workflow(name)
                 if result is None or time < result[1]:
                     result = (wf, time)
         return result

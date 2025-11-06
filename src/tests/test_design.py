@@ -13,20 +13,14 @@ class TestDesign(unittest.TestCase):
         d: Design = TestDesign.sample_design()
         self.assertEqual('Design 1', d.name)
         self.assertEqual(4, len(d.zones))
-        dmz: Optional[Zone] = d.get_zone('DMZ')
-        self.assertIsNotNone(dmz)
-        if dmz is None: return
+        dmz: Zone = d.get_zone('DMZ')
         self.assertTrue(dmz.is_fully_connected(in_network=d.network))
 
         self.assertEqual(7, len(d.compute_nodes())) # physical hosts, v hosts and clients
-        local_host: Optional[ComputeNode] = d.get_compute_node('SRV01')
-        self.assertIsNotNone(local_host)
-        if local_host is None: return
+        local_host: ComputeNode = d.get_compute_node('SRV01')
         self.assertEqual(16, local_host.total_vcpu_allocation())
         self.assertEqual(8, local_host.total_cpu_allocation())
-        gis_host: Optional[ComputeNode] = d.get_compute_node('VGIS01')
-        self.assertIsNotNone(gis_host)
-        if gis_host is None: return
+        gis_host: ComputeNode = d.get_compute_node('VGIS01')
         self.assertEqual(8, gis_host.vcore_count())
         self.assertEqual(ComputeNodeType.V_SERVER, gis_host.type)
 
@@ -41,10 +35,8 @@ class TestDesign(unittest.TestCase):
         for node in d.compute_nodes():
             node.description = "updated"
 
-        gis: Optional[ComputeNode] = d.get_compute_node('VGIS01')
-        self.assertIsNotNone(gis)
-        if gis is not None:
-            self.assertEqual('updated', gis.description)
+        gis: ComputeNode = d.get_compute_node('VGIS01')
+        self.assertEqual('updated', gis.description)
         self.assertEqual('updated', d.service_providers[0].nodes[0].description)
         sp: Optional[ServiceProvider] = d._workflows[0].definition.chains[0].service_provider_for_step_at_index(0)
         self.assertIsNotNone(sp)
@@ -56,15 +48,11 @@ class TestDesign(unittest.TestCase):
         self.assertTrue(d.is_valid())
         self.assertEqual(4, len(d._compute_nodes)) # 2 clients and 2 physical servers
         self.assertEqual(10, len(d.network))
-        mobile_wdef: Optional[WorkflowDef] = d.get_workflowdef('Mobile Map Definition')
-        self.assertIsNotNone(mobile_wdef)
-        if mobile_wdef is None: return
+        mobile_wdef: WorkflowDef = d.get_workflowdef('Mobile Map Definition')
         self.assertEqual(7, len(mobile_wdef.chains[0].service_providers))
         self.assertLess(0, len(mobile_wdef.chains[0].service_providers['feature'].nodes))
 
-        agol_z: Optional[Zone] = d.get_zone("AGOL")
-        self.assertIsNotNone(agol_z)
-        if agol_z is None: return
+        agol_z: Zone = d.get_zone("AGOL")
         d.remove_zone(agol_z)
         
         self.assertFalse(d.is_valid())
@@ -105,10 +93,8 @@ class TestDesign(unittest.TestCase):
         d.add_connection(TestConnection.sample_conn_to_agol(), add_reciprocal=True)
 
         # Physical Servers
-        lz: Optional[Zone] = d.get_zone('Local')
-        az: Optional[Zone] = d.get_zone('AGOL')
-        if lz is None or az is None:
-            raise ValueError('Could not get Intranet and AGOL from the network')
+        lz: Zone = d.get_zone('Local')
+        az: Zone = d.get_zone('AGOL')
         local_host: ComputeNode = ComputeNode(name='SRV01', desc='Local server', 
                                               hw_def=TestHWDef.sample_server_hw_def(),
                                               memory_GB=48, zone=lz,
@@ -139,11 +125,9 @@ class TestDesign(unittest.TestCase):
         sp_local: list[ServiceProvider] = list()
         sp_local.append(ServiceProvider(name='Web browser', desc='', service=d.services['browser'], nodes=[local_client]))
         sp_local.append(ServiceProvider(name='Pro workstation', desc='', service=d.services['pro'], nodes=[local_client]))
-        vm_web: Optional[ComputeNode] = d.get_compute_node('VWEB01')
-        vm_gis: Optional[ComputeNode] = d.get_compute_node('VGIS01')
-        vm_db:  Optional[ComputeNode] = d.get_compute_node('VDB01')
-        if vm_web is None or vm_gis is None or vm_db is None:
-            raise ValueError('Could not get web, gis and db servers from design.')
+        vm_web: ComputeNode = d.get_compute_node('VWEB01')
+        vm_gis: ComputeNode = d.get_compute_node('VGIS01')
+        vm_db:  ComputeNode = d.get_compute_node('VDB01')
         sp_local.append(ServiceProvider(name='IIS', desc='', service=d.services['web'], nodes=[vm_web]))
         sp_local.append(ServiceProvider(name='Portal', desc='', service=d.services['portal'], nodes=[vm_gis]))
         sp_local.append(ServiceProvider(name='Map server', desc='', service=d.services['map'], nodes=[vm_gis]))
@@ -158,9 +142,7 @@ class TestDesign(unittest.TestCase):
         # Service Providers (AGOL)
         sp_agol: list[ServiceProvider] = list()
         sp_agol.append(ServiceProvider(name='Field Maps', desc='', service=d.services['mobile'], nodes=[mobile_client]))
-        srv_agol: Optional[ComputeNode] = d.get_compute_node('AGOL01')
-        if srv_agol is None:
-            raise ValueError('Could not get AGOL server from design.')
+        srv_agol: ComputeNode = d.get_compute_node('AGOL01')
         sp_agol.append(ServiceProvider(name='AGOL Edge', desc='', service=d.services['web'], nodes=[srv_agol]))
         sp_agol.append(ServiceProvider(name='AGOL Portal', desc='', service=d.services['portal'], nodes=[srv_agol]))
         sp_agol.append(ServiceProvider(name='AGOL GIS', desc='', service=d.services['feature'], nodes=[srv_agol]))
