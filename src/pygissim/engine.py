@@ -1483,12 +1483,16 @@ def create_solution(chain: WorkflowChain, in_network: list[Connection]) -> Clien
     if source_node is None:
         raise ValueError(f'handler node for ServiceProvider {source_sp.name} was None')
     
-    steps: list[ClientRequestSolutionStep] = []
-    steps.append(ClientRequestSolutionStep(st_calculator=source_node, 
+    # Keep track of compute nodes to retrace steps
+    handler_nodes: list[ComputeNode] = []
+
+    cr_steps: list[ClientRequestSolutionStep] = []
+    cr_steps.append(ClientRequestSolutionStep(st_calculator=source_node, 
                                            is_response=False, 
                                            data_size=step.request_size_kb, 
                                            chatter=0, # No chatter for compute step
                                            service_time=step.service_time))
+    handler_nodes.append(source_node)
     
     for i in range(1, len(chain.steps)):
         step = chain.steps[i]
@@ -1507,30 +1511,28 @@ def create_solution(chain: WorkflowChain, in_network: list[Connection]) -> Clien
             
             # Add the network steps
             for conn in route.connections:
-                steps.append(ClientRequestSolutionStep(st_calculator=conn, 
+                cr_steps.append(ClientRequestSolutionStep(st_calculator=conn, 
                                                     is_response=False, 
                                                     data_size=step.request_size_kb, 
                                                     chatter=step.chatter, 
                                                     service_time=0)) # Service time is based on data size
         
         # Add the next compute step
-        steps.append(ClientRequestSolutionStep(st_calculator=dest_node, 
+        cr_steps.append(ClientRequestSolutionStep(st_calculator=dest_node, 
                                                is_response=False, 
                                                data_size=step.request_size_kb, 
                                                chatter=0,  # No chatter for compute step
                                                service_time=step.service_time))
+        handler_nodes.append(dest_node)
         source_sp = dest_sp
         source_node = dest_node
     
     # Now retrace back to client
+    discard = handler_nodes.pop()
+
     for i in range(len(chain.steps)-2, -1, -1):
         step = chain.steps[i]
-        dest_sp = chain.service_provider_for_step_at_index(i)
-        if dest_sp is None:
-            raise ValueError(f'ServiceProvider for {step} was None')
-        dest_node: Optional[ComputeNode] = dest_sp.handler_node()
-        if dest_node is None: 
-            raise ValueError(f'handler node for ServiceProvider {dest_sp.name} was None')
+        dest_node: Optional[ComputeNode] = handler_nodes.pop()
         
         if source_node != dest_node:
             route: Optional[Route] = find_route(source_node.zone, dest_node.zone, in_network)
@@ -1540,22 +1542,21 @@ def create_solution(chain: WorkflowChain, in_network: list[Connection]) -> Clien
             
             # Add the network steps
             for conn in route.connections:
-                steps.append(ClientRequestSolutionStep(st_calculator=conn, 
+                cr_steps.append(ClientRequestSolutionStep(st_calculator=conn, 
                                                     is_response=True, 
                                                     data_size=step.response_size_kb, 
                                                     chatter=step.chatter, 
                                                     service_time=0)) # Service time is based on data size
         
         # Add the next compute step
-        steps.append(ClientRequestSolutionStep(st_calculator=dest_node, 
+        cr_steps.append(ClientRequestSolutionStep(st_calculator=dest_node, 
                                                is_response=True, 
                                                data_size=step.response_size_kb, 
                                                chatter=0,  # No chatter for compute step
                                                service_time=step.service_time))
-        source_sp = dest_sp
         source_node = dest_node
 
-    return ClientRequestSolution(steps)
+    return ClientRequestSolution(cr_steps)
 
 
 # ------------------------------------------------------------

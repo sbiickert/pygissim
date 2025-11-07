@@ -268,8 +268,8 @@ class TestClientRequestSolution(unittest.TestCase):
     
     def test_create(self):
         crs = TestClientRequestSolution.sample_intranet_crs()
-        # for step in crs.steps:
-        #     print(step.st_calculator.name) # type: ignore
+        for step in crs.steps:
+            print(step.st_calculator.name) # type: ignore
         self.assertEqual(17, len(crs.steps))
 
     

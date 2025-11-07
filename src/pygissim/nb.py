@@ -178,6 +178,12 @@ def describe_worflowdefstep(step: WorkflowDefStep, indent: int = 0) -> str:
 def describe_service_provider(sp: ServiceProvider, indent: int = 0) -> str:
     return f'{indent * "\t"}{sp.name} ({sp.description}) service: {sp.service.name}; nodes: [{",".join(map(lambda n: (n.name), sp.nodes))}]'
 
+def describe_request_solution(soln: ClientRequestSolution) -> str:
+    result: str = "Client Request Solution:\n"
+    for index, step in enumerate(soln.steps):
+        result = result + f"{index+1}. {step.st_calculator.name}\n"# type: ignore
+    return result
+
 def zones_to_graph_nodes(zones: list[Zone]) -> list:
     nodes = []
     for zone in zones:
