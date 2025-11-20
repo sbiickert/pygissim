@@ -110,15 +110,12 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Read-only data class for tracking the utilization rate of all queues (compute and network)</span>
 
 <span class="sd">    :param source: The name of the MultiQueue that was measured.</span>
-<span class="sd">    :type source: str</span>
 <span class="sd">    :param stc_type: The type of the MultiQueue&#39;s :class:`ServiceTimeCalculator`&#39;.</span>
-<span class="sd">    :type stc_type: str</span>
 <span class="sd">    :param clock: The simulation time (in ms) when the measurement was taken.</span>
-<span class="sd">    :type clock: int</span>
 <span class="sd">    :param channel_count: The number of parallel channels in the MultiQueue.</span>
-<span class="sd">    :type channel_count: int</span>
 <span class="sd">    :param request_count: The number of requests being processed and queued.</span>
 <span class="sd">    :param utilization: The utilization (1.0 = 100%) of this queue.</span>
+<span class="sd">    :param work: The work done (ms equivalent) during this sample.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">source</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">stc_type</span><span class="p">:</span> <span class="nb">str</span>
@@ -126,6 +123,7 @@
     <span class="n">channel_count</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">request_count</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">utilization</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">work</span><span class="p">:</span> <span class="nb">int</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;QM@</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">clock</span><span class="si">}</span><span class="s1"> (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="si">}</span><span class="s1"> channels:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">channel_count</span><span class="si">}</span><span class="s1"> requests:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">request_count</span><span class="si">}</span><span class="s1">)&#39;</span></div>
@@ -807,6 +805,14 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_v_hosts</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
+    
+<div class="viewcode-block" id="ComputeNode.is_physical_host_for">
+<a class="viewcode-back" href="../../pygissim.html#pygissim.engine.ComputeNode.is_physical_host_for">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_physical_host_for</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vm</span><span class="p">:</span> <span class="s1">&#39;ComputeNode&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; :returns: True if this is a physical server that is host to the vm. &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">!=</span> <span class="n">ComputeNodeType</span><span class="o">.</span><span class="n">P_SERVER</span><span class="p">:</span> <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="n">vm</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_v_hosts</span></div>
+
 
 <div class="viewcode-block" id="ComputeNode.total_vcpu_allocation">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.ComputeNode.total_vcpu_allocation">[docs]</a>
@@ -1103,6 +1109,23 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">service_time_calculator</span><span class="o">.</span><span class="n">name</span> <span class="c1"># type: ignore</span></div>
 
     
+<div class="viewcode-block" id="MultiQueue.type">
+<a class="viewcode-back" href="../../pygissim.html#pygissim.engine.MultiQueue.type">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; :returns: A string indicating what the type of service time calculator is.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">stc</span> <span class="o">=</span> <span class="s2">&quot;UNKNOWN&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">service_time_calculator</span><span class="p">,</span> <span class="n">ComputeNode</span><span class="p">):</span>
+            <span class="n">node</span><span class="p">:</span> <span class="n">ComputeNode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">service_time_calculator</span>
+            <span class="k">match</span> <span class="n">node</span><span class="o">.</span><span class="n">type</span><span class="p">:</span>
+                <span class="k">case</span> <span class="n">ComputeNodeType</span><span class="o">.</span><span class="n">CLIENT</span><span class="p">:</span> <span class="n">stc</span> <span class="o">=</span> <span class="s2">&quot;CLIENT&quot;</span>
+                <span class="k">case</span> <span class="n">ComputeNodeType</span><span class="o">.</span><span class="n">P_SERVER</span><span class="p">:</span> <span class="n">stc</span> <span class="o">=</span> <span class="s2">&quot;P_SERVER&quot;</span>
+                <span class="k">case</span> <span class="n">ComputeNodeType</span><span class="o">.</span><span class="n">V_SERVER</span><span class="p">:</span> <span class="n">stc</span> <span class="o">=</span> <span class="s2">&quot;V_SERVER&quot;</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">service_time_calculator</span><span class="p">,</span> <span class="n">Connection</span><span class="p">):</span>
+            <span class="n">stc</span> <span class="o">=</span> <span class="s2">&quot;CONNECTION&quot;</span>
+        <span class="k">return</span> <span class="n">stc</span></div>
+
+   
 <div class="viewcode-block" id="MultiQueue.available_channel_count">
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.MultiQueue.available_channel_count">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">available_channel_count</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
@@ -1293,25 +1316,16 @@
 <a class="viewcode-back" href="../../pygissim.html#pygissim.engine.MultiQueue.get_performance_metric">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_performance_metric</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clock</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QueueMetric</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; :returns: A performance metric for the queue indicating how busy it is. &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">service_time_calculator</span><span class="p">,</span> <span class="n">ComputeNode</span><span class="p">):</span>
-            <span class="n">node</span><span class="p">:</span> <span class="n">ComputeNode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">service_time_calculator</span>
-            <span class="k">match</span> <span class="n">node</span><span class="o">.</span><span class="n">type</span><span class="p">:</span>
-                <span class="k">case</span> <span class="n">ComputeNodeType</span><span class="o">.</span><span class="n">CLIENT</span><span class="p">:</span> <span class="n">stc</span> <span class="o">=</span> <span class="s2">&quot;CLIENT&quot;</span>
-                <span class="k">case</span> <span class="n">ComputeNodeType</span><span class="o">.</span><span class="n">P_SERVER</span><span class="p">:</span> <span class="n">stc</span> <span class="o">=</span> <span class="s2">&quot;P_SERVER&quot;</span>
-                <span class="k">case</span> <span class="n">ComputeNodeType</span><span class="o">.</span><span class="n">V_SERVER</span><span class="p">:</span> <span class="n">stc</span> <span class="o">=</span> <span class="s2">&quot;V_SERVER&quot;</span>
-        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">service_time_calculator</span><span class="p">,</span> <span class="n">Connection</span><span class="p">):</span>
-            <span class="n">stc</span> <span class="o">=</span> <span class="s2">&quot;CONNECTION&quot;</span>
-        <span class="k">else</span><span class="p">:</span> <span class="n">stc</span> <span class="o">=</span> <span class="s2">&quot;UNKNOWN&quot;</span>
-
         <span class="n">processing_wrs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">WaitingRequest</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_processing_requests</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">wr</span> <span class="ow">in</span> <span class="n">processing_wrs</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_log_work_done</span><span class="p">(</span><span class="n">wr</span><span class="p">,</span> <span class="n">clock</span><span class="p">)</span>
 
-        <span class="n">qm</span> <span class="o">=</span> <span class="n">QueueMetric</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">(),</span> <span class="n">stc_type</span><span class="o">=</span><span class="n">stc</span><span class="p">,</span>
+        <span class="n">qm</span> <span class="o">=</span> <span class="n">QueueMetric</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">(),</span> <span class="n">stc_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">(),</span>
                            <span class="n">clock</span><span class="o">=</span><span class="n">clock</span><span class="p">,</span> 
                            <span class="n">channel_count</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">channels</span><span class="p">),</span> 
                            <span class="n">request_count</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">request_count</span><span class="p">(),</span>
-                           <span class="n">utilization</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_calc_utilization</span><span class="p">(</span><span class="n">clock</span><span class="p">))</span>
+                           <span class="n">utilization</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_calc_utilization</span><span class="p">(</span><span class="n">clock</span><span class="p">),</span>
+                           <span class="n">work</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">work_done</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">work_done</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">last_metric_clock</span> <span class="o">=</span> <span class="n">clock</span>
         <span class="k">return</span> <span class="n">qm</span></div>
@@ -1904,12 +1918,16 @@
     <span class="k">if</span> <span class="n">source_node</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;handler node for ServiceProvider </span><span class="si">{</span><span class="n">source_sp</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1"> was None&#39;</span><span class="p">)</span>
     
-    <span class="n">steps</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ClientRequestSolutionStep</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">steps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ClientRequestSolutionStep</span><span class="p">(</span><span class="n">st_calculator</span><span class="o">=</span><span class="n">source_node</span><span class="p">,</span> 
+    <span class="c1"># Keep track of compute nodes to retrace steps</span>
+    <span class="n">handler_nodes</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ComputeNode</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">cr_steps</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ClientRequestSolutionStep</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">cr_steps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ClientRequestSolutionStep</span><span class="p">(</span><span class="n">st_calculator</span><span class="o">=</span><span class="n">source_node</span><span class="p">,</span> 
                                            <span class="n">is_response</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> 
                                            <span class="n">data_size</span><span class="o">=</span><span class="n">step</span><span class="o">.</span><span class="n">request_size_kb</span><span class="p">,</span> 
                                            <span class="n">chatter</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="c1"># No chatter for compute step</span>
                                            <span class="n">service_time</span><span class="o">=</span><span class="n">step</span><span class="o">.</span><span class="n">service_time</span><span class="p">))</span>
+    <span class="n">handler_nodes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">source_node</span><span class="p">)</span>
     
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">chain</span><span class="o">.</span><span class="n">steps</span><span class="p">)):</span>
         <span class="n">step</span> <span class="o">=</span> <span class="n">chain</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
@@ -1928,30 +1946,28 @@
             
             <span class="c1"># Add the network steps</span>
             <span class="k">for</span> <span class="n">conn</span> <span class="ow">in</span> <span class="n">route</span><span class="o">.</span><span class="n">connections</span><span class="p">:</span>
-                <span class="n">steps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ClientRequestSolutionStep</span><span class="p">(</span><span class="n">st_calculator</span><span class="o">=</span><span class="n">conn</span><span class="p">,</span> 
+                <span class="n">cr_steps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ClientRequestSolutionStep</span><span class="p">(</span><span class="n">st_calculator</span><span class="o">=</span><span class="n">conn</span><span class="p">,</span> 
                                                     <span class="n">is_response</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> 
                                                     <span class="n">data_size</span><span class="o">=</span><span class="n">step</span><span class="o">.</span><span class="n">request_size_kb</span><span class="p">,</span> 
                                                     <span class="n">chatter</span><span class="o">=</span><span class="n">step</span><span class="o">.</span><span class="n">chatter</span><span class="p">,</span> 
                                                     <span class="n">service_time</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span> <span class="c1"># Service time is based on data size</span>
         
         <span class="c1"># Add the next compute step</span>
-        <span class="n">steps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ClientRequestSolutionStep</span><span class="p">(</span><span class="n">st_calculator</span><span class="o">=</span><span class="n">dest_node</span><span class="p">,</span> 
+        <span class="n">cr_steps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ClientRequestSolutionStep</span><span class="p">(</span><span class="n">st_calculator</span><span class="o">=</span><span class="n">dest_node</span><span class="p">,</span> 
                                                <span class="n">is_response</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> 
                                                <span class="n">data_size</span><span class="o">=</span><span class="n">step</span><span class="o">.</span><span class="n">request_size_kb</span><span class="p">,</span> 
                                                <span class="n">chatter</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>  <span class="c1"># No chatter for compute step</span>
                                                <span class="n">service_time</span><span class="o">=</span><span class="n">step</span><span class="o">.</span><span class="n">service_time</span><span class="p">))</span>
+        <span class="n">handler_nodes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dest_node</span><span class="p">)</span>
         <span class="n">source_sp</span> <span class="o">=</span> <span class="n">dest_sp</span>
         <span class="n">source_node</span> <span class="o">=</span> <span class="n">dest_node</span>
     
     <span class="c1"># Now retrace back to client</span>
+    <span class="n">discard</span> <span class="o">=</span> <span class="n">handler_nodes</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">chain</span><span class="o">.</span><span class="n">steps</span><span class="p">)</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
         <span class="n">step</span> <span class="o">=</span> <span class="n">chain</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-        <span class="n">dest_sp</span> <span class="o">=</span> <span class="n">chain</span><span class="o">.</span><span class="n">service_provider_for_step_at_index</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">dest_sp</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;ServiceProvider for </span><span class="si">{</span><span class="n">step</span><span class="si">}</span><span class="s1"> was None&#39;</span><span class="p">)</span>
-        <span class="n">dest_node</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ComputeNode</span><span class="p">]</span> <span class="o">=</span> <span class="n">dest_sp</span><span class="o">.</span><span class="n">handler_node</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">dest_node</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> 
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;handler node for ServiceProvider </span><span class="si">{</span><span class="n">dest_sp</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1"> was None&#39;</span><span class="p">)</span>
+        <span class="n">dest_node</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ComputeNode</span><span class="p">]</span> <span class="o">=</span> <span class="n">handler_nodes</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
         
         <span class="k">if</span> <span class="n">source_node</span> <span class="o">!=</span> <span class="n">dest_node</span><span class="p">:</span>
             <span class="n">route</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Route</span><span class="p">]</span> <span class="o">=</span> <span class="n">find_route</span><span class="p">(</span><span class="n">source_node</span><span class="o">.</span><span class="n">zone</span><span class="p">,</span> <span class="n">dest_node</span><span class="o">.</span><span class="n">zone</span><span class="p">,</span> <span class="n">in_network</span><span class="p">)</span>
@@ -1961,22 +1977,21 @@
             
             <span class="c1"># Add the network steps</span>
             <span class="k">for</span> <span class="n">conn</span> <span class="ow">in</span> <span class="n">route</span><span class="o">.</span><span class="n">connections</span><span class="p">:</span>
-                <span class="n">steps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ClientRequestSolutionStep</span><span class="p">(</span><span class="n">st_calculator</span><span class="o">=</span><span class="n">conn</span><span class="p">,</span> 
+                <span class="n">cr_steps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ClientRequestSolutionStep</span><span class="p">(</span><span class="n">st_calculator</span><span class="o">=</span><span class="n">conn</span><span class="p">,</span> 
                                                     <span class="n">is_response</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
                                                     <span class="n">data_size</span><span class="o">=</span><span class="n">step</span><span class="o">.</span><span class="n">response_size_kb</span><span class="p">,</span> 
                                                     <span class="n">chatter</span><span class="o">=</span><span class="n">step</span><span class="o">.</span><span class="n">chatter</span><span class="p">,</span> 
                                                     <span class="n">service_time</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span> <span class="c1"># Service time is based on data size</span>
         
         <span class="c1"># Add the next compute step</span>
-        <span class="n">steps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ClientRequestSolutionStep</span><span class="p">(</span><span class="n">st_calculator</span><span class="o">=</span><span class="n">dest_node</span><span class="p">,</span> 
+        <span class="n">cr_steps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ClientRequestSolutionStep</span><span class="p">(</span><span class="n">st_calculator</span><span class="o">=</span><span class="n">dest_node</span><span class="p">,</span> 
                                                <span class="n">is_response</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
                                                <span class="n">data_size</span><span class="o">=</span><span class="n">step</span><span class="o">.</span><span class="n">response_size_kb</span><span class="p">,</span> 
                                                <span class="n">chatter</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>  <span class="c1"># No chatter for compute step</span>
                                                <span class="n">service_time</span><span class="o">=</span><span class="n">step</span><span class="o">.</span><span class="n">service_time</span><span class="p">))</span>
-        <span class="n">source_sp</span> <span class="o">=</span> <span class="n">dest_sp</span>
         <span class="n">source_node</span> <span class="o">=</span> <span class="n">dest_node</span>
 
-    <span class="k">return</span> <span class="n">ClientRequestSolution</span><span class="p">(</span><span class="n">steps</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">ClientRequestSolution</span><span class="p">(</span><span class="n">cr_steps</span><span class="p">)</span></div>
 
 
 

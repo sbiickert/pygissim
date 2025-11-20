@@ -34,15 +34,12 @@ class QueueMetric:
     """ Read-only data class for tracking the utilization rate of all queues (compute and network)
 
     :param source: The name of the MultiQueue that was measured.
-    :type source: str
     :param stc_type: The type of the MultiQueue's :class:`ServiceTimeCalculator`'.
-    :type stc_type: str
     :param clock: The simulation time (in ms) when the measurement was taken.
-    :type clock: int
     :param channel_count: The number of parallel channels in the MultiQueue.
-    :type channel_count: int
     :param request_count: The number of requests being processed and queued.
     :param utilization: The utilization (1.0 = 100%) of this queue.
+    :param work: The work done (ms equivalent) during this sample.
     """
     source: str
     stc_type: str
@@ -50,6 +47,7 @@ class QueueMetric:
     channel_count: int
     request_count: int
     utilization: float
+    work: int
 
     def __str__(self):
         return f'QM@{self.clock} ({self.source} channels:{self.channel_count} requests:{self.request_count})'
@@ -590,6 +588,11 @@ class ComputeNode(ServiceTimeCalculator):
         if index >= 0 and index < len(self._v_hosts):
             return self._v_hosts[index]
         return None
+    
+    def is_physical_host_for(self, vm: 'ComputeNode') -> bool:
+        """ :returns: True if this is a physical server that is host to the vm. """
+        if self.type != ComputeNodeType.P_SERVER: return False
+        return vm in self._v_hosts
 
     def total_vcpu_allocation(self) -> int:
         """
@@ -829,6 +832,20 @@ class MultiQueue:
         """ :returns: The name of the service time calculator (i.e. the Connection or ComputeNode)"""
         return self.service_time_calculator.name # type: ignore
     
+    def type(self) -> str:
+        """ :returns: A string indicating what the type of service time calculator is.
+        """
+        stc = "UNKNOWN"
+        if isinstance(self.service_time_calculator, ComputeNode):
+            node: ComputeNode = self.service_time_calculator
+            match node.type:
+                case ComputeNodeType.CLIENT: stc = "CLIENT"
+                case ComputeNodeType.P_SERVER: stc = "P_SERVER"
+                case ComputeNodeType.V_SERVER: stc = "V_SERVER"
+        elif isinstance(self.service_time_calculator, Connection):
+            stc = "CONNECTION"
+        return stc
+   
     def available_channel_count(self) -> int:
         """ :returns: The number of channels without any active requests in them. """
         count: int = 0
@@ -987,25 +1004,16 @@ class MultiQueue:
     
     def get_performance_metric(self, clock: int) -> QueueMetric:
         """ :returns: A performance metric for the queue indicating how busy it is. """
-        if isinstance(self.service_time_calculator, ComputeNode):
-            node: ComputeNode = self.service_time_calculator
-            match node.type:
-                case ComputeNodeType.CLIENT: stc = "CLIENT"
-                case ComputeNodeType.P_SERVER: stc = "P_SERVER"
-                case ComputeNodeType.V_SERVER: stc = "V_SERVER"
-        elif isinstance(self.service_time_calculator, Connection):
-            stc = "CONNECTION"
-        else: stc = "UNKNOWN"
-
         processing_wrs: list[WaitingRequest] = self.all_processing_requests()
         for wr in processing_wrs:
             self._log_work_done(wr, clock)
 
-        qm = QueueMetric(source=self.name(), stc_type=stc,
+        qm = QueueMetric(source=self.name(), stc_type=self.type(),
                            clock=clock, 
                            channel_count=len(self.channels), 
                            request_count=self.request_count(),
-                           utilization=self._calc_utilization(clock))
+                           utilization=self._calc_utilization(clock),
+                           work=self.work_done)
         self.work_done = 0
         self.last_metric_clock = clock
         return qm

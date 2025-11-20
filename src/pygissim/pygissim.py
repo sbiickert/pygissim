@@ -8,6 +8,7 @@ The higher-level classes: Design and Simulator.
 Uses the pygissim.engine extensively to build a simulation design and then run it.
 """
 from typing import Optional, Set, Tuple
+from functools import cmp_to_key
 
 from pygissim.engine import *
 
@@ -620,12 +621,38 @@ class Simulator:
             result.extend(q.all_waiting_requests())
 
         return result
-    
+
     def gather_queue_metrics(self):
-        """ Gathers a :class:`pygissim.engine.QueueMetric` from every queue and stores it in queue_metrics. """
-        for q in self.queues:
+        """ Gathers a :class:`pygissim.engine.QueueMetric` from every queue and stores it in queue_metrics.
+        Sorts the queues so that physical servers are last: their VMs will have had a chance to register
+        their utilization first.
+        """
+        sorted_queues: list[MultiQueue] = sorted(self.queues, key=cmp_to_key(_sort_queues))
+        for q in sorted_queues:
             qm: QueueMetric = q.get_performance_metric(self.clock)
             self.queue_metrics.append(qm)
+
+            #Apply work to the physical host
+            if q.type() == 'V_SERVER': 
+                vm: ComputeNode = q.service_time_calculator # type: ignore
+                if self.design is not None:
+                    for cn in self.design._compute_nodes:
+                        if cn.is_physical_host_for(vm):
+                            host_q: Optional[MultiQueue] = self.find_queue(cn)
+                            if host_q is not None:
+                                host_q.work_done = host_q.work_done + qm.work
+
+    
+def _sort_queues(q1:MultiQueue, q2:MultiQueue) -> int:
+    type1: str = q1.type()
+    type2: str = q2.type()
+    if type1 == 'P_SERVER' and not type2 == 'P_SERVER':
+        return 1
+    if type2 == 'P_SERVER' and not type1 == 'P_SERVER':
+        return -1
+    return 0
+    
+
 
 if __name__ == "__main__":
     print("pygissim is a library.")

@@ -445,8 +445,8 @@
 <a class="viewcode-back" href="../../tests.html#tests.test_work.TestClientRequestSolution.test_create">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">test_create</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">crs</span> <span class="o">=</span> <span class="n">TestClientRequestSolution</span><span class="o">.</span><span class="n">sample_intranet_crs</span><span class="p">()</span>
-        <span class="c1"># for step in crs.steps:</span>
-        <span class="c1">#     print(step.st_calculator.name) # type: ignore</span>
+        <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="n">crs</span><span class="o">.</span><span class="n">steps</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">step</span><span class="o">.</span><span class="n">st_calculator</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="c1"># type: ignore</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">17</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">crs</span><span class="o">.</span><span class="n">steps</span><span class="p">))</span></div>
 
 

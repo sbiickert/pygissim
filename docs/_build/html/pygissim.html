@@ -381,6 +381,16 @@ calculated service times shorter or longer, respectively.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="pygissim.engine.ComputeNode.is_physical_host_for">
+<span class="sig-name descname"><span class="pre">is_physical_host_for</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pygissim.engine.ComputeNode" title="pygissim.engine.ComputeNode"><span class="pre">ComputeNode</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#ComputeNode.is_physical_host_for"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.ComputeNode.is_physical_host_for" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if this is a physical server that is host to the vm.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="pygissim.engine.ComputeNode.provide_queue">
 <span class="sig-name descname"><span class="pre">provide_queue</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pygissim.engine.MultiQueue" title="pygissim.engine.MultiQueue"><span class="pre">MultiQueue</span></a></span></span><a class="reference internal" href="_modules/pygissim/engine.html#ComputeNode.provide_queue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.ComputeNode.provide_queue" title="Link to this definition"></a></dt>
 <dd><p>Creates and returns a MultiQueue that represent’s this ComputeNode’s ability to do work.
@@ -865,22 +875,33 @@ queue used when waiting for a turn in a channel.</p>
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="pygissim.engine.MultiQueue.type">
+<span class="sig-name descname"><span class="pre">type</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/pygissim/engine.html#MultiQueue.type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.MultiQueue.type" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A string indicating what the type of service time calculator is.</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="pygissim.engine.QueueMetric">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pygissim.engine.</span></span><span class="sig-name descname"><span class="pre">QueueMetric</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stc_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clock</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_count</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">request_count</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">utilization</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/engine.html#QueueMetric"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.QueueMetric" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pygissim.engine.</span></span><span class="sig-name descname"><span class="pre">QueueMetric</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stc_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clock</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_count</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">request_count</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">utilization</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">work</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/engine.html#QueueMetric"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.engine.QueueMetric" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Read-only data class for tracking the utilization rate of all queues (compute and network)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>source</strong> (<em>str</em>) – The name of the MultiQueue that was measured.</p></li>
-<li><p><strong>stc_type</strong> (<em>str</em>) – The type of the MultiQueue’s <a class="reference internal" href="#pygissim.engine.ServiceTimeCalculator" title="pygissim.engine.ServiceTimeCalculator"><code class="xref py py-class docutils literal notranslate"><span class="pre">ServiceTimeCalculator</span></code></a>’.</p></li>
-<li><p><strong>clock</strong> (<em>int</em>) – The simulation time (in ms) when the measurement was taken.</p></li>
-<li><p><strong>channel_count</strong> (<em>int</em>) – The number of parallel channels in the MultiQueue.</p></li>
+<li><p><strong>source</strong> – The name of the MultiQueue that was measured.</p></li>
+<li><p><strong>stc_type</strong> – The type of the MultiQueue’s <a class="reference internal" href="#pygissim.engine.ServiceTimeCalculator" title="pygissim.engine.ServiceTimeCalculator"><code class="xref py py-class docutils literal notranslate"><span class="pre">ServiceTimeCalculator</span></code></a>’.</p></li>
+<li><p><strong>clock</strong> – The simulation time (in ms) when the measurement was taken.</p></li>
+<li><p><strong>channel_count</strong> – The number of parallel channels in the MultiQueue.</p></li>
 <li><p><strong>request_count</strong> – The number of requests being processed and queued.</p></li>
 <li><p><strong>utilization</strong> – The utilization (1.0 = 100%) of this queue.</p></li>
+<li><p><strong>work</strong> – The work done (ms equivalent) during this sample.</p></li>
 </ul>
 </dd>
 </dl>
@@ -912,6 +933,11 @@ queue used when waiting for a turn in a channel.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pygissim.engine.QueueMetric.utilization">
 <span class="sig-name descname"><span class="pre">utilization</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#pygissim.engine.QueueMetric.utilization" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pygissim.engine.QueueMetric.work">
+<span class="sig-name descname"><span class="pre">work</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#pygissim.engine.QueueMetric.work" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -2478,7 +2504,9 @@ or <a class="reference internal" href="#pygissim.engine.Connection" title="pygis
 <dl class="py method">
 <dt class="sig sig-object py" id="pygissim.pygissim.Simulator.gather_queue_metrics">
 <span class="sig-name descname"><span class="pre">gather_queue_metrics</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pygissim/pygissim.html#Simulator.gather_queue_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygissim.pygissim.Simulator.gather_queue_metrics" title="Link to this definition"></a></dt>
-<dd><p>Gathers a <a class="reference internal" href="#pygissim.engine.QueueMetric" title="pygissim.engine.QueueMetric"><code class="xref py py-class docutils literal notranslate"><span class="pre">pygissim.engine.QueueMetric</span></code></a> from every queue and stores it in queue_metrics.</p>
+<dd><p>Gathers a <a class="reference internal" href="#pygissim.engine.QueueMetric" title="pygissim.engine.QueueMetric"><code class="xref py py-class docutils literal notranslate"><span class="pre">pygissim.engine.QueueMetric</span></code></a> from every queue and stores it in queue_metrics.
+Sorts the queues so that physical servers are last: their VMs will have had a chance to register
+their utilization first.</p>
 </dd></dl>
 
 <dl class="py method">
