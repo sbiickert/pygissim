@@ -140,7 +140,19 @@ class Connection(ServiceTimeCalculator):
             self.destination == other.destination and \
             self.bandwidth == other.bandwidth and \
             self.latency_ms == other.latency_ms
+
+    def set_source(self, zone:'Zone'):
+        self.source = zone
     
+    def set_destination(self, zone:'Zone'):
+        self.destination = zone
+
+    def set_bandwidth(self, value:int):
+        self.bandwidth = value
+    
+    def set_latency(self, value:int):
+        self.latency_ms = value
+
     def __str__(self):
         return f'Connection {self.name}'
     
@@ -220,6 +232,12 @@ class Zone:
     
     def __str__(self):
         return f'Zone {self.name}'
+
+    def set_name(self, value:str):
+        self.name = value
+
+    def set_description(self, value:str):
+        self.description = value
 
     def connect(self, other: 'Zone', bw: int, lat: int) -> Connection:
         """ Creates a Connection to a Zone. 

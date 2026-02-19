@@ -104,18 +104,26 @@ class Design:
 
         return messages
     
+    def set_name(self, n:str):
+        self.name = n
+    
+    def set_desc(self, d:str):
+        self.description = d
 
-    def add_zone(self, zone: Zone, local_bw_mbps: int, local_latency_ms: int):
+    def add_zone(self, zone: Zone, local_bw_mbps: int, local_latency_ms: int) -> Optional[Connection]:
         """ Convenience method to add the Zone and a local Connection at the same time.
         
         :param zone: The Zone to add to the design.
         :param local_bw_mbps: The bandwidth of the local Connection for the Zone in megabits per second (Mbps)
         :param local_latency_ms: The latence of the local Connection for the Zone in milliseconds (ms)
+        :returns: the internal Connection for the added Zone. 
         """
-        if zone in self.zones: return
+        if zone in self.zones:
+            return zone.local_connection(in_network=self.network)
         self.zones.append(zone)
         internal_conn: Connection = zone.self_connect(bw=local_bw_mbps, lat=local_latency_ms)
         self.network.append(internal_conn)
+        return internal_conn
 
     def remove_zone(self, zone: Zone):
         """ Removes a Zone from the Design. Doing so can have cascading effects, 
